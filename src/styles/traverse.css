@@ -1,0 +1,393 @@
+/* ==========================================================================
+   AFTERLIGHT — EVA Traverse Cartography Modal
+   Phase 02.5 Editorial Archival Restoration
+   ========================================================================== */
+
+#traverse-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* Backdrop */
+.traverse-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(2, 4, 7, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: auto;
+  opacity: 0;
+}
+
+/* Modal Frame */
+.traverse-modal-panel {
+  position: relative;
+  z-index: 2;
+  width: min(980px, 94vw);
+  max-height: 92vh;
+  background: #090c12;
+  border: 1px solid var(--color-border-subtle);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 70px rgba(0, 0, 0, 0.95);
+  opacity: 0;
+}
+
+/* Archival Header */
+.traverse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 28px 16px 28px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  background: rgba(10, 13, 19, 0.95);
+}
+
+.traverse-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.traverse-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.traverse-reseau-pip {
+  color: var(--color-amber-accent);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.traverse-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--color-parchment);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.traverse-close-btn {
+  background: transparent;
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  padding: 6px 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s var(--ease-cinematic);
+}
+
+.traverse-close-btn:hover,
+.traverse-close-btn:focus-visible {
+  border-color: var(--color-amber-accent);
+  color: var(--color-amber-accent);
+  background: rgba(201, 151, 56, 0.08);
+  outline: none;
+}
+
+/* Nav Selector Tabs */
+.traverse-nav {
+  display: flex;
+  background: rgba(4, 6, 9, 0.8);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 6px 28px;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.traverse-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  padding: 8px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s var(--ease-cinematic);
+  white-space: nowrap;
+}
+
+.traverse-tab .tab-num {
+  font-size: 9px;
+  opacity: 0.6;
+}
+
+.traverse-tab:hover,
+.traverse-tab:focus-visible {
+  color: var(--color-parchment);
+  background: rgba(255, 255, 255, 0.03);
+  outline: none;
+}
+
+.traverse-tab.is-active {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-parchment);
+  border-color: rgba(201, 151, 56, 0.4);
+  box-shadow: inset 0 -2px 0 var(--color-amber-accent);
+}
+
+.traverse-tab.is-active .tab-num {
+  color: var(--color-amber-accent);
+  opacity: 1;
+}
+
+/* Body Content */
+.traverse-body {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  padding: 24px 28px;
+  gap: 24px;
+  overflow-y: auto;
+  max-height: calc(92vh - 120px);
+}
+
+/* Cartographic Map Container */
+.traverse-map-container {
+  background: #040609;
+  border: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  position: relative;
+}
+
+.traverse-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* SVG Map Details */
+.map-crater {
+  fill: rgba(255, 255, 255, 0.015);
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 0.8;
+  stroke-dasharray: 4, 3;
+}
+
+.map-crater-label {
+  fill: #616b7c;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.14em;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.map-landmark-intrepid {
+  fill: var(--color-parchment);
+  stroke: var(--color-amber-accent);
+  stroke-width: 1;
+}
+
+.map-landmark-surveyor {
+  fill: #d97736;
+}
+
+.map-landmark-alsep {
+  fill: var(--color-amber-accent);
+}
+
+.map-landmark-label {
+  fill: var(--color-parchment);
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+
+.traverse-path-eva1 {
+  fill: none;
+  stroke: var(--color-text-secondary);
+  stroke-width: 1.6;
+  stroke-dasharray: 6, 4;
+}
+
+.traverse-path-eva2 {
+  fill: none;
+  stroke: var(--color-amber-accent);
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 3px rgba(201, 151, 56, 0.35));
+}
+
+.station-node {
+  fill: var(--color-parchment);
+  stroke: #040609;
+  stroke-width: 1.5;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.station-node:hover {
+  fill: var(--color-amber-accent);
+  r: 6.5;
+}
+
+.station-node.is-active {
+  fill: var(--color-amber-accent);
+  stroke: var(--color-parchment);
+  stroke-width: 2;
+  r: 6.5;
+}
+
+.station-label {
+  fill: #8590a2;
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  letter-spacing: 0.08em;
+}
+
+/* Station Detail Card */
+.traverse-detail-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: rgba(14, 18, 24, 0.4);
+  border: 1px solid var(--color-border-subtle);
+  padding: 24px;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 10px;
+}
+
+.detail-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--color-amber-accent);
+}
+
+.detail-metric {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+}
+
+.detail-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--color-parchment);
+  margin-bottom: 10px;
+}
+
+.detail-body {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  font-weight: 300;
+  margin-bottom: 18px;
+}
+
+.detail-notes-box {
+  background: rgba(201, 151, 56, 0.05);
+  border-left: 2px solid var(--color-amber-accent);
+  border-top: 1px solid var(--color-border-subtle);
+  border-right: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 14px 16px;
+}
+
+.notes-tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--color-amber-accent);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.notes-text {
+  font-family: var(--font-quote);
+  font-size: 13.5px;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--color-parchment);
+}
+
+/* ==========================================================================
+   Responsive Overrides
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .traverse-modal-panel {
+    width: 96vw;
+    max-height: 94vh;
+  }
+
+  .traverse-header {
+    padding: 16px 18px 12px 18px;
+  }
+
+  .traverse-title {
+    font-size: 16px;
+  }
+
+  .traverse-nav {
+    padding: 6px 18px;
+  }
+
+  .traverse-body {
+    grid-template-columns: 1fr;
+    padding: 16px 18px;
+    gap: 16px;
+  }
+
+  .traverse-map-container {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .traverse-backdrop,
+  .traverse-modal-panel,
+  .traverse-close-btn,
+  .traverse-tab,
+  .station-node {
+    transition: none !important;
+    animation: none !important;
+  }
+}

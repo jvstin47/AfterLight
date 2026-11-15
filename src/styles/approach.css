@@ -1,0 +1,409 @@
+/* Stage A: Redesigned Opening Experience (Cinematic Archival Approach) */
+
+#approach-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  overflow: hidden;
+}
+
+/* Deep Vacuum Atmospheric Backdrop */
+.approach-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 45%, rgba(2, 3, 5, 0.72) 0%, rgba(2, 3, 5, 0.95) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Architectural Frame with Reseau Calibration Ticks */
+.approach-frame {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1;
+}
+
+.reseau-tick {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1;
+  color: var(--color-hairline-bright);
+  user-select: none;
+}
+
+.reseau-tick.top-left {
+  top: -7px;
+  left: -5px;
+}
+
+.reseau-tick.top-right {
+  top: -7px;
+  right: -5px;
+}
+
+.reseau-tick.bottom-left {
+  bottom: -7px;
+  left: -5px;
+}
+
+.reseau-tick.bottom-right {
+  bottom: -7px;
+  right: -5px;
+}
+
+/* Main Content Structure */
+.approach-content {
+  position: relative;
+  z-index: 2;
+  max-width: 880px;
+  width: 90%;
+  padding: 40px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Top Header Meta */
+.approach-header {
+  margin-bottom: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.approach-catalog-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--color-telemetry-slate);
+  text-transform: uppercase;
+}
+
+.meta-dot {
+  width: 5px;
+  height: 5px;
+  background-color: var(--color-archival-amber);
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.approach-coordinates {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--color-text-secondary);
+}
+
+.coord-divider {
+  color: var(--color-text-tertiary);
+  font-size: 8px;
+}
+
+.coord-region {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+/* Centerpiece */
+.approach-centerpiece {
+  margin-bottom: 40px;
+  max-width: 740px;
+}
+
+.approach-series-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: var(--color-archival-amber);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.approach-title {
+  font-family: var(--font-serif);
+  font-size: clamp(38px, 7.5vw, 74px);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--color-text-primary);
+  line-height: 1.08;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.8);
+}
+
+.approach-subtitle {
+  font-family: var(--font-quote);
+  font-size: clamp(16px, 2.2vw, 22px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Restrained Archival Divider */
+.approach-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 220px;
+  margin: 26px auto 28px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--color-hairline-bright);
+}
+
+.divider-amber-mark {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-archival-amber);
+  transform: rotate(45deg);
+  opacity: 0.8;
+}
+
+/* Historical Quotation */
+.approach-quote {
+  margin: 0 auto;
+  max-width: 620px;
+  padding: 0 16px;
+}
+
+.quote-text {
+  font-family: var(--font-quote);
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  font-style: italic;
+  font-weight: 300;
+  margin-bottom: 12px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.quote-attribution {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-style: normal;
+}
+
+.cite-author {
+  font-family: var(--font-serif);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--color-archival-amber);
+  text-transform: uppercase;
+}
+
+.cite-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+}
+
+/* Entrance Actions */
+.approach-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.btn-enter-archive {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 34px;
+  background: rgba(14, 16, 19, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-cinematic);
+  border-radius: 0;
+  backdrop-filter: blur(4px);
+  outline: none;
+}
+
+.btn-enter-archive .btn-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: var(--color-archival-amber);
+}
+
+.btn-enter-archive .btn-corner.top-l {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--color-archival-amber);
+  border-left: 2px solid var(--color-archival-amber);
+}
+
+.btn-enter-archive .btn-corner.bottom-r {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--color-archival-amber);
+  border-right: 2px solid var(--color-archival-amber);
+}
+
+.btn-enter-archive:hover,
+.btn-enter-archive:focus-visible {
+  border-color: var(--color-text-primary);
+  background: rgba(238, 237, 232, 0.1);
+  color: var(--color-text-primary);
+  transform: translateY(-1px);
+}
+
+.btn-key-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  padding: 3px 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-hairline);
+  color: var(--color-archival-amber);
+}
+
+.btn-skip-descent {
+  background: transparent;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  padding: 6px 14px;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  outline: none;
+}
+
+.btn-skip-descent:hover,
+.btn-skip-descent:focus-visible {
+  color: var(--color-text-secondary);
+}
+
+.btn-key-hint {
+  color: var(--color-text-tertiary);
+  font-size: 9px;
+}
+
+/* Archival Telemetry Footer */
+.approach-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--color-text-tertiary);
+  border-top: 1px solid var(--color-hairline);
+  padding-top: 16px;
+}
+
+.footer-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.telem-label {
+  color: var(--color-text-tertiary);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.telem-val {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.telem-val.telem-amber {
+  color: var(--color-archival-amber);
+}
+
+.telem-sep {
+  color: var(--color-hairline-bright);
+}
+
+.footer-notes {
+  letter-spacing: 0.1em;
+  color: var(--color-text-tertiary);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .approach-frame {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+  .approach-content {
+    padding: 24px 16px;
+    width: 95%;
+  }
+  .approach-header {
+    margin-bottom: 24px;
+  }
+  .approach-coordinates {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .approach-centerpiece {
+    margin-bottom: 28px;
+  }
+  .approach-divider {
+    margin: 18px auto 20px;
+  }
+  .quote-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .approach-footer {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+  .footer-telemetry {
+    justify-content: center;
+  }
+}
