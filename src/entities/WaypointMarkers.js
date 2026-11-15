@@ -15,7 +15,9 @@ export class WaypointMarkers {
   constructor(container) {
     this.container = container;
     this.markers = [];
-    this.visible = true;
+    this.visible = false;
+    this.container.style.display = 'none';
+    this.container.style.opacity = '0';
     this.tempVec = new THREE.Vector3();
 
     this.init();
@@ -110,9 +112,23 @@ export class WaypointMarkers {
     });
   }
 
-  setVisible(visible) {
+  setVisible(visible, fade = false) {
     this.visible = visible;
-    this.container.style.display = visible ? 'block' : 'none';
+    if (visible) {
+      this.container.style.display = 'block';
+      if (fade) {
+        this.container.style.opacity = '0';
+        this.container.style.transition = 'opacity 0.8s ease-out';
+        requestAnimationFrame(() => {
+          this.container.style.opacity = '1';
+        });
+      } else {
+        this.container.style.opacity = '1';
+      }
+    } else {
+      this.container.style.display = 'none';
+      this.container.style.opacity = '0';
+    }
   }
 
   setActive(activeId) {

@@ -86,6 +86,11 @@ async function init() {
       hudController.show();
     }
 
+    // Reveal surface waypoint markers once descending to the landing site
+    if (scene && scene.waypointMarkers) {
+      scene.waypointMarkers.setVisible(true, !immediate);
+    }
+
     // Camera descend to site overview
     const duration = immediate ? 800 : 3200;
     scene.cameraController.setPreset('OVERVIEW', duration);
