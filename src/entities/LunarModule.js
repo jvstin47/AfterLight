@@ -19,7 +19,7 @@ export function createLunarModule(elevationFn, onLoaded, onError) {
 
   console.log('[LunarModule] Requesting cached official NASA LM-6 GLB model...');
 
-  assetManager.loadGLTF('/assets/3d_models/lunar_module/apollo_lunar_module.glb')
+  assetManager.loadGLTF('/assets/3d_models/lunar_module/apollo_lunar_module.glb?v=0.2.1')
     .then((model) => {
       model.name = 'nasa-lm-6-model';
 
