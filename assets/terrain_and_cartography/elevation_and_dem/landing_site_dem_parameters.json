@@ -1,0 +1,23 @@
+{
+  "dataset": "Lunar Reconnaissance Orbiter (LRO) Narrow Angle Camera (NAC) DTM",
+  "product_id": "NAC_DTM_APOLLO12",
+  "spatial_resolution_meters_per_pixel": 1.5,
+  "horizontal_datum": "Mean Earth/Polar Axis (ME) reference system (IAU/IAG 2000)",
+  "reference_sphere_radius_meters": 1737400.0,
+  "elevation_range_landing_area_meters": [
+    -1430.5,
+    -1390.2
+  ],
+  "bounding_box": {
+    "min_latitude": -3.04,
+    "max_latitude": -2.99,
+    "min_longitude": -23.46,
+    "max_longitude": -23.39
+  },
+  "associated_lroc_nac_frames": [
+    "M175428601LE",
+    "M175428601RE",
+    "M114104427LE",
+    "M114104427RE"
+  ]
+}

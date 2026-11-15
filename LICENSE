@@ -1,0 +1,51 @@
+AFTERLIGHT Licensing Terms
+
+The AFTERLIGHT project incorporates both original project-authored materials and
+archival third-party materials (including historical photography, mission documentation,
+scientific elevation models, and spacecraft 3D models). Different licensing terms apply:
+
+================================================================================
+1. Original Project-Authored Code & Materials (MIT License)
+================================================================================
+
+Copyright (c) 2026 Justin (jvstin47) and the AFTERLIGHT Contributors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software, scripts, custom SVG schematics, and associated documentation
+files authored specifically for the AFTERLIGHT project (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+2. Third-Party Archival Materials, Media & Datasets (Excluded from MIT License)
+================================================================================
+
+The MIT License above DOES NOT APPLY to third-party assets contained within
+this repository, including but not limited to:
+
+- Archival NASA photography and imagery (from the Apollo Lunar Surface Journal,
+  NASA Images API, and NASA Scientific Visualization Studio).
+- Historical NASA mission reports, technical reports, and transcripts
+  (NASA MSC-01855, NASA SP-235, NASA SP-284 / TR 19710024418).
+- Lunar Reconnaissance Orbiter (LROC) Narrow Angle Camera digital elevation
+  and orthophoto datasets.
+- 3D models and geometry originating from NASA 3D Resources.
+
+These third-party materials remain subject to their respective original licenses,
+public domain designations, and NASA Media Usage Guidelines. For full attribution,
+usage constraints, and copyright statements, refer to:
+  - THIRD_PARTY_NOTICES.md
+  - docs/LICENSING_AND_ATTRIBUTION.md

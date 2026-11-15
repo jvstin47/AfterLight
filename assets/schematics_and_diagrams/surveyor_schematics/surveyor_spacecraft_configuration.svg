@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0b0d12; }
+      .grid { stroke: #1b2230; stroke-width: 1; }
+      .title { fill: #e2e8f0; font-family: monospace; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
+      .subtitle { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .frame { stroke: #94a3b8; stroke-width: 2; fill: none; }
+      .antenna { stroke: #38bdf8; stroke-width: 2; fill: rgba(56, 189, 248, 0.2); }
+      .solar { fill: #1e3a8a; stroke: #60a5fa; stroke-width: 1.5; }
+      .retrieved { stroke: #f43f5e; stroke-width: 2.5; fill: rgba(244, 63, 94, 0.2); }
+      .label { fill: #cbd5e1; font-family: monospace; font-size: 11px; }
+      .highlight { fill: #f43f5e; font-family: monospace; font-size: 12px; font-weight: bold; }
+    </style>
+  </defs>
+  <rect width="1000" height="800" class="bg"/>
+  <g class="grid">
+    <path d="M0,100 H1000 M0,200 H1000 M0,300 H1000 M0,400 H1000 M0,500 H1000 M0,600 H1000 M0,700 H1000"/>
+    <path d="M100,0 V800 M200,0 V800 M300,0 V800 M400,0 V800 M500,0 V800 M600,0 V800 M700,0 V800 M800,0 V800 M900,0 V800"/>
+  </g>
+  <text x="50" y="55" class="title">SURVEYOR 3 SPACECRAFT CONFIGURATION</text>
+  <text x="50" y="78" class="subtitle">HUGHES AIRCRAFT / JPL ROBOTIC LUNAR SOFT LANDER (1967-1969)</text>
+
+  <!-- Central Mast & Solar Array -->
+  <line x1="500" y1="200" x2="500" y2="520" stroke="#94a3b8" stroke-width="4"/>
+  <rect x="440" y="120" width="120" height="80" class="solar"/>
+  <text x="500" y="165" class="label" text-anchor="middle" fill="#93c5fd">SOLAR PANEL (3,960 CELLS)</text>
+  <rect x="510" y="210" width="80" height="45" class="antenna"/>
+  <text x="600" y="235" class="label">PLANAR HIGH-GAIN ANTENNA</text>
+
+  <!-- Triangular Space Frame -->
+  <polygon points="500,420 380,540 620,540" class="frame" stroke-width="3"/>
+  <!-- Thermal Compartments -->
+  <rect x="410" y="460" width="60" height="40" fill="#e2e8f0" stroke="#64748b"/>
+  <text x="440" y="485" class="label" text-anchor="middle">COMP A</text>
+  <rect x="530" y="460" width="60" height="40" fill="#e2e8f0" stroke="#64748b"/>
+  <text x="560" y="485" class="label" text-anchor="middle">COMP B</text>
+
+  <!-- Legs -->
+  <!-- Leg 1 (Left) -->
+  <line x1="380" y1="540" x2="180" y2="650" class="frame" stroke-width="4"/>
+  <circle cx="180" cy="650" r="16" fill="#94a3b8"/>
+  <text x="130" y="685" class="label">LEG 1 FOOTPAD</text>
+
+  <!-- Leg 2 (Right) -->
+  <line x1="620" y1="540" x2="820" y2="650" class="frame" stroke-width="4"/>
+  <circle cx="820" cy="650" r="16" fill="#94a3b8"/>
+  <text x="780" y="685" class="label">LEG 2 FOOTPAD</text>
+
+  <!-- Leg 3 (Center Bottom) -->
+  <line x1="500" y1="540" x2="500" y2="690" class="frame" stroke-width="4"/>
+  <circle cx="500" cy="690" r="16" fill="#94a3b8"/>
+  <text x="500" y="725" class="label" text-anchor="middle">LEG 3 FOOTPAD</text>
+
+  <!-- RETRIEVED COMPONENT 1: TV Camera (On Leg 2 side) -->
+  <rect x="610" y="370" width="40" height="75" class="retrieved" rx="4"/>
+  <line x1="630" y1="370" x2="730" y2="320" stroke="#f43f5e" stroke-width="1.5"/>
+  <circle cx="730" cy="320" r="3" fill="#f43f5e"/>
+  <text x="740" y="315" class="highlight">[RETRIEVED] TV CAMERA UNIT</text>
+  <text x="740" y="335" class="label">Returned to Earth by Apollo 12</text>
+  <text x="740" y="350" class="label">Subject of 31-month space exposure study</text>
+
+  <!-- RETRIEVED COMPONENT 2: Surface Sampler Scoop -->
+  <line x1="390" y1="490" x2="300" y2="530" stroke="#94a3b8" stroke-width="3"/>
+  <line x1="300" y1="530" x2="230" y2="570" stroke="#94a3b8" stroke-width="3"/>
+  <polygon points="220,565 240,560 235,580 215,585" class="retrieved"/>
+  <line x1="220" y1="585" x2="120" y2="530" stroke="#f43f5e" stroke-width="1.5"/>
+  <circle cx="120" cy="530" r="3" fill="#f43f5e"/>
+  <text x="30" y="515" class="highlight">[RETRIEVED] SURFACE SAMPLER SCOOP</text>
+  <text x="30" y="535" class="label">Mechanized pantograph cutting arm</text>
+  <text x="30" y="550" class="label">Tested soil bearing strength in 1967</text>
+
+  <!-- Omni Antennas -->
+  <line x1="370" y1="470" x2="270" y2="430" class="antenna"/>
+  <circle cx="270" cy="430" r="8" class="antenna"/>
+  <text x="160" y="425" class="label">OMNI ANTENNA A</text>
+
+  <line x1="630" y1="470" x2="730" y2="430" class="antenna"/>
+  <circle cx="730" cy="430" r="8" class="antenna"/>
+  <text x="745" y="425" class="label">OMNI ANTENNA B</text>
+</svg>

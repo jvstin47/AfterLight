@@ -1,0 +1,54 @@
+{
+  "spacecraft": "Lunar Module-6 (LM-6) Descent Stage",
+  "callsign": "Intrepid",
+  "manufacturer": "Grumman Aerospace Corporation (Bethpage, New York)",
+  "mission": "Apollo 12",
+  "crew": {
+    "commander": "Charles Pete Conrad Jr.",
+    "lunar_module_pilot": "Alan L. Bean",
+    "command_module_pilot": "Richard F. Gordon Jr. (remained in lunar orbit aboard Yankee Clipper)"
+  },
+  "landing_coordinates": {
+    "latitude_deg": -3.01239,
+    "longitude_deg": -23.42157,
+    "landing_time_utc": "1969-11-19T06:54:35Z",
+    "surface_stay_duration_hours": 31.52,
+    "landing_accuracy": "First pinpoint lunar landing in human history, touching down within 163m of Surveyor 3"
+  },
+  "physical_specifications": {
+    "descent_stage_height_meters": 3.23,
+    "descent_stage_width_across_flats_meters": 4.22,
+    "landing_gear_span_diagonal_meters": 9.45,
+    "footpad_diameter_meters": 0.94,
+    "lunar_surface_sensing_probes_length_meters": 1.68,
+    "descent_stage_dry_mass_kg": 2211.0,
+    "propellant_mass_at_landing_kg": 8248.0,
+    "residual_propellant_on_surface_kg": 470.0
+  },
+  "propulsion_system": {
+    "engine": "TRW Descent Propulsion System (DPS)",
+    "thrust_range_newtons": [
+      4670,
+      43900
+    ],
+    "throttling_capability": "Continuously variable 10% to 100% thrust",
+    "propellants": "Aerozine 50 fuel and Nitrogen Tetroxide (N2O4) oxidizer, hypergolic",
+    "combustion_chamber": "Ablative-cooled thrust chamber with columbium radiation-cooled nozzle extension"
+  },
+  "equipment_stowage_and_discarded_hardware": {
+    "quad_1": "Manned Flight Awareness commemorative plaque, ladder, descent engine",
+    "quad_2": "Modular Equipment Stowage Assembly (MESA) containing lunar surface TV camera, rock sample collection boxes, core tubes, Apollo lunar hand tools",
+    "quad_3": "Scientific equipment bay, Solar Wind Composition foil experiment",
+    "quad_4": "ALSEP stowage subpackages 1 and 2, SNAP-27 graphite fuel cask assembly mounted externally on quadrant corner"
+  },
+  "artifacts_currently_at_site": [
+    "Intrepid Descent Stage structure, tanks, landing gear, and DPS engine bell",
+    "Egress ladder and commemorative stainless steel plaque",
+    "Jettisoned PLSS backpacks (Conrad and Bean) on surface below hatch",
+    "Jettisoned lunar overshoes, gloves, armbands, and waste bags",
+    "Apollo Lunar Hand Tool Carrier and discarded sampling scoops/tongs",
+    "United States Flag (planted ~7m south of LM)",
+    "SNAP-27 graphite transport cask (attached to Quad 4 frame)",
+    "Lunar surface sensing probes (broken and bent under footpads)"
+  ]
+}

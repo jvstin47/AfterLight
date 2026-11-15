@@ -1,0 +1,81 @@
+{
+  "project": "AFTERLIGHT",
+  "prototype": "Apollo 12 Landing Site",
+  "pbr_material_library": {
+    "lunar_regolith_undisturbed": {
+      "base_color_srgb": [0.38, 0.37, 0.35],
+      "albedo": 0.082,
+      "roughness": 0.88,
+      "metallic": 0.0,
+      "normal_scale": 1.2,
+      "retroreflective_retro_boost": 1.75,
+      "notes": "Fine-grained basaltic lunar soil with micro-porous structure and jagged agglutinates"
+    },
+    "lunar_regolith_compressed_tracks": {
+      "base_color_srgb": [0.24, 0.23, 0.22],
+      "albedo": 0.055,
+      "roughness": 0.72,
+      "metallic": 0.0,
+      "normal_scale": 0.9,
+      "notes": "Compacted soil in astronaut boot tracks and equipment cart wheels; appears markedly darker than virgin surface"
+    },
+    "kapton_aluminized_foil_gold": {
+      "base_color_srgb": [0.85, 0.65, 0.18],
+      "albedo": 0.62,
+      "roughness": 0.22,
+      "metallic": 0.92,
+      "wrinkle_normal_scale": 2.4,
+      "notes": "Multi-Layer Insulation (MLI) blankets on LM descent stage; highly crinkled specular foil"
+    },
+    "kapton_copper_amber": {
+      "base_color_srgb": [0.72, 0.38, 0.12],
+      "albedo": 0.45,
+      "roughness": 0.25,
+      "metallic": 0.88,
+      "wrinkle_normal_scale": 2.1,
+      "notes": "Secondary thermal blanket foil used on select quadrant bulkheads"
+    },
+    "inconel_dps_engine_bell": {
+      "base_color_srgb": [0.18, 0.18, 0.19],
+      "albedo": 0.14,
+      "roughness": 0.42,
+      "metallic": 0.85,
+      "notes": "Columbium radiation-cooled nozzle bell, discolored by hypergolic combustion exhaust"
+    },
+    "surveyor_weathered_white_paint": {
+      "base_color_srgb": [0.62, 0.54, 0.44],
+      "albedo": 0.38,
+      "roughness": 0.65,
+      "metallic": 0.05,
+      "notes": "Originally bright white TiO2 paint, degraded to tan/sepia after 31 months of solar UV and LM blast"
+    },
+    "surveyor_7075_aluminum_struts": {
+      "base_color_srgb": [0.75, 0.77, 0.80],
+      "albedo": 0.72,
+      "roughness": 0.38,
+      "metallic": 0.95,
+      "notes": "Polished structural aluminum alloy with subtle sandblasted matte texture on windward sides"
+    },
+    "alsep_beryllium_rtg_casing": {
+      "base_color_srgb": [0.32, 0.34, 0.36],
+      "albedo": 0.28,
+      "roughness": 0.48,
+      "metallic": 0.78,
+      "notes": "High-temperature beryllium metal casing and radial cooling fins operating at ~590°C"
+    },
+    "spacesuit_beta_cloth": {
+      "base_color_srgb": [0.88, 0.88, 0.86],
+      "albedo": 0.84,
+      "roughness": 0.80,
+      "metallic": 0.0,
+      "notes": "Woven silica fiber (Beta cloth) outer layer of A7L spacesuit"
+    },
+    "spacesuit_dust_smudge": {
+      "base_color_srgb": [0.28, 0.27, 0.26],
+      "albedo": 0.12,
+      "roughness": 0.90,
+      "metallic": 0.0,
+      "notes": "Heavy regolith smudging on boots, shins, knees, and suit arms caused by electrostatic adhesion"
+    }
+  }
+}

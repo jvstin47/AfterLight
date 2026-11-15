@@ -1,0 +1,75 @@
+{
+  "spacecraft": "Surveyor 3",
+  "mission": "Surveyor Program / Lunar Soft Lander",
+  "builder": "Hughes Aircraft Company / NASA Jet Propulsion Laboratory (JPL)",
+  "launch_date": "1967-04-17T07:05:01Z",
+  "landing_date": "1967-04-20T00:04:53Z",
+  "lunar_landing_coordinates": {
+    "latitude_deg": -3.0152,
+    "longitude_deg": -23.4189,
+    "region": "Oceanus Procellarum (Ocean of Storms)",
+    "feature": "Surveyor Crater (inside southeastern inner slope, ~10 to 14 deg incline)"
+  },
+  "physical_dimensions": {
+    "height_meters": 3.3,
+    "mast_height_meters": 3.0,
+    "landing_gear_diagonal_footprint_meters": 4.3,
+    "footpad_diameter_meters": 0.29,
+    "landing_mass_kg": 294.3,
+    "structure": "Triangular space frame constructed of thin-wall 7075-T6 tubular aluminum alloy"
+  },
+  "subsystems": {
+    "mast_assembly": {
+      "solar_panel": "Single planar array of 3,960 solar cells (~1.0m x 0.7m), supplying up to 89W electrical power",
+      "high_gain_planar_antenna": "Gimballed flat rectangular planar array antenna (~0.80m x 0.50m) for TV downlink"
+    },
+    "landing_gear": {
+      "legs": 3,
+      "configuration": "120-degree radial spacing, hinged tubular inverted tripod struts",
+      "shock_absorbers": "Hydraulic dashpot and crushable aluminum honeycomb footpads"
+    },
+    "television_system": {
+      "vidicon_camera": "Focal length 25-100mm zoom lens, mounted vertically with 360-degree azimuth and elevation mirror turret",
+      "resolution": "200-line and 600-line scan modes",
+      "images_returned_1967": 6315
+    },
+    "soil_mechanics_surface_sampler": {
+      "mechanism": "Articulated pantograph / scissor arm driven by electric motors",
+      "extension_range_meters": [
+        0.58,
+        1.5
+      ],
+      "scoop_dimensions_meters": [
+        0.12,
+        0.05,
+        0.04
+      ],
+      "trenching_depth_cm": 17.5,
+      "bearing_strength_tests_performed": "Multiple bearing and impact penetrations confirming soil bearing capacity of 1.8 to 5.5 N/cm^2"
+    },
+    "propulsion": {
+      "solid_retro_rocket": "Thiokol TE-364-4 (jettisoned before touchdown)",
+      "vernier_engines": "3 liquid engines burning monomethylhydrazine (MMH) and MON-10 oxidizer, throttleable 130 to 460 N thrust each"
+    }
+  },
+  "apollo_12_rendezvous": {
+    "date": "1969-11-20",
+    "astronauts": [
+      "Charles Pete Conrad Jr.",
+      "Alan L. Bean"
+    ],
+    "time_on_moon_prior_to_visit": "31 months (974 days) exposed to vacuum, solar radiation, thermal cycling (-180C to +120C), and micrometeoroid flux",
+    "distance_from_lm_intrepid_meters": 163.0,
+    "hardware_retrieved_by_astronauts": [
+      "Television Camera Unit (including vidicon tube, optics, filter wheel, and electronics housing)",
+      "Surface Sampler Scoop bucket and section of articulated arm",
+      "Sections of unpainted 7075-T6 aluminum tubing from landing leg 3 strut",
+      "Sections of electrical cabling with Kapton/Teflon insulation"
+    ],
+    "post_flight_findings": {
+      "streptococcus_mitis_claim": "Microbiological testing initially claimed 50-100 viable bacteria inside camera foam, later determined to be laboratory contamination during sterile bench inspection in Houston",
+      "optical_degradation": "Severe browning and pitting of optical mirrors and white thermal paint due to solar UV radiation and sandblasting from Intrepid descent engine exhaust",
+      "micrometeoroid_flux": "Counted microscopic pits proving lunar surface bombardment rate was lower than pre-Apollo conservative estimates"
+    }
+  }
+}

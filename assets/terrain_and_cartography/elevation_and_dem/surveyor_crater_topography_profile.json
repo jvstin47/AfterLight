@@ -1,0 +1,74 @@
+{
+  "feature": "Surveyor Crater",
+  "location": "Oceanus Procellarum, Moon",
+  "center_coordinates": {
+    "lat": -3.0145,
+    "lon": -23.419
+  },
+  "rim_diameter_meters": 200.0,
+  "rim_elevation_datum_meters": 0.0,
+  "maximum_depth_meters": -21.4,
+  "surveyor_3_position": {
+    "distance_from_center_meters": 42.0,
+    "azimuth_deg": 155.0,
+    "depth_below_rim_meters": -11.5,
+    "local_slope_degrees": 11.8,
+    "slope_direction": "Sloping down towards northwest into crater floor"
+  },
+  "radial_cross_section_profile": [
+    {
+      "radial_distance_m": -120.0,
+      "elevation_m": -1.2,
+      "slope_deg": 2.0,
+      "zone": "Outer ejecta blanket"
+    },
+    {
+      "radial_distance_m": -100.0,
+      "elevation_m": 0.0,
+      "slope_deg": 4.0,
+      "zone": "Northwest rim crest"
+    },
+    {
+      "radial_distance_m": -75.0,
+      "elevation_m": -6.5,
+      "slope_deg": 9.5,
+      "zone": "Northwest inner wall"
+    },
+    {
+      "radial_distance_m": -50.0,
+      "elevation_m": -14.2,
+      "slope_deg": 12.0,
+      "zone": "Lower inner wall"
+    },
+    {
+      "radial_distance_m": 0.0,
+      "elevation_m": -21.4,
+      "slope_deg": 1.5,
+      "zone": "Crater floor center"
+    },
+    {
+      "radial_distance_m": 42.0,
+      "elevation_m": -11.5,
+      "slope_deg": 11.8,
+      "zone": "Surveyor 3 resting site"
+    },
+    {
+      "radial_distance_m": 75.0,
+      "elevation_m": -5.8,
+      "slope_deg": 10.2,
+      "zone": "Southeast inner wall"
+    },
+    {
+      "radial_distance_m": 100.0,
+      "elevation_m": 0.0,
+      "slope_deg": 3.5,
+      "zone": "Southeast rim crest"
+    },
+    {
+      "radial_distance_m": 120.0,
+      "elevation_m": -0.8,
+      "slope_deg": 1.8,
+      "zone": "Outer ejecta blanket"
+    }
+  ]
+}

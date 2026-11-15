@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0b0d12; }
+      .grid { stroke: #1b2230; stroke-width: 1; }
+      .title { fill: #e2e8f0; font-family: monospace; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
+      .subtitle { fill: #94a3b8; font-family: monospace; font-size: 13px; }
+      .cable { stroke: #64748b; stroke-width: 1.5; stroke-dasharray: 4,3; fill: none; }
+      .center-box { fill: #38bdf8; stroke: #ffffff; stroke-width: 2; }
+      .rtg-box { fill: #ef4444; stroke: #f87171; stroke-width: 2; }
+      .sensor-box { fill: #10b981; stroke: #34d399; stroke-width: 2; }
+      .label { fill: #cbd5e1; font-family: monospace; font-size: 11px; }
+      .dist { fill: #f59e0b; font-family: monospace; font-size: 11px; }
+      .compass { stroke: #f59e0b; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <rect width="1000" height="800" class="bg"/>
+  <g class="grid">
+    <path d="M0,100 H1000 M0,200 H1000 M0,300 H1000 M0,400 H1000 M0,500 H1000 M0,600 H1000 M0,700 H1000"/>
+    <path d="M100,0 V800 M200,0 V800 M300,0 V800 M400,0 V800 M500,0 V800 M600,0 V800 M700,0 V800 M800,0 V800 M900,0 V800"/>
+  </g>
+  <text x="50" y="55" class="title">APOLLO 12 ALSEP ARRAY A SURFACE DEPLOYMENT GEOMETRY</text>
+  <text x="50" y="78" class="subtitle">DEPLOYED NOV 19, 1969 — 130 METERS NORTHWEST OF LM INTREPID</text>
+
+  <!-- Central Station (Center) -->
+  <rect x="470" y="370" width="60" height="60" class="center-box" rx="4"/>
+  <circle cx="500" cy="400" r="12" fill="#0284c7"/>
+  <text x="500" y="450" class="label" text-anchor="middle" font-weight="bold">CENTRAL STATION</text>
+  <text x="500" y="465" class="label" text-anchor="middle">(S-BAND TELEMETRY HUB)</text>
+
+  <!-- RTG (SNAP-27) -->
+  <line x1="470" y1="400" x2="320" y2="400" class="cable" stroke="#ef4444" stroke-width="2.5"/>
+  <circle cx="300" cy="400" r="22" class="rtg-box"/>
+  <text x="300" y="440" class="label" text-anchor="middle" font-weight="bold">SNAP-27 RTG</text>
+  <text x="300" y="455" class="label" text-anchor="middle">(Plutonium-238 / 73W)</text>
+  <text x="380" y="390" class="dist">3.0 METERS</text>
+
+  <!-- Passive Seismic Experiment (PSE) -->
+  <line x1="500" y1="370" x2="500" y2="230" class="cable"/>
+  <polygon points="500,200 480,240 520,240" class="sensor-box"/>
+  <text x="500" y="180" class="label" text-anchor="middle" font-weight="bold">PASSIVE SEISMIC (PSE)</text>
+  <text x="500" y="195" class="label" text-anchor="middle">Thermal Mylar Shroud</text>
+  <text x="510" y="300" class="dist">2.7 METERS</text>
+
+  <!-- Solar Wind Spectrometer (SWS) -->
+  <line x1="530" y1="400" x2="670" y2="400" class="cable"/>
+  <rect x="670" y="385" width="35" height="30" class="sensor-box" rx="2"/>
+  <text x="687" y="435" class="label" text-anchor="middle" font-weight="bold">SOLAR WIND (SWS)</text>
+  <text x="687" y="450" class="label" text-anchor="middle">7 Faraday Cups</text>
+  <text x="585" y="390" class="dist">4.0 METERS</text>
+
+  <!-- Lunar Surface Magnetometer (LSM) -->
+  <line x1="500" y1="430" x2="500" y2="640" class="cable" stroke-dasharray="6,4"/>
+  <circle cx="500" cy="660" r="20" class="sensor-box"/>
+  <line x1="500" y1="640" x2="500" y2="680" stroke="#ffffff" stroke-width="2"/>
+  <line x1="480" y1="660" x2="520" y2="660" stroke="#ffffff" stroke-width="2"/>
+  <text x="500" y="705" class="label" text-anchor="middle" font-weight="bold">MAGNETOMETER (LSM)</text>
+  <text x="500" y="720" class="label" text-anchor="middle">3 Fluxgate Sensor Arms</text>
+  <text x="515" y="540" class="dist">15.0 METERS</text>
+
+  <!-- SIDE / CCGE -->
+  <line x1="475" y1="420" x2="220" y2="580" class="cable" stroke-dasharray="6,4"/>
+  <rect x="180" y="570" width="40" height="35" class="sensor-box" rx="2"/>
+  <text x="200" y="625" class="label" text-anchor="middle" font-weight="bold">SIDE / CCGE</text>
+  <text x="200" y="640" class="label" text-anchor="middle">Suprathermal Ion / Cold Cathode</text>
+  <text x="310" y="520" class="dist">15.5 METERS</text>
+
+  <!-- Alignment Compass Indicator -->
+  <g transform="translate(850, 150)">
+    <circle cx="0" cy="0" r="50" class="compass"/>
+    <line x1="0" y1="-45" x2="0" y2="45" stroke="#f59e0b" stroke-width="1.5"/>
+    <line x1="-45" y1="0" x2="45" y2="0" stroke="#f59e0b" stroke-width="1.5"/>
+    <polygon points="0,-45 -6,-25 6,-25" fill="#f59e0b"/>
+    <text x="0" y="-55" class="dist" text-anchor="middle">LUNAR NORTH</text>
+    <text x="0" y="65" class="dist" text-anchor="middle">TO LM (305° AZ)</text>
+  </g>
+</svg>

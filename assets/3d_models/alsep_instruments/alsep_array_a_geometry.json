@@ -1,0 +1,73 @@
+{
+  "package": "Apollo Lunar Surface Experiments Package (ALSEP)",
+  "array_designation": "Array A (Apollo 12)",
+  "deployment_date": "1969-11-19T14:45:00Z",
+  "operational_lifespan": "1969-11-19 to 1977-09-30 (8 years, deactivated by NASA command)",
+  "deployment_coordinates": {
+    "latitude_deg": -3.0116,
+    "longitude_deg": -23.423,
+    "distance_from_lm_intrepid_meters": 130.0,
+    "azimuth_from_lm_deg": 305.0
+  },
+  "subsystems_and_instruments": {
+    "central_station": {
+      "dimensions_meters": [
+        0.64,
+        0.61,
+        0.58
+      ],
+      "mass_kg": 25.0,
+      "downlink_frequency_mhz": 1712.5,
+      "uplink_frequency_mhz": 2119.0,
+      "transmitter_rf_power_watts": 1.0,
+      "telemetry_bitrate_bps": 1060,
+      "antenna": "Modified helical S-band antenna, manually pointed towards Earth using sun compass and elevation gimbal",
+      "thermal_control": "Specular aluminum reflector skirt, command-actuated thermal louvers on top plate"
+    },
+    "snap_27_rtg": {
+      "contractor": "General Electric Space Division",
+      "fuel": "Plutonium-238 dioxide (Pu-238) microspheres (approx. 3.8 kg)",
+      "thermal_power_initial_watts": 1480.0,
+      "electrical_power_initial_watts": 73.5,
+      "electrical_power_at_shutdown_1977_watts": 63.0,
+      "operating_temperature_celsius": 590.0,
+      "casing": "Beryllium cylinder with 8 radial heat dissipation fins, height 0.46m, diameter 0.40m",
+      "distance_from_central_station_meters": 3.0,
+      "deployment_note": "Fuel capsule carried in graphite cask mounted on side of LM descent stage; extracted by Alan Bean using Hanford tool into RTG core"
+    },
+    "passive_seismic_experiment_pse": {
+      "principal_investigator": "Dr. Gary Latham (Columbia University / Lamont-Doherty)",
+      "purpose": "Measure natural lunar seismicity, moonquakes, meteoroid impacts, and artificial spacecraft impacts",
+      "shroud": "Aluminized Mylar / Kapton 10-sided skirt, base diameter 0.9m, for passive thermal protection",
+      "distance_from_central_station_meters": 2.7,
+      "key_observations": [
+        "LM Intrepid ascent stage intentional impact on 1969-11-20 (reverberated for over 60 minutes)",
+        "Deep moonquakes occurring cyclically at depths of 800-1000 km triggered by Earth tidal stresses",
+        "Recorded footprint impacts and discarded PLSS backpack drops by Conrad and Bean"
+      ]
+    },
+    "lunar_surface_magnetometer_lsm": {
+      "principal_investigator": "Dr. Palmer Dyal (NASA Ames Research Center)",
+      "configuration": "Three fluxgate sensors mounted on 1.0m orthogonal boom arms",
+      "distance_from_central_station_meters": 15.0,
+      "measurement_range_nt": [
+        -400,
+        400
+      ],
+      "key_result": "Discovered permanent crustal remanent magnetic field of ~36 gamma (nT), unexpectedly strong"
+    },
+    "solar_wind_spectrometer_sws": {
+      "principal_investigator": "Dr. Conway Snyder (JPL)",
+      "configuration": "Array of 7 Faraday cups oriented upward to capture proton and electron flux from the solar wind",
+      "distance_from_central_station_meters": 4.0
+    },
+    "suprathermal_ion_detector_side_ccge": {
+      "principal_investigator": "Dr. John Freeman (Rice University)",
+      "combination": "SIDE measures low-energy positive ions; integrated Cold Cathode Gauge Experiment (CCGE) measures ambient lunar atmosphere pressure (down to 10^-12 torr)",
+      "distance_from_central_station_meters": 15.5
+    },
+    "lunar_dust_detector": {
+      "configuration": "Three miniature solar photovoltaic cells mounted on top of Central Station to measure dust accumulation from LM liftoff"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+newmtl SpecularMylarSkirt
+Kd 0.95 0.95 0.95
+Ks 0.9 0.9 0.9
+Ns 90
+
+newmtl GoldThermalFoil
+Kd 0.88 0.68 0.18
+Ks 0.8 0.7 0.3
+Ns 60
+
