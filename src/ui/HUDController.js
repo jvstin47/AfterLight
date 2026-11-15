@@ -174,7 +174,7 @@ export class HUDController {
   show() {
     this.container.style.display = 'flex';
     this.container.style.opacity = '1';
-    this.container.style.pointerEvents = 'auto';
+    this.container.style.pointerEvents = 'none';
   }
 
   hide() {
