@@ -73,10 +73,14 @@ export class ApproachOverlay {
 
         <!-- Primary Entrance Actions -->
         <div class="approach-actions">
-          <button id="btn-enter-site" class="btn-enter-archive" aria-label="Enter lunar landing site and descend from orbit">
+          <button id="btn-enter-site" class="btn-enter-archive cir-btn" aria-label="Enter lunar landing site and descend from orbit">
             <span class="btn-corner top-l"></span>
             <span class="btn-corner bottom-r"></span>
             <span class="btn-primary-text">ENTER EXPEDITION</span>
+            <svg class="cir-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 17 17 7"></path>
+              <path d="M7 7h10v10"></path>
+            </svg>
             <span class="btn-key-badge">ENTER ↵</span>
           </button>
           <button id="btn-skip-intro" class="btn-skip-descent" aria-label="Skip orbital approach sequence directly to surface">

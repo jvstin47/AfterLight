@@ -5,6 +5,10 @@ import { audioManager } from './core/AudioManager.js';
 import { ApproachOverlay } from './ui/ApproachOverlay.js';
 import { HUDController } from './ui/HUDController.js';
 import { VidiconOverlay } from './ui/VidiconOverlay.js';
+import { MissionAudioCapsule } from './ui/MissionAudioCapsule.js';
+import { NavRail } from './ui/NavRail.js';
+import { QuickSearch } from './ui/QuickSearch.js';
+import { MissionStatsCard } from './ui/MissionStatsCard.js';
 
 function isWebGLAvailable() {
   try {
@@ -62,6 +66,17 @@ async function init() {
   if (vidiconContainer) {
     new VidiconOverlay(vidiconContainer);
   }
+
+  // Initialize Astronaut UI Component Suite
+  const audioCapsule = new MissionAudioCapsule();
+  const navRail = new NavRail();
+  const quickSearch = new QuickSearch();
+  const statsCard = new MissionStatsCard();
+
+  eventBus.on('audio:toggle', () => {
+    audioManager.init();
+    audioManager.toggleMute();
+  });
 
   // Lazy-loaded Modal Singletons
   let dossierDrawerInstance = null;

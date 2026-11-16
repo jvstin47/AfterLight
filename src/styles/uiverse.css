@@ -1,0 +1,836 @@
+/* AFTERLIGHT — Uiverse Astronaut Design System Components */
+
+:root {
+  --color-cloud: #111419;
+  --color-ink: #f0ead6;
+  --color-edge: rgba(255, 255, 255, 0.12);
+  --color-mist: #8a93a3;
+  --color-signal: #c99738;
+  --color-citrus: #ff7a3d;
+  --color-meadow: #2bc48a;
+}
+
+/* 1. Action Pill Button */
+.cir-btn {
+  --ink: var(--color-ink, #0e1116);
+  --cloud: var(--color-cloud, #ffffff);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 24px;
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  background: var(--color-cloud);
+  color: var(--color-ink);
+  font-family: "Cinzel", "Inter", system-ui, sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 14px 28px -18px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 140ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-btn__arrow {
+  width: 16px;
+  height: 16px;
+  color: var(--color-signal);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-signal);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.5),
+    0 20px 36px -16px rgba(201, 151, 56, 0.35);
+}
+
+.cir-btn:hover .cir-btn__arrow {
+  transform: translate(2px, -2px);
+}
+
+.cir-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(201, 151, 56, 0.4),
+    0 14px 28px -18px rgba(0, 0, 0, 0.6);
+}
+
+.cir-btn:active {
+  transform: translateY(1px);
+}
+
+/* 2. Pill Tabs Radio Group */
+.cir-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  background: var(--color-cloud);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 20px 40px -24px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono, monospace);
+  backdrop-filter: blur(8px);
+}
+
+.cir-tabs__r {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cir-tabs__t {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-mist);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-tabs__t:hover {
+  color: var(--color-ink);
+}
+
+.cir-tabs__r:checked + .cir-tabs__t {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-signal);
+  border: 1px solid rgba(201, 151, 56, 0.4);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 8px 18px -10px rgba(201, 151, 56, 0.4);
+}
+
+.cir-tabs__r:focus-visible + .cir-tabs__t {
+  box-shadow: 0 0 0 3px rgba(201, 151, 56, 0.4);
+}
+
+/* 3. Modern Pill Search Bar */
+.cir-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 320px;
+  height: 44px;
+  padding: 0 8px 0 16px;
+  background: var(--color-cloud);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 18px 36px -22px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono, monospace);
+  transition:
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(8px);
+}
+
+.cir-search__icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-mist);
+  flex-shrink: 0;
+}
+
+.cir-search__field {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  color: var(--color-ink);
+  letter-spacing: 0.05em;
+}
+
+.cir-search__field::placeholder {
+  color: var(--color-mist);
+  opacity: 0.7;
+}
+
+.cir-search__kbd {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-mist);
+  letter-spacing: 0.05em;
+}
+
+.cir-search:focus-within {
+  border-color: var(--color-signal);
+  box-shadow:
+    0 0 0 3px rgba(201, 151, 56, 0.3),
+    0 18px 36px -22px rgba(0, 0, 0, 0.6);
+}
+
+/* 4. Custom Architectural Checkboxes */
+.cir-checks {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: var(--font-mono, monospace);
+}
+
+.cir-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--color-ink);
+  user-select: none;
+}
+
+.cir-check input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cir-check__box {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--color-edge);
+  border-radius: 6px;
+  background: var(--color-cloud);
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-check__box::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c99738' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: scale(0.6);
+  transition:
+    opacity 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-check input:checked + .cir-check__box {
+  background: rgba(201, 151, 56, 0.15);
+  border-color: var(--color-signal);
+}
+
+.cir-check input:checked + .cir-check__box::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.cir-check input:focus-visible + .cir-check__box {
+  box-shadow: 0 0 0 3px rgba(201, 151, 56, 0.3);
+}
+
+.cir-check__label {
+  line-height: 1.2;
+}
+
+/* 5. Modern Switch Toggles */
+.cir-toggles {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: var(--font-mono, monospace);
+  max-width: 340px;
+}
+
+.cir-toggle {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  align-items: start;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cir-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cir-toggle__track {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-edge);
+  transition:
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  margin-top: 2px;
+}
+
+.cir-toggle__knob {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--color-mist);
+  border-radius: 999px;
+  transform: translateY(-50%);
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 4px 8px -4px rgba(0, 0, 0, 0.5);
+  transition:
+    left 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-toggle input:checked + .cir-toggle__track {
+  background: rgba(201, 151, 56, 0.2);
+  border-color: var(--color-signal);
+}
+
+.cir-toggle input:checked + .cir-toggle__track .cir-toggle__knob {
+  left: calc(100% - 19px);
+  background: var(--color-signal);
+  box-shadow: 0 0 8px rgba(201, 151, 56, 0.6);
+}
+
+.cir-toggle input:focus-visible + .cir-toggle__track {
+  box-shadow: 0 0 0 3px rgba(201, 151, 56, 0.3);
+}
+
+.cir-toggle__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cir-toggle__t {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: 0.04em;
+}
+
+.cir-toggle__d {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-mist);
+}
+
+/* 6. Mission Comm / Telemetry Notification Card */
+.cir-note {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  width: min(440px, calc(100vw - 32px));
+  padding: 14px 16px 14px 18px;
+  background: rgba(14, 16, 20, 0.92);
+  border: 1px solid var(--color-edge);
+  border-radius: 20px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 24px 48px -24px rgba(0, 0, 0, 0.7);
+  font-family: var(--font-mono, monospace);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 50;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.cir-note.is-hidden {
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cir-note__ico {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(201, 151, 56, 0.15);
+  color: var(--color-signal);
+  border: 1px solid rgba(201, 151, 56, 0.3);
+}
+
+.cir-note__ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.cir-note__body {
+  min-width: 0;
+}
+
+.cir-note__t {
+  margin: 0 0 2px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-ink);
+  text-transform: uppercase;
+}
+
+.cir-note__d {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-mist);
+}
+
+.cir-note__act {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cir-note__btn {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid rgba(201, 151, 56, 0.4);
+  border-radius: 999px;
+  background: var(--color-signal);
+  color: #0c0e12;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-note__btn:hover {
+  background: #dfab44;
+  box-shadow: 0 0 10px rgba(201, 151, 56, 0.5);
+}
+
+.cir-note__close {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-mist);
+  cursor: pointer;
+  transition: all 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-note__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-ink);
+}
+
+.cir-note__close svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* 7. Metric & Telemetry Stat Card */
+.cir-stat {
+  width: 320px;
+  padding: 20px 22px 18px;
+  background: rgba(14, 16, 20, 0.92);
+  border: 1px solid var(--color-edge);
+  border-radius: 24px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 20px 40px -24px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono, monospace);
+  color: var(--color-ink);
+  backdrop-filter: blur(10px);
+}
+
+.cir-stat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cir-stat__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+.cir-stat__label svg {
+  width: 14px;
+  height: 14px;
+  color: var(--color-signal);
+}
+
+.cir-stat__range {
+  height: 22px;
+  padding: 0 9px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-signal);
+}
+
+.cir-stat__value {
+  font-family: "Cinzel", "Times New Roman", serif;
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink);
+}
+
+.cir-stat__unit {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-mist);
+  margin-left: 4px;
+}
+
+.cir-stat__delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-meadow);
+}
+
+.cir-stat__delta svg {
+  width: 12px;
+  height: 12px;
+}
+
+.cir-stat__bar {
+  display: flex;
+  height: 6px;
+  margin-top: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cir-stat__legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 10.5px;
+  color: var(--color-mist);
+  font-weight: 500;
+}
+
+.cir-stat__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cir-stat__legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+/* 8. Pulsing Telemetry Loader */
+.cir-load {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 12px;
+  background: var(--color-cloud);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 18px 36px -24px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-ink);
+}
+
+.cir-load__dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cir-load__dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-signal);
+  animation: cir-load-pulse 1.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.cir-load__dots i:nth-child(2) {
+  background: var(--color-citrus);
+  animation-delay: 0.16s;
+}
+
+.cir-load__dots i:nth-child(3) {
+  background: var(--color-meadow);
+  animation-delay: 0.32s;
+}
+
+@keyframes cir-load-pulse {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* 9. Interactive Waypoint Tooltip */
+.cir-tip {
+  position: absolute;
+  width: 220px;
+  padding: 12px 14px;
+  background: rgba(14, 16, 20, 0.94);
+  border: 1px solid var(--color-edge);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 18px 36px -22px rgba(0, 0, 0, 0.6);
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  color: var(--color-ink);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  z-index: 100;
+  transform: translate(-50%, -100%) translateY(-12px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cir-tip__title {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-signal);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cir-tip__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cir-tip__row + .cir-tip__row {
+  margin-top: 4px;
+}
+
+.cir-tip__lab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-mist);
+}
+
+.cir-tip__val {
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.cir-tip__arrow {
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  background: rgba(14, 16, 20, 0.94);
+  border-right: 1px solid var(--color-edge);
+  border-bottom: 1px solid var(--color-edge);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* 10. Archival Station Pagination Controller */
+.cir-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  background: var(--color-cloud);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 18px 36px -24px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-mono, monospace);
+}
+
+.cir-page__nav,
+.cir-page__num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-mist);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-page__nav svg {
+  width: 14px;
+  height: 14px;
+}
+
+.cir-page__num:hover,
+.cir-page__nav:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-ink);
+}
+
+.cir-page__num--active {
+  background: var(--color-signal);
+  color: #0e1116;
+  font-weight: 700;
+}
+
+.cir-page__num--active:hover {
+  background: #dfab44;
+}
+
+/* 11. Vertical Navigation Dock Rail */
+.cir-rail {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(14, 16, 20, 0.9);
+  border: 1px solid var(--color-edge);
+  border-radius: 999px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.4),
+    0 20px 40px -24px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  pointer-events: auto;
+}
+
+.cir-rail__b {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-mist);
+  cursor: pointer;
+  transition: all 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cir-rail__b svg {
+  width: 18px;
+  height: 18px;
+}
+
+.cir-rail__b:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-ink);
+}
+
+.cir-rail__b--active {
+  background: rgba(201, 151, 56, 0.2);
+  color: var(--color-signal);
+  border: 1px solid rgba(201, 151, 56, 0.4);
+}
+
+.cir-rail__sep {
+  width: 20px;
+  height: 1px;
+  background: var(--color-edge);
+  margin: 4px 0;
+}
+
+/* Live Audio Waveform Bars in Comm Capsule */
+.comm-waveform {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+  margin-top: 6px;
+}
+
+.comm-waveform span {
+  display: inline-block;
+  width: 3px;
+  background: var(--color-signal);
+  border-radius: 1px;
+  min-height: 2px;
+  transition: height 0.08s ease;
+}
