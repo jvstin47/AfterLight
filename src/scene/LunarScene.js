@@ -183,6 +183,34 @@ export class LunarScene {
         this.waypointMarkers.update(this.camera, this.width, this.height);
       }
 
+      // Real-time camera telemetry stream for Vidicon overlay & field instruments
+      this.telemetryFrameCount = (this.telemetryFrameCount || 0) + 1;
+      if (this.telemetryFrameCount % 12 === 0) {
+        const camPos = this.camera.position;
+        const target = this.cameraController.controls.target;
+        const dx = target.x - camPos.x;
+        const dz = target.z - camPos.z;
+        const dy = target.y - camPos.y;
+
+        let azRad = Math.atan2(dx, -dz);
+        if (azRad < 0) azRad += Math.PI * 2;
+        const azDeg = (azRad * 180) / Math.PI;
+
+        const bearings = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+        const bIdx = Math.round(azDeg / 22.5) % 16;
+
+        const horizDist = Math.hypot(dx, dz);
+        const elDeg = (Math.atan2(dy, horizDist) * 180) / Math.PI;
+        const range = camPos.distanceTo(target);
+
+        eventBus.emit('camera:telemetry', {
+          azimuth: azDeg,
+          bearing: bearings[bIdx],
+          elevation: elDeg,
+          range
+        });
+      }
+
       // Render frame
       this.renderer.render(this.scene, this.camera);
     };

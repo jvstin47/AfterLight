@@ -4,6 +4,7 @@ import { eventBus } from './core/EventBus.js';
 import { audioManager } from './core/AudioManager.js';
 import { ApproachOverlay } from './ui/ApproachOverlay.js';
 import { HUDController } from './ui/HUDController.js';
+import { VidiconOverlay } from './ui/VidiconOverlay.js';
 
 function isWebGLAvailable() {
   try {
@@ -56,6 +57,11 @@ async function init() {
   // Initialize Primary UI Controllers
   const approachOverlay = new ApproachOverlay(approachContainer);
   const hudController = new HUDController(hudContainer);
+
+  const vidiconContainer = document.getElementById('vidicon-container');
+  if (vidiconContainer) {
+    new VidiconOverlay(vidiconContainer);
+  }
 
   // Lazy-loaded Modal Singletons
   let dossierDrawerInstance = null;
@@ -131,6 +137,8 @@ async function init() {
       eventBus.emit('camera:preset', 'ALSEP_SITE');
     } else if (e.key === 't' || e.key === 'T') {
       eventBus.emit('ui:traverse:toggle');
+    } else if (e.key === 'v' || e.key === 'V') {
+      eventBus.emit('ui:vidicon:toggle');
     } else if (e.key === 'm' || e.key === 'M') {
       audioManager.init();
       const enabled = audioManager.toggleMute();

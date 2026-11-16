@@ -116,9 +116,11 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.hud-action-btn.audio-btn.is-active {
+.hud-action-btn.audio-btn.is-active,
+.hud-action-btn.vidicon-btn.is-active {
   border-color: var(--color-archival-amber);
   color: var(--color-archival-amber);
+  box-shadow: 0 0 10px rgba(201, 151, 56, 0.25);
 }
 
 .action-icon {

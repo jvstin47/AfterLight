@@ -32,6 +32,11 @@ export class HUDController {
         </div>
 
         <div class="hud-top-actions">
+          <button id="btn-vidicon" class="hud-action-btn vidicon-btn" aria-label="Toggle 1969 Surveyor Vidicon Telemetry Scan">
+            <span class="action-icon" aria-hidden="true">&odot;</span>
+            <span>VIDICON SCAN</span>
+            <span class="key-shortcut mobile-hide">[V]</span>
+          </button>
           <button id="btn-audio-toggle" class="hud-action-btn audio-btn" aria-label="Toggle Mission Audio">
             <span class="action-icon" aria-hidden="true">&#9834;</span>
             <span class="audio-status">AUDIO: MUTED</span>
@@ -141,6 +146,16 @@ export class HUDController {
     const traverseBtn = this.container.querySelector('#btn-traverse');
     traverseBtn?.addEventListener('click', () => {
       eventBus.emit('ui:traverse:toggle');
+    });
+
+    // Vidicon Mode toggle
+    const vidiconBtn = this.container.querySelector('#btn-vidicon');
+    vidiconBtn?.addEventListener('click', () => {
+      eventBus.emit('ui:vidicon:toggle');
+    });
+
+    eventBus.on('vidicon:toggled', (active) => {
+      vidiconBtn?.classList.toggle('is-active', active);
     });
 
     // Synchronize preset button states on external camera change
