@@ -155,7 +155,7 @@ export class QuickSearch {
     this.close();
     if (type === 'artifact') {
       const art = ARTIFACTS[id] || Object.values(ARTIFACTS).find(a => a.id === id);
-      if (art) eventBus.emit('artifact:selected', art);
+      if (art) eventBus.emit('artifact:selected', { id: art.id, artifact: art });
     } else if (type === 'camera') {
       eventBus.emit('camera:preset', id);
     } else if (type === 'modal' && id === 'TRAVERSE') {

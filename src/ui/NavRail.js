@@ -117,14 +117,21 @@ export class NavRail {
       this.container.style.opacity = '1';
     });
 
-    eventBus.on('dossier:opened', () => {
+    const hideRail = () => {
       this.container.style.opacity = '0';
       this.container.style.pointerEvents = 'none';
-    });
+      this.container.style.visibility = 'hidden';
+    };
 
-    eventBus.on('dossier:closed', () => {
+    const showRail = () => {
+      this.container.style.visibility = 'visible';
       this.container.style.opacity = '1';
       this.container.style.pointerEvents = 'auto';
-    });
+    };
+
+    eventBus.on('dossier:opened', hideRail);
+    eventBus.on('dossier:closed', showRail);
+    eventBus.on('traverse:opened', hideRail);
+    eventBus.on('traverse:closed', showRail);
   }
 }

@@ -163,6 +163,7 @@ export class TraverseModal {
     this.isOpen = true;
     this.container.style.display = 'flex';
     audioManager.playQuindarIntro();
+    eventBus.emit('traverse:opened');
     this.selectEva(this.currentEva);
 
     const panel = this.container.querySelector('.traverse-modal-panel');
@@ -196,6 +197,7 @@ export class TraverseModal {
     if (!this.isOpen) return;
     this.isOpen = false;
     audioManager.playQuindarOutro();
+    eventBus.emit('traverse:closed');
 
     const panel = this.container.querySelector('.traverse-modal-panel');
     const backdrop = this.container.querySelector('.traverse-backdrop');

@@ -84,15 +84,22 @@ export class MissionStatsCard {
       }
     });
 
-    // Hide stat card on mobile or when dossier is open
-    eventBus.on('dossier:opened', () => {
+    // Hide stat card when dossier or traverse modal is open
+    const hideCard = () => {
       this.cardEl.style.opacity = '0';
       this.cardEl.style.pointerEvents = 'none';
-    });
+      this.cardEl.style.visibility = 'hidden';
+    };
 
-    eventBus.on('dossier:closed', () => {
+    const showCard = () => {
+      this.cardEl.style.visibility = 'visible';
       this.cardEl.style.opacity = '1';
       this.cardEl.style.pointerEvents = 'auto';
-    });
+    };
+
+    eventBus.on('dossier:opened', hideCard);
+    eventBus.on('dossier:closed', showCard);
+    eventBus.on('traverse:opened', hideCard);
+    eventBus.on('traverse:closed', showCard);
   }
 }

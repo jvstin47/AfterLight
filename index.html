@@ -39,15 +39,16 @@
       <!-- Stage B: Exploration HUD -->
       <div id="hud-container" style="display: none;"></div>
 
-      <!-- Stage C: Artifact Dossier Drawer -->
-      <div id="dossier-container" style="display: none;"></div>
-
-      <!-- EVA Cartography Modal -->
-      <div id="traverse-container" style="display: none;"></div>
-
       <!-- Fallback Non-WebGL Layer -->
       <div id="fallback-container" style="display: none;"></div>
     </div>
+
+    <!-- Modals & Drawers (Top Stacking Context above all HUD widgets) -->
+    <!-- Stage C: Artifact Dossier Drawer -->
+    <div id="dossier-container" style="display: none;"></div>
+
+    <!-- EVA Cartography Modal -->
+    <div id="traverse-container" style="display: none;"></div>
 
     <!-- Entry Point -->
     <script type="module" src="/src/main.js"></script>
