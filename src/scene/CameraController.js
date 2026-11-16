@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import anime from 'animejs';
+import { SplinePathEngine } from './SplinePathEngine.js';
 
 export const CAMERA_PRESETS = {
   APPROACH: {
@@ -34,9 +35,13 @@ export class CameraController {
   /**
    * @param {HTMLElement} domElement 
    * @param {number} aspect 
+   * @param {Function} elevationFn (x, z) => ground elevation in meters
    */
-  constructor(domElement, aspect) {
+  constructor(domElement, aspect, elevationFn = () => 0) {
     this.domElement = domElement;
+    this.elevationFn = elevationFn;
+    this.splineEngine = new SplinePathEngine(elevationFn);
+
     // Expanded far clipping plane to 25,000m for true spherical planetary horizon
     this.camera = new THREE.PerspectiveCamera(45, aspect, 0.3, 25000);
     this.controls = new OrbitControls(this.camera, this.domElement);
@@ -65,7 +70,7 @@ export class CameraController {
   }
 
   /**
-   * Transition smoothly to a camera position and target
+   * Transition smoothly along a cinematic 3D spline trajectory
    * @param {THREE.Vector3|{x:number, y:number, z:number}} targetPosition 
    * @param {THREE.Vector3|{x:number, y:number, z:number}} targetLookAt 
    * @param {number} duration ms
@@ -79,29 +84,17 @@ export class CameraController {
     this.isTransitioning = true;
     this.controls.enabled = false;
 
-    const startPos = {
-      x: this.camera.position.x,
-      y: this.camera.position.y,
-      z: this.camera.position.z,
-    };
+    const startPos = this.camera.position.clone();
+    const startTarget = this.controls.target.clone();
+    const endPos = new THREE.Vector3(targetPosition.x, targetPosition.y, targetPosition.z);
+    const endTarget = new THREE.Vector3(targetLookAt.x, targetLookAt.y, targetLookAt.z);
 
-    const startTarget = {
-      x: this.controls.target.x,
-      y: this.controls.target.y,
-      z: this.controls.target.z,
-    };
-
-    const endPos = {
-      x: targetPosition.x,
-      y: targetPosition.y,
-      z: targetPosition.z,
-    };
-
-    const endTarget = {
-      x: targetLookAt.x,
-      y: targetLookAt.y,
-      z: targetLookAt.z,
-    };
+    const trajectory = this.splineEngine.createTrajectory(
+      startPos,
+      endPos,
+      startTarget,
+      endTarget
+    );
 
     const animState = { t: 0 };
 
@@ -109,19 +102,11 @@ export class CameraController {
       targets: animState,
       t: 1,
       duration: duration,
-      easing: 'easeInOutCubic',
+      easing: 'linear', // Easing is handled internally by splineEngine quintic smoothstep
       update: () => {
-        const easeT = animState.t;
-        this.camera.position.set(
-          THREE.MathUtils.lerp(startPos.x, endPos.x, easeT),
-          THREE.MathUtils.lerp(startPos.y, endPos.y, easeT),
-          THREE.MathUtils.lerp(startPos.z, endPos.z, easeT)
-        );
-        this.controls.target.set(
-          THREE.MathUtils.lerp(startTarget.x, endTarget.x, easeT),
-          THREE.MathUtils.lerp(startTarget.y, endTarget.y, easeT),
-          THREE.MathUtils.lerp(startTarget.z, endTarget.z, easeT)
-        );
+        const sample = trajectory.sampleAt(animState.t);
+        this.camera.position.copy(sample.position);
+        this.controls.target.copy(sample.target);
         this.controls.update();
       },
       complete: () => {
@@ -149,6 +134,11 @@ export class CameraController {
 
   update() {
     if (!this.isTransitioning) {
+      // Dynamic terrain ground collision clamping during manual orbiting
+      const groundY = this.elevationFn(this.camera.position.x, this.camera.position.z);
+      if (this.camera.position.y < groundY + 1.6) {
+        this.camera.position.y = groundY + 1.6;
+      }
       this.controls.update();
     }
   }

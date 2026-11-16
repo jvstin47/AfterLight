@@ -60,10 +60,6 @@ export class LunarScene {
     // Lunar vacuum has no atmospheric scattering; background is deep space
     this.scene.background = new THREE.Color(0x010204);
 
-    // Initialize camera controller
-    this.cameraController = new CameraController(this.canvas, this.width / this.height);
-    this.camera = this.cameraController.camera;
-
     // Initialize lighting and astronomical bodies
     this.lighting = new LunarLighting(this.scene);
 
@@ -73,6 +69,14 @@ export class LunarScene {
       size: 1000,
       segments: 256,
     });
+
+    // Initialize camera controller with terrain elevation function for collision clamping
+    this.cameraController = new CameraController(
+      this.canvas,
+      this.width / this.height,
+      (x, z) => this.terrain.getElevation(x, z)
+    );
+    this.camera = this.cameraController.camera;
 
     // Initialize waypoint 2D markers
     this.waypointMarkers = new WaypointMarkers(this.markerContainer);
