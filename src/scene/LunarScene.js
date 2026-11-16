@@ -7,8 +7,10 @@ import { Surveyor3 } from '../entities/Surveyor3.js';
 import { ALSEP } from '../entities/ALSEP.js';
 import { FlagAndEquipment } from '../entities/FlagAndEquipment.js';
 import { WaypointMarkers } from '../entities/WaypointMarkers.js';
+import { SpatialProjector } from './SpatialProjector.js';
 import { ARTIFACTS } from '../data/artifactsData.js';
 import { eventBus } from '../core/EventBus.js';
+import { audioManager } from '../core/AudioManager.js';
 
 export class LunarScene {
   /**
@@ -80,6 +82,10 @@ export class LunarScene {
 
     // Initialize waypoint 2D markers
     this.waypointMarkers = new WaypointMarkers(this.markerContainer);
+
+    // Initialize in-scene 3D Spatial Projector for archival photographs & typography
+    this.spatialProjector = new SpatialProjector(this.scene, (x, z) => this.terrain.getElevation(x, z));
+    this.interactiveRoots.push(this.spatialProjector.group);
   }
 
   async initEntities() {
@@ -258,6 +264,14 @@ export class LunarScene {
         this.waypointMarkers.update(this.camera, this.width, this.height);
       }
 
+      // Update in-scene 3D spatial archival plates orientation and distance fading
+      if (this.spatialProjector) {
+        this.spatialProjector.update(this.camera);
+      }
+
+      // Update 3D spatial audio listener position and orientation
+      audioManager.updateListener(this.camera);
+
       // Real-time camera telemetry stream for Vidicon overlay & field instruments
       this.telemetryFrameCount = (this.telemetryFrameCount || 0) + 1;
       if (this.telemetryFrameCount % 12 === 0) {
@@ -316,6 +330,7 @@ export class LunarScene {
     this.surveyor3.dispose();
     this.alsep.dispose();
     this.flagAndEquip.dispose();
+    if (this.spatialProjector) this.spatialProjector.dispose();
 
     this.renderer.dispose();
   }
