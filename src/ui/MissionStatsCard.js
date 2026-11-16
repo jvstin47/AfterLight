@@ -53,16 +53,16 @@ export class MissionStatsCard {
 
       <!-- Multi-segment Regolith Geochemical Bar -->
       <div class="cir-stat__bar" aria-hidden="true">
-        <span style="flex:46; background: #c99738;" title="Basalt 46%"></span>
-        <span style="flex:28; background: #ff7a3d;" title="Impact Melt 28%"></span>
-        <span style="flex:14; background: #2bc48a;" title="Breccia 14%"></span>
-        <span style="flex:12; background: #4a5568;" title="Volcanic Glass 12%"></span>
+        <span style="flex:46; background: var(--color-archival-amber, #dfac4e);" title="Basalt 46%"></span>
+        <span style="flex:28; background: var(--color-citrus, #e06c3a);" title="Impact Melt 28%"></span>
+        <span style="flex:14; background: var(--color-meadow, #10b981);" title="Breccia 14%"></span>
+        <span style="flex:12; background: #64748b;" title="Volcanic Glass 12%"></span>
       </div>
 
       <footer class="cir-stat__legend">
-        <span><i style="background:#c99738;"></i>BASALT</span>
-        <span><i style="background:#ff7a3d;"></i>MELT</span>
-        <span><i style="background:#2bc48a;"></i>BRECCIA</span>
+        <span><i style="background:var(--color-archival-amber, #dfac4e);"></i>BASALT</span>
+        <span><i style="background:var(--color-citrus, #e06c3a);"></i>MELT</span>
+        <span><i style="background:var(--color-meadow, #10b981);"></i>BRECCIA</span>
       </footer>
     `;
 
@@ -101,5 +101,7 @@ export class MissionStatsCard {
     eventBus.on('dossier:closed', showCard);
     eventBus.on('traverse:opened', hideCard);
     eventBus.on('traverse:closed', showCard);
+    eventBus.on('expeditions:opened', hideCard);
+    eventBus.on('expeditions:closed', showCard);
   }
 }

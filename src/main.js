@@ -37,6 +37,7 @@ async function init() {
   const hudContainer = document.getElementById('hud-container');
   const dossierContainer = document.getElementById('dossier-container');
   const traverseContainer = document.getElementById('traverse-container');
+  const expeditionsContainer = document.getElementById('expeditions-container');
   const fallbackContainer = document.getElementById('fallback-container');
 
   // Verify WebGL capability
@@ -97,6 +98,15 @@ async function init() {
     return traverseModalInstance;
   }
 
+  let expeditionsModalInstance = null;
+  async function getExpeditionsModal() {
+    if (!expeditionsModalInstance) {
+      const { ExpeditionsModal } = await import('./ui/ExpeditionsModal.js');
+      expeditionsModalInstance = new ExpeditionsModal(expeditionsContainer);
+    }
+    return expeditionsModalInstance;
+  }
+
   // Wire Events & State Machine
   eventBus.on('approach:complete', ({ immediate }) => {
     stateMachine.transitionTo(STATES.ENVIRONMENT);
@@ -132,6 +142,11 @@ async function init() {
     modal.toggle();
   });
 
+  eventBus.on('ui:expeditions:toggle', async () => {
+    const modal = await getExpeditionsModal();
+    modal.toggle();
+  });
+
   eventBus.on('dossier:closed', () => {
     if (stateMachine.current === STATES.INSPECTION) {
       stateMachine.transitionTo(STATES.ENVIRONMENT);
@@ -152,8 +167,12 @@ async function init() {
       eventBus.emit('camera:preset', 'SURVEYOR_RIM');
     } else if (e.key === '4') {
       eventBus.emit('camera:preset', 'ALSEP_SITE');
+    } else if (e.key === '5') {
+      eventBus.emit('camera:preset', 'CELESTIAL_EARTH');
     } else if (e.key === 't' || e.key === 'T') {
       eventBus.emit('ui:traverse:toggle');
+    } else if (e.key === 'e' || e.key === 'E') {
+      eventBus.emit('ui:expeditions:toggle');
     } else if (e.key === 'v' || e.key === 'V') {
       eventBus.emit('ui:vidicon:toggle');
     } else if (e.key === 'm' || e.key === 'M') {

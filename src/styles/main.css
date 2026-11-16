@@ -1,24 +1,24 @@
 :root {
-  /* Curated Archival Palette */
-  --color-vacuum: #020305;
-  --color-basalt: #0e1013;
-  --color-surface-panel: rgba(14, 16, 19, 0.94);
-  --color-surface-translucent: rgba(2, 3, 5, 0.82);
+  /* Curated Archival Palette — Active Theory Inspired Monumental Aesthetic */
+  --color-vacuum: #020408;
+  --color-basalt: #0b0e14;
+  --color-surface-panel: rgba(10, 14, 20, 0.88);
+  --color-surface-translucent: rgba(4, 7, 12, 0.78);
   --color-shadow: #000000;
-  --color-regolith-dark: #121417;
-  --color-regolith-mid: #22262c;
-  --color-regolith-high: #383d45;
-  --color-sunlight: #f4f2eb;
-  --color-text-primary: #eeede8;
-  --color-text-secondary: #9fa6b3;
-  --color-text-tertiary: #616773;
-  --color-archival-amber: #c99738;
-  --color-amber-dim: rgba(201, 151, 56, 0.25);
-  --color-telemetry-slate: #7a8494;
-  --color-hairline: rgba(255, 255, 255, 0.09);
-  --color-hairline-bright: rgba(255, 255, 255, 0.22);
-  --color-border-subtle: rgba(255, 255, 255, 0.10);
-  --color-border-focus: rgba(201, 151, 56, 0.6);
+  --color-regolith-dark: #101317;
+  --color-regolith-mid: #1f242b;
+  --color-regolith-high: #333a44;
+  --color-sunlight: #f5f4ef;
+  --color-text-primary: #f3f4f6;
+  --color-text-secondary: #9ca3af;
+  --color-text-tertiary: #64748b;
+  --color-archival-amber: #dfac4e;
+  --color-amber-dim: rgba(223, 172, 78, 0.20);
+  --color-telemetry-slate: #64748b;
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-hairline-bright: rgba(255, 255, 255, 0.18);
+  --color-border-subtle: rgba(255, 255, 255, 0.09);
+  --color-border-focus: rgba(223, 172, 78, 0.55);
 
   /* Clean, Ultra-Legible Modern Typography */
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

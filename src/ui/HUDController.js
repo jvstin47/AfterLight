@@ -32,6 +32,11 @@ export class HUDController {
         </div>
 
         <div class="hud-top-actions">
+          <button id="btn-expeditions" class="hud-action-btn expeditions-btn" aria-label="Explore Lunar Rovers and Landing Sites">
+            <span class="action-icon" aria-hidden="true">&Delta;</span>
+            <span>ROVERS & SITES</span>
+            <span class="key-shortcut mobile-hide">[E]</span>
+          </button>
           <button id="btn-vidicon" class="hud-action-btn vidicon-btn" aria-label="Toggle 1969 Surveyor Vidicon Telemetry Scan">
             <span class="action-icon" aria-hidden="true">&odot;</span>
             <span>VIDICON SCAN</span>
@@ -81,7 +86,7 @@ export class HUDController {
       <nav class="hud-vantage-bar" aria-label="Camera Perspectives">
         <div class="vantage-label">
           <span class="label-text">OBSERVATION PERSPECTIVE</span>
-          <span class="label-keys mobile-hide">[KEYS 1 &bull; 2 &bull; 3 &bull; 4]</span>
+          <span class="label-keys mobile-hide">[KEYS 1 &bull; 2 &bull; 3 &bull; 4 &bull; 5]</span>
         </div>
         <div class="vantage-strip" role="radiogroup">
           <button class="vantage-pill is-active" data-preset="OVERVIEW" aria-checked="true">
@@ -102,6 +107,11 @@ export class HUDController {
           <button class="vantage-pill" data-preset="ALSEP_SITE" aria-checked="false">
             <span class="vantage-num">04</span>
             <span class="vantage-name">ALSEP SCIENCE DEPLOY</span>
+            <span class="vantage-active-line"></span>
+          </button>
+          <button class="vantage-pill" data-preset="CELESTIAL_EARTH" aria-checked="false">
+            <span class="vantage-num">05</span>
+            <span class="vantage-name">EARTH FROM STATIO COGNITUM</span>
             <span class="vantage-active-line"></span>
           </button>
         </div>
@@ -140,6 +150,19 @@ export class HUDController {
         audioStatus.textContent = 'AUDIO: MUTED';
         audioBtn.classList.remove('is-active');
       }
+    });
+
+    // Expeditions / Rovers toggle
+    const expeditionsBtn = this.container.querySelector('#btn-expeditions');
+    expeditionsBtn?.addEventListener('click', () => {
+      eventBus.emit('ui:expeditions:toggle');
+    });
+
+    eventBus.on('expeditions:opened', () => {
+      expeditionsBtn?.classList.add('is-active');
+    });
+    eventBus.on('expeditions:closed', () => {
+      expeditionsBtn?.classList.remove('is-active');
     });
 
     // Traverse Map toggle

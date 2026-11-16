@@ -229,5 +229,188 @@ export const ARTIFACTS = {
         caption: 'Bean adjusting the alignment bubble and sun compass on the scientific subpackages (NASA AS12-47-6919).'
       }
     ]
+  },
+
+  'us-flag': {
+    id: 'us-flag',
+    index: '04',
+    name: 'Apollo 12 Lunar Surface Flag & Jettisoned Gear',
+    designation: 'United States Deployment & Egress Hardware',
+    category: 'Surface Expedition Artifact & Commemorative Monument',
+    manufacturer: 'NASA MSC / Annin & Co. / Hamilton Standard (PLSS)',
+    landingDate: 'November 19, 1969',
+    coordinates: '3.01230° S, 23.42150° W',
+    region: 'Statio Cognitum (7m South of LM-6 Intrepid)',
+    status: 'Permanent Extraterrestrial Monument',
+    distanceMeters: 7,
+    position: { x: 0, y: 0, z: 7.0 },
+    cameraFocus: {
+      position: { x: 4.5, y: 1.8, z: 9.5 },
+      target: { x: 0, y: 1.0, z: 7.0 }
+    },
+    keySpecs: [
+      { label: 'Flag Dimensions', value: '3 x 5 ft (0.91 x 1.52 m)' },
+      { label: 'Staff Assembly', value: 'Two-piece anodized aluminum' },
+      { label: 'Spreader Arm', value: 'Spring-loaded horizontal rod' },
+      { label: 'Jettisoned PLSS', value: '2x Hamilton Standard Backpacks' },
+      { label: 'Footwear Discard', value: '2 pairs silicon rubber overshoes' },
+      { label: 'Shadow Throw', value: '7.8m razor shadow at 13.5° solar el' }
+    ],
+    narrative: {
+      origin: {
+        title: 'ORIGIN — The Symbolic Presence',
+        text: 'The Apollo 12 flag was engineered with a horizontal spreader bar along the top hem to keep the nylon banner extended in the vacuum of space where no wind blows. Beneath the ladder lay the life support backpacks (PLSS) and lunar overshoes, deliberately jettisoned prior to liftoff to reduce mass for orbital rendezvous.'
+      },
+      journey: {
+        title: 'JOURNEY — Planting the Banner in Oceanus Procellarum',
+        text: 'During EVA-1, Pete Conrad and Alan Bean penetrated the tough subsurface lunar crust to plant the staff 7 meters south of Intrepid. The latch on the horizontal spreader failed to lock fully open, leaving the fabric with a characteristic rippled, wind-whipped aesthetic immortalized in Hasselblad frame AS12-47-6988.'
+      },
+      mission: {
+        title: 'MISSION — The Jettison Ceremony',
+        text: 'Before lifting off from the Moon, Conrad and Bean opened the forward hatch and tossed their heavy primary life support backpacks and heavy outer boots onto the regolith directly below the ladder. This discarded hardware reduced the ascent stage weight by over 75 kg, ensuring safe fuel margins.'
+      },
+      discoveries: {
+        title: 'DISCOVERIES — The Fading of the Nylon',
+        text: 'Subjected to over 50 years of unfiltered solar ultraviolet radiation, solar wind bombardment, and 300-degree temperature swings between lunar day (+120°C) and night (-130°C), thermal spectroscopy indicates the nylon dye has likely bleached bone-white, yet the aluminum staff and hardware remain standing.'
+      },
+      finalDays: {
+        title: 'FINAL DAYS — Surviving the Ascent Blast',
+        text: 'Unlike Apollo 11’s flag, which was knocked down by the ascent stage rocket exhaust blast due to being planted too close to Eagle, Pete Conrad planted the Apollo 12 flag at a safe distance and angle. Lunar Reconnaissance Orbiter (LRO) high-resolution camera passes confirm the flag’s shadow still rotates across the regolith.'
+      },
+      legacy: {
+        title: 'LEGACY — The Human Imprint',
+        text: 'Surrounded by the compacted, undisturbed bootprints of Conrad and Bean, the flag assembly and jettisoned backpacks mark the domestic center of Statio Cognitum—the exact point of human departure from the alien surface.'
+      }
+    },
+    schematic: 'assets/schematics_and_diagrams/lm_schematics/lm_descent_stage_subsystems.svg',
+    schematicTitle: 'Lunar Surface Deployment & Jettison Protocol',
+    gallery: [
+      {
+        src: 'assets/photography/intrepid_lm/AS12-47-6988_Flag_LM_Shadow_Footprints.jpg',
+        caption: 'The deployed US flag casting a razor-sharp shadow alongside the long shadow of Intrepid (NASA AS12-47-6988).'
+      }
+    ]
+  },
+
+  'swc-experiment': {
+    id: 'swc-experiment',
+    index: '05',
+    name: 'Solar Wind Composition Experiment',
+    designation: 'SWC (University of Bern / Swiss National Science Foundation)',
+    category: 'Solar Particle Physics Experiment',
+    manufacturer: 'University of Bern (Prof. Johannes Geiss)',
+    landingDate: 'November 19, 1969',
+    coordinates: '3.01235° S, 23.42160° W',
+    region: 'Statio Cognitum (5m North of LM-6 Intrepid)',
+    status: 'Exposed for 18 hr 42 min; Returned to Earth for Mass Spectrometry',
+    distanceMeters: 5.2,
+    position: { x: 0, y: 0, z: -5.2 },
+    cameraFocus: {
+      position: { x: 3.5, y: 1.6, z: -4.0 },
+      target: { x: 0, y: 1.0, z: -5.2 }
+    },
+    keySpecs: [
+      { label: 'Foil Dimensions', value: '30 cm x 130 cm' },
+      { label: 'Material', value: 'Ultra-pure 99.6% aluminum & platinum' },
+      { label: 'Principal Investigator', value: 'Prof. Johannes Geiss (Uni Bern)' },
+      { label: 'Exposure Duration', value: '18 hours 42 minutes' },
+      { label: 'Target Ions', value: 'Helium, Neon, Argon, Krypton, Xenon' },
+      { label: 'Staff Assembly', value: 'Telescopic aluminum tubing' }
+    ],
+    narrative: {
+      origin: {
+        title: 'ORIGIN — Capturing the Breath of the Sun',
+        text: 'Conceived by Swiss physicist Johannes Geiss at the University of Bern, the Solar Wind Composition experiment was designed to trap noble gas ions streaming directly from the Sun’s corona before they could interact with Earth’s magnetic field or atmosphere.'
+      },
+      journey: {
+        title: 'JOURNEY — Deployed in the Solar Wind',
+        text: 'Pete Conrad deployed the SWC during the first hour of EVA-1. Unfurling the ultra-pure aluminum foil sheet from its reel like a window blind, he staked the staff into the regolith 5 meters north of Intrepid, angled directly toward the Sun to intercept the supersonic solar wind plasma.'
+      },
+      mission: {
+        title: 'MISSION — Atomic Ion Trapping',
+        text: 'For 18 hours and 42 minutes, high-energy solar wind ions (He-3, He-4, Ne-20, Ne-22, Ar-36, Ar-40) penetrated the top few hundred atomic layers of the foil, embedding themselves permanently in the metallic crystal lattice without thermal distortion.'
+      },
+      discoveries: {
+        title: 'DISCOVERIES — The Isotopic Composition of the Solar System',
+        text: 'Rolled up and stowed in a Teflon bag before liftoff, the returned foil was analyzed in mass spectrometers in Bern. The isotopic ratios of helium and neon provided humanity’s first direct measurement of the primordial composition of the solar nebula from which the planets condensed 4.6 billion years ago.'
+      },
+      finalDays: {
+        title: 'FINAL DAYS — Returned to Terrestrial Laboratories',
+        text: 'While the foil was retrieved and returned to Earth, the aluminum reel assembly, mounting brackets, and staff base remained staked in the lunar soil at Statio Cognitum.'
+      },
+      legacy: {
+        title: 'LEGACY — Precision Extraterrestrial Science',
+        text: 'The SWC proved that extraordinarily profound planetary physics could be conducted with simple, passive collection hardware, setting the precedent for modern solar sample missions like NASA Genesis and Stardust.'
+      }
+    },
+    schematic: 'assets/schematics_and_diagrams/lm_schematics/lm_descent_stage_subsystems.svg',
+    schematicTitle: 'SWC Telescopic Staff & Unfurled Collector Foil Geometry',
+    gallery: [
+      {
+        src: 'assets/photography/intrepid_lm/AS12-47-6913_Conrad_MESA_Lunar_Module.jpg',
+        caption: 'Pete Conrad working near the MESA during SWC setup and deployment (NASA AS12-47-6913).'
+      }
+    ]
+  },
+
+  'surface-tv-camera': {
+    id: 'surface-tv-camera',
+    index: '06',
+    name: 'Westinghouse Lunar Surface Color TV Camera',
+    designation: 'Apollo Color TV (Field-Sequential Vidicon)',
+    category: 'Surface Broadcast & Telecommunications Hardware',
+    manufacturer: 'Westinghouse Electric Corporation Defense & Space Center',
+    landingDate: 'November 19, 1969',
+    coordinates: '3.01225° S, 23.42170° W',
+    region: 'Statio Cognitum (14m Northwest of LM-6 Intrepid)',
+    status: 'Permanent Artifact; Damaged During Initial Deployment',
+    distanceMeters: 14.1,
+    position: { x: -10.5, y: 0, z: -9.5 },
+    cameraFocus: {
+      position: { x: -7.5, y: 1.8, z: -8.0 },
+      target: { x: -10.5, y: 0.9, z: -9.5 }
+    },
+    keySpecs: [
+      { label: 'Sensor Type', value: 'Secondary Electron Conduction (SEC)' },
+      { label: 'Color Mechanism', value: 'Rotating 6-segment color wheel (600 rpm)' },
+      { label: 'Resolution', value: '525 lines / 60 fields/sec' },
+      { label: 'Power Consumption', value: '20 Watts @ 28V DC' },
+      { label: 'Thermal Wrap', value: 'Aluminized Kapton & gold foil shroud' },
+      { label: 'Deployment Range', value: '100-foot coaxial cable from MESA' }
+    ],
+    narrative: {
+      origin: {
+        title: 'ORIGIN — Bringing Color from the Moon',
+        text: 'Following Apollo 11’s grainy black-and-white broadcast, Westinghouse developed an extraordinary field-sequential color television camera built around a military-grade Secondary Electron Conduction (SEC) vidicon tube capable of transmitting live color pictures over the low-bandwidth lunar communications link.'
+      },
+      journey: {
+        title: 'JOURNEY — Carried to Oceanus Procellarum',
+        text: 'Mounted in the Modular Equipment Stowage Assembly (MESA) during descent, the camera captured Pete Conrad’s first steps down the ladder. Alan Bean then unmounted the camera, connected a 100-foot umbilical cable, and carried it onto a tripod 14 meters northwest to frame the entire landing site.'
+      },
+      mission: {
+        title: 'MISSION — The Accidental Solar Burnout',
+        text: 'While mounting the camera onto its tripod, Alan Bean inadvertently tilted the lens upward into direct sunlight and the intense specular glare from Intrepid’s foil insulation blankets. The focused solar rays instantly burned and blistered the photosensitive antimony trisulfide target on the SEC vidicon tube, cutting off live color television transmissions.'
+      },
+      discoveries: {
+        title: 'DISCOVERIES — Hard Lessons in Space Optics',
+        text: 'The failure of the Apollo 12 color camera led NASA and Westinghouse to develop protective mechanical lens sunshades, automatic light sensors, and stricter crew handling protocols for Apollos 14 through 17, ensuring the flawless color broadcasts of subsequent missions.'
+      },
+      finalDays: {
+        title: 'FINAL DAYS — The Silent Witness',
+        text: 'Bean and Conrad attempted to revive the camera by tapping it with a hammer, but the tube was permanently blinded. The astronauts left the gold-foil-wrapped camera resting on its tripod overlooking the plain, where it has remained silent ever since.'
+      },
+      legacy: {
+        title: 'LEGACY — The Human Element in Spaceflight',
+        text: 'The blinded camera is one of the most poignant human artifacts on the Moon: a reminder that space exploration is an experimental frontier where split-second human moments become part of planetary history.'
+      }
+    },
+    schematic: 'assets/schematics_and_diagrams/surveyor_schematics/surveyor_spacecraft_configuration.svg',
+    schematicTitle: 'Westinghouse SEC Color Vidicon Camera Assembly',
+    gallery: [
+      {
+        src: 'assets/photography/intrepid_lm/AS12-46-6739_Conrad_MESA_Lunar_Module.jpg',
+        caption: 'Pete Conrad operating the MESA where the Westinghouse camera was initially deployed (NASA AS12-46-6739).'
+      }
+    ]
   }
 };

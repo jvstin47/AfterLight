@@ -1,13 +1,13 @@
 /* AFTERLIGHT — Uiverse Astronaut Design System Components */
 
 :root {
-  --color-cloud: #111419;
-  --color-ink: #f0ead6;
-  --color-edge: rgba(255, 255, 255, 0.12);
-  --color-mist: #8a93a3;
-  --color-signal: #c99738;
-  --color-citrus: #ff7a3d;
-  --color-meadow: #2bc48a;
+  --color-cloud: rgba(12, 16, 23, 0.92);
+  --color-ink: #f3f4f6;
+  --color-edge: rgba(255, 255, 255, 0.10);
+  --color-mist: #94a3b8;
+  --color-signal: #dfac4e;
+  --color-citrus: #f97316;
+  --color-meadow: #10b981;
 }
 
 /* 1. Action Pill Button */

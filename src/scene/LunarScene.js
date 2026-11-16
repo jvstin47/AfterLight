@@ -102,9 +102,12 @@ export class LunarScene {
       console.error('[LunarScene] LM-6 init failed:', err);
     }
 
-    // 2. US Flag, PLSS backpacks, boots
+    // 2. US Flag, SWC Experiment, TV Camera, PLSS backpacks, boots
     this.flagAndEquip = new FlagAndEquipment(this.scene, elevationFn);
     this.flagAndEquip.init();
+    if (this.flagAndEquip.group) {
+      this.interactiveRoots.push(this.flagAndEquip.group);
+    }
 
     // Primary landing site is complete and rendered for approach
     eventBus.emit('scene:ready');
@@ -254,9 +257,9 @@ export class LunarScene {
       // Update camera controls
       this.cameraController.update();
 
-      // Subtle celestial rotation of Earth
+      // Subtle celestial rotation of Earth & solar billboard alignment
       if (this.lighting) {
-        this.lighting.update(delta);
+        this.lighting.update(delta, this.camera);
       }
 
       // Project waypoint screen markers

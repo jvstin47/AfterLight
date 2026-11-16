@@ -50,7 +50,17 @@ export class NavRail {
         </svg>
       </button>
 
-      <!-- 4. Air-to-Ground Comm Deck -->
+      <!-- 4. Lunar Expeditions & Planetary Rovers -->
+      <button id="rail-btn-expeditions" class="cir-rail__b" type="button" aria-label="Explore Lunar Rovers & Landing Sites [E]">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="6" cy="18" r="3"></circle>
+          <circle cx="18" cy="18" r="3"></circle>
+          <path d="M6 15h12"></path>
+          <path d="M9 15V8l6-3v10"></path>
+        </svg>
+      </button>
+
+      <!-- 5. Air-to-Ground Comm Deck -->
       <button id="rail-btn-audio" class="cir-rail__b" type="button" aria-label="Toggle Air-to-Ground Radio Audio [M]">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
@@ -61,7 +71,7 @@ export class NavRail {
 
       <span class="cir-rail__sep" aria-hidden="true"></span>
 
-      <!-- 5. Quick Command Search -->
+      <!-- 6. Quick Command Search -->
       <button id="rail-btn-search" class="cir-rail__b" type="button" aria-label="Search Artifacts & Transcripts [⌘ K]">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8"></circle>
@@ -77,6 +87,7 @@ export class NavRail {
     const btnOverview = this.container.querySelector('#rail-btn-overview');
     const btnVidicon = this.container.querySelector('#rail-btn-vidicon');
     const btnTraverse = this.container.querySelector('#rail-btn-traverse');
+    const btnExpeditions = this.container.querySelector('#rail-btn-expeditions');
     const btnAudio = this.container.querySelector('#rail-btn-audio');
     const btnSearch = this.container.querySelector('#rail-btn-search');
 
@@ -90,6 +101,10 @@ export class NavRail {
 
     btnTraverse?.addEventListener('click', () => {
       eventBus.emit('ui:traverse:toggle');
+    });
+
+    btnExpeditions?.addEventListener('click', () => {
+      eventBus.emit('ui:expeditions:toggle');
     });
 
     btnAudio?.addEventListener('click', () => {
@@ -133,5 +148,7 @@ export class NavRail {
     eventBus.on('dossier:closed', showRail);
     eventBus.on('traverse:opened', hideRail);
     eventBus.on('traverse:closed', showRail);
+    eventBus.on('expeditions:opened', hideRail);
+    eventBus.on('expeditions:closed', showRail);
   }
 }

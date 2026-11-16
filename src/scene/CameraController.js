@@ -29,6 +29,12 @@ export const CAMERA_PRESETS = {
     target: new THREE.Vector3(-106, 0.4, -75),
     fov: 45,
   },
+  CELESTIAL_EARTH: {
+    // Standing near the LM looking high up into the East-Southeast sky at crescent Earth (64.5° elevation)
+    position: new THREE.Vector3(-6.0, 1.75, 6.0),
+    target: new THREE.Vector3(120.0, 260.0, -14.0),
+    fov: 46,
+  },
 };
 
 export class CameraController {
@@ -55,7 +61,7 @@ export class CameraController {
   initControls() {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
-    this.controls.screenSpacePanning = false;
+    this.controls.screenSpacePanning = true;
 
     // Constrain so camera doesn't dip under the lunar surface
     this.controls.maxPolarAngle = Math.PI / 2 - 0.03;
