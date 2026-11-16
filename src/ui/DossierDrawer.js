@@ -173,6 +173,7 @@ export class DossierDrawer {
     this.selectTab('origin');
 
     this.container.style.display = 'block';
+    eventBus.emit('dossier:opened', { artifact });
     const panel = this.container.querySelector('.dossier-panel');
     const backdrop = this.container.querySelector('.dossier-backdrop');
 
@@ -283,11 +284,20 @@ export class DossierDrawer {
       const schematicCap = artifact.schematicTitle || artifact.schematicCaption || 'Engineering blueprint';
       if (schematicSrc) {
         schematicContainer.innerHTML = `
-          <div class="schematic-frame">
+          <div class="schematic-frame" role="button" tabindex="0" title="Click to view full architectural blueprint">
             <img src="${schematicSrc}" alt="${schematicCap}" class="schematic-img" loading="lazy" />
-            <figcaption class="schematic-caption">${schematicCap}</figcaption>
+            <figcaption class="schematic-caption">${schematicCap} &bull; <span class="schematic-expand-hint">[EXPAND BLUEPRINT]</span></figcaption>
           </div>
         `;
+        const frameEl = schematicContainer.querySelector('.schematic-frame');
+        const triggerZoom = () => this.openZoom(schematicSrc, schematicCap);
+        frameEl?.addEventListener('click', triggerZoom);
+        frameEl?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            triggerZoom();
+          }
+        });
         const schemSection = this.container.querySelector('#dossier-schematic-section');
         if (schemSection) schemSection.style.display = 'block';
       } else {

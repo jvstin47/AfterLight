@@ -373,18 +373,27 @@
 
 /* Schematics */
 .schematic-frame {
-  background: #020407;
+  background: #04070c;
   border: 1px solid var(--color-border-subtle);
-  padding: 18px;
+  padding: 14px;
   text-align: center;
+  cursor: zoom-in;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schematic-frame:hover,
+.schematic-frame:focus-visible {
+  border-color: var(--color-archival-amber);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(217, 119, 6, 0.15);
+  outline: none;
 }
 
 .schematic-img {
   max-width: 100%;
   height: auto;
-  max-height: 260px;
+  max-height: 340px;
   object-fit: contain;
-  filter: contrast(1.05) brightness(0.95);
+  filter: contrast(1.05) brightness(1.02);
   display: block;
   margin: 0 auto;
 }
@@ -392,10 +401,15 @@
 .schematic-caption {
   font-family: var(--font-mono);
   font-size: 9.5px;
-  letter-spacing: 0.14em;
-  color: var(--color-text-muted);
-  margin-top: 12px;
+  letter-spacing: 0.12em;
+  color: var(--color-text-secondary);
+  margin-top: 10px;
   text-transform: uppercase;
+}
+
+.schematic-expand-hint {
+  color: var(--color-archival-amber);
+  font-weight: 500;
 }
 
 /* Photo Gallery */
@@ -481,7 +495,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 500;
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;

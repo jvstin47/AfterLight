@@ -1,77 +1,348 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%">
   <defs>
+    <!-- Technical Blueprint Grids -->
+    <pattern id="minorGridAlsep" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#101722" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="majorGridAlsep" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="url(#minorGridAlsep)"/>
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#182333" stroke-width="1.2"/>
+    </pattern>
+
+    <!-- Markers -->
+    <marker id="arrowAlsep" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowAmberAlsep" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#d97706"/>
+    </marker>
+
     <style>
-      .bg { fill: #0b0d12; }
-      .grid { stroke: #1b2230; stroke-width: 1; }
-      .title { fill: #e2e8f0; font-family: monospace; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
-      .subtitle { fill: #94a3b8; font-family: monospace; font-size: 13px; }
-      .cable { stroke: #64748b; stroke-width: 1.5; stroke-dasharray: 4,3; fill: none; }
-      .center-box { fill: #38bdf8; stroke: #ffffff; stroke-width: 2; }
-      .rtg-box { fill: #ef4444; stroke: #f87171; stroke-width: 2; }
-      .sensor-box { fill: #10b981; stroke: #34d399; stroke-width: 2; }
-      .label { fill: #cbd5e1; font-family: monospace; font-size: 11px; }
-      .dist { fill: #f59e0b; font-family: monospace; font-size: 11px; }
-      .compass { stroke: #f59e0b; stroke-width: 1.5; fill: none; }
+      .bg { fill: #070a0f; }
+      .border-line { stroke: #334155; stroke-width: 1.5; fill: none; }
+      .blueprint-primary { stroke: #94a3b8; stroke-width: 1.4; fill: none; }
+      .blueprint-heavy { stroke: #cbd5e1; stroke-width: 2.2; fill: none; }
+      .cable-line { stroke: #d97706; stroke-width: 1.5; stroke-dasharray: 6,3; fill: none; }
+      .centerline { stroke: #475569; stroke-width: 0.8; stroke-dasharray: 24,4,4,4; fill: none; }
+      .range-ring { stroke: #1e293b; stroke-width: 0.9; stroke-dasharray: 4,4; fill: none; }
+      .dimension-line { stroke: #475569; stroke-width: 0.9; marker-start: url(#arrowAlsep); marker-end: url(#arrowAlsep); fill: none; }
+      .dimension-text { fill: #94a3b8; font-family: 'Space Mono', monospace; font-size: 9.5px; letter-spacing: 0.08em; }
+      .callout-line { stroke: #64748b; stroke-width: 1; fill: none; }
+      .callout-amber { stroke: #d97706; stroke-width: 1.2; fill: none; marker-end: url(#arrowAmberAlsep); }
+      .text-title { fill: #f1f5f9; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; letter-spacing: 0.14em; }
+      .text-meta { fill: #94a3b8; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.06em; }
+      .text-amber { fill: #f59e0b; font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; }
+      .text-label { fill: #cbd5e1; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; }
+      .text-sub { fill: #64748b; font-family: 'Space Mono', monospace; font-size: 8.5px; letter-spacing: 0.04em; }
+      .box-dark { fill: #0d131c; stroke: #334155; stroke-width: 1.2; }
     </style>
   </defs>
-  <rect width="1000" height="800" class="bg"/>
-  <g class="grid">
-    <path d="M0,100 H1000 M0,200 H1000 M0,300 H1000 M0,400 H1000 M0,500 H1000 M0,600 H1000 M0,700 H1000"/>
-    <path d="M100,0 V800 M200,0 V800 M300,0 V800 M400,0 V800 M500,0 V800 M600,0 V800 M700,0 V800 M800,0 V800 M900,0 V800"/>
+
+  <!-- Background and Technical Grid -->
+  <rect width="1200" height="900" class="bg"/>
+  <rect width="1200" height="900" fill="url(#majorGridAlsep)"/>
+
+  <!-- Master Outer Border -->
+  <rect x="25" y="25" width="1150" height="850" class="border-line"/>
+  <rect x="30" y="30" width="1140" height="840" stroke="#1e293b" stroke-width="0.75" fill="none"/>
+
+  <!-- Reseau Ticks -->
+  <path d="M 22 25 L 28 25 M 25 22 L 25 28" stroke="#475569" stroke-width="1"/>
+  <path d="M 1172 25 L 1178 25 M 1175 22 L 1175 28" stroke="#475569" stroke-width="1"/>
+  <path d="M 22 875 L 28 875 M 25 872 L 25 878" stroke="#475569" stroke-width="1"/>
+  <path d="M 1172 875 L 1178 875 M 1175 872 L 1175 878" stroke="#475569" stroke-width="1"/>
+
+  <!-- ============================================== -->
+  <!-- BENDIX AEROSPACE ENGINEERING TITLE BLOCK       -->
+  <!-- ============================================== -->
+  <g id="title-block-alsep" transform="translate(730, 725)">
+    <rect width="435" height="140" fill="#0b1017" stroke="#334155" stroke-width="1.5"/>
+    <line x1="0" y1="35" x2="435" y2="35" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="70" x2="435" y2="70" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="105" x2="435" y2="105" stroke="#1e293b" stroke-width="1"/>
+    <line x1="220" y1="0" x2="220" y2="70" stroke="#1e293b" stroke-width="1"/>
+    <line x1="330" y1="70" x2="330" y2="140" stroke="#1e293b" stroke-width="1"/>
+
+    <text x="12" y="22" class="text-title">BENDIX CORPORATION</text>
+    <text x="232" y="22" class="text-meta">AEROSPACE SYSTEMS / NASA MSC</text>
+    <text x="12" y="55" class="text-label">APOLLO 12 ALSEP ARRAY A</text>
+    <text x="232" y="55" class="text-sub">SURFACE FIELD DEPLOYMENT GEOMETRY</text>
+
+    <text x="12" y="90" class="text-meta">DWG NO: BSR-2760 / MSFC-408</text>
+    <text x="340" y="90" class="text-meta">SCALE: 1:75</text>
+    <text x="12" y="125" class="text-amber">SITE: 130M NW OF LM-6 INTREPID</text>
+    <text x="340" y="125" class="text-meta">SHEET 1 OF 1</text>
   </g>
-  <text x="50" y="55" class="title">APOLLO 12 ALSEP ARRAY A SURFACE DEPLOYMENT GEOMETRY</text>
-  <text x="50" y="78" class="subtitle">DEPLOYED NOV 19, 1969 — 130 METERS NORTHWEST OF LM INTREPID</text>
 
-  <!-- Central Station (Center) -->
-  <rect x="470" y="370" width="60" height="60" class="center-box" rx="4"/>
-  <circle cx="500" cy="400" r="12" fill="#0284c7"/>
-  <text x="500" y="450" class="label" text-anchor="middle" font-weight="bold">CENTRAL STATION</text>
-  <text x="500" y="465" class="label" text-anchor="middle">(S-BAND TELEMETRY HUB)</text>
-
-  <!-- RTG (SNAP-27) -->
-  <line x1="470" y1="400" x2="320" y2="400" class="cable" stroke="#ef4444" stroke-width="2.5"/>
-  <circle cx="300" cy="400" r="22" class="rtg-box"/>
-  <text x="300" y="440" class="label" text-anchor="middle" font-weight="bold">SNAP-27 RTG</text>
-  <text x="300" y="455" class="label" text-anchor="middle">(Plutonium-238 / 73W)</text>
-  <text x="380" y="390" class="dist">3.0 METERS</text>
-
-  <!-- Passive Seismic Experiment (PSE) -->
-  <line x1="500" y1="370" x2="500" y2="230" class="cable"/>
-  <polygon points="500,200 480,240 520,240" class="sensor-box"/>
-  <text x="500" y="180" class="label" text-anchor="middle" font-weight="bold">PASSIVE SEISMIC (PSE)</text>
-  <text x="500" y="195" class="label" text-anchor="middle">Thermal Mylar Shroud</text>
-  <text x="510" y="300" class="dist">2.7 METERS</text>
-
-  <!-- Solar Wind Spectrometer (SWS) -->
-  <line x1="530" y1="400" x2="670" y2="400" class="cable"/>
-  <rect x="670" y="385" width="35" height="30" class="sensor-box" rx="2"/>
-  <text x="687" y="435" class="label" text-anchor="middle" font-weight="bold">SOLAR WIND (SWS)</text>
-  <text x="687" y="450" class="label" text-anchor="middle">7 Faraday Cups</text>
-  <text x="585" y="390" class="dist">4.0 METERS</text>
-
-  <!-- Lunar Surface Magnetometer (LSM) -->
-  <line x1="500" y1="430" x2="500" y2="640" class="cable" stroke-dasharray="6,4"/>
-  <circle cx="500" cy="660" r="20" class="sensor-box"/>
-  <line x1="500" y1="640" x2="500" y2="680" stroke="#ffffff" stroke-width="2"/>
-  <line x1="480" y1="660" x2="520" y2="660" stroke="#ffffff" stroke-width="2"/>
-  <text x="500" y="705" class="label" text-anchor="middle" font-weight="bold">MAGNETOMETER (LSM)</text>
-  <text x="500" y="720" class="label" text-anchor="middle">3 Fluxgate Sensor Arms</text>
-  <text x="515" y="540" class="dist">15.0 METERS</text>
-
-  <!-- SIDE / CCGE -->
-  <line x1="475" y1="420" x2="220" y2="580" class="cable" stroke-dasharray="6,4"/>
-  <rect x="180" y="570" width="40" height="35" class="sensor-box" rx="2"/>
-  <text x="200" y="625" class="label" text-anchor="middle" font-weight="bold">SIDE / CCGE</text>
-  <text x="200" y="640" class="label" text-anchor="middle">Suprathermal Ion / Cold Cathode</text>
-  <text x="310" y="520" class="dist">15.5 METERS</text>
-
-  <!-- Alignment Compass Indicator -->
-  <g transform="translate(850, 150)">
-    <circle cx="0" cy="0" r="50" class="compass"/>
-    <line x1="0" y1="-45" x2="0" y2="45" stroke="#f59e0b" stroke-width="1.5"/>
-    <line x1="-45" y1="0" x2="45" y2="0" stroke="#f59e0b" stroke-width="1.5"/>
-    <polygon points="0,-45 -6,-25 6,-25" fill="#f59e0b"/>
-    <text x="0" y="-55" class="dist" text-anchor="middle">LUNAR NORTH</text>
-    <text x="0" y="65" class="dist" text-anchor="middle">TO LM (305° AZ)</text>
+  <!-- Upper Metadata &amp; NASA Science Operations Header -->
+  <g transform="translate(50, 60)">
+    <text x="0" y="0" class="text-title">APOLLO 12 ALSEP ARRAY A SURFACE DEPLOYMENT</text>
+    <text x="0" y="20" class="text-meta">NATIONAL AERONAUTICS AND SPACE ADMINISTRATION • LUNAR SURFACE EXPERIMENTS</text>
+    <text x="0" y="34" class="text-sub">DEPLOYED NOV 19, 1969 • POWERED BY SNAP-27 PLUTONIUM-238 RADIOISOTOPE GENERATOR</text>
   </g>
+
+  <!-- Instrumentation Array Summary Table -->
+  <g transform="translate(50, 140)">
+    <rect width="240" height="135" fill="#0b1017" stroke="#1e293b" stroke-width="1"/>
+    <text x="12" y="20" class="text-amber">ARRAY A SCIENTIFIC PAYLOAD</text>
+    <text x="12" y="38" class="text-sub">CS: CENTRAL STATION &amp; HELICAL ANTENNA</text>
+    <text x="12" y="54" class="text-sub">RTG: SNAP-27 RADIOISOTOPE THERMAL (73W)</text>
+    <text x="12" y="70" class="text-sub">PSE: PASSIVE SEISMIC EXPERIMENT</text>
+    <text x="12" y="86" class="text-sub">LSM: LUNAR SURFACE MAGNETOMETER</text>
+    <text x="12" y="102" class="text-sub">SWS: SOLAR WIND SPECTROMETER</text>
+    <text x="12" y="118" class="text-sub">SIDE/CCGE: SUPRATHERMAL ION / COLD CATHODE</text>
+  </g>
+
+  <!-- Authentic Lunar Compass Rose (Statio Cognitum True Lunar North) -->
+  <g transform="translate(1100, 100)">
+    <circle cx="0" cy="0" r="32" stroke="#334155" stroke-width="1" fill="#0b1017"/>
+    <line x1="0" y1="-32" x2="0" y2="32" stroke="#475569" stroke-width="1"/>
+    <line x1="-32" y1="0" x2="32" y2="0" stroke="#475569" stroke-width="1"/>
+    <path d="M 0 -28 L 6 -14 L 0 -17 L -6 -14 Z" fill="#f59e0b"/>
+    <text x="-4" y="-36" class="text-amber" font-size="9">N</text>
+    <text x="36" y="3" class="text-meta" font-size="8">E</text>
+    <text x="-3" y="44" class="text-meta" font-size="8">S</text>
+    <text x="-46" y="3" class="text-meta" font-size="8">W</text>
+    <text x="-32" y="56" class="text-sub" font-size="7">TRUE LUNAR NORTH</text>
+  </g>
+
+  <!-- Vector to LM Intrepid Indicator -->
+  <g transform="translate(1020, 220)">
+    <line x1="0" y1="0" x2="60" y2="45" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <circle cx="60" cy="45" r="3" fill="#f59e0b"/>
+    <text x="-120" y="5" class="text-amber" font-size="8.5">BEARING 125° TO LM INTREPID</text>
+    <text x="-120" y="18" class="text-sub" font-size="7.5">DISTANCE: 130 METERS SOUTHEAST</text>
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CENTRAL FIELD MAP: ALSEP ARRAY A DEPLOYMENT GEOMETRY -->
+  <!-- ==================================================== -->
+  <g id="alsep-field" transform="translate(560, 480)">
+
+    <!-- Centerlines -->
+    <line x1="-360" y1="0" x2="360" y2="0" class="centerline"/>
+    <line x1="0" y1="-340" x2="0" y2="300" class="centerline"/>
+
+    <!-- Radial Distance Range Rings (From Central Station) -->
+    <!-- 5 Meter Circle (r=50px) -->
+    <circle cx="0" cy="0" r="50" class="range-ring"/>
+    <text x="35" y="-35" class="text-sub" font-size="7">R = 5M</text>
+
+    <!-- 15 Meter Circle (r=150px) -->
+    <circle cx="0" cy="0" r="150" class="range-ring"/>
+    <text x="105" y="-105" class="text-sub" font-size="7">R = 15M (50 FT)</text>
+
+    <!-- 25 Meter Circle (r=250px) -->
+    <circle cx="0" cy="0" r="250" class="range-ring"/>
+    <text x="175" y="-175" class="text-sub" font-size="7">R = 25M (82 FT)</text>
+
+    <!-- Earth Vector Pointer from Central Station (Pointing 64° Elevation, 078° Azimuth) -->
+    <g transform="rotate(-12)">
+      <line x1="0" y1="0" x2="300" y2="0" stroke="#334155" stroke-width="1" stroke-dasharray="6,4"/>
+      <path d="M 290 -5 L 300 0 L 290 5" stroke="#334155" stroke-width="1.2" fill="none"/>
+      <text x="210" y="-8" class="text-meta" font-size="8">S-BAND VECTOR TO EARTH (ELEV 64°)</text>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 1. CENTRAL STATION (ORIGIN 0,0)                 -->
+    <!-- =============================================== -->
+    <!-- Mylar Ground Sheet / Deployment Base -->
+    <polygon points="-38,-28 38,-28 42,28 -34,28" fill="#141c27" stroke="#cbd5e1" stroke-width="1.8"/>
+    
+    <!-- Central Electronics Package Body -->
+    <rect x="-24" y="-18" width="48" height="36" fill="#0b1017" stroke="#cbd5e1" stroke-width="2"/>
+    
+    <!-- Specular Thermal Louvers on Side Panels -->
+    <line x1="-20" y1="-12" x2="20" y2="-12" stroke="#64748b" stroke-width="1"/>
+    <line x1="-20" y1="-4" x2="20" y2="-4" stroke="#64748b" stroke-width="1"/>
+    <line x1="-20" y1="4" x2="20" y2="4" stroke="#64748b" stroke-width="1"/>
+    <line x1="-20" y1="12" x2="20" y2="12" stroke="#64748b" stroke-width="1"/>
+
+    <!-- Central S-Band Helical Directional Antenna (Apex Tip) -->
+    <circle cx="0" cy="0" r="8" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="3" fill="#f59e0b"/>
+    <!-- Antenna Aiming Mechanism Gimbal Ring -->
+    <line x1="-6" y1="-6" x2="6" y2="6" stroke="#f59e0b" stroke-width="1.5"/>
+
+    <!-- Dust Detector (LDD) on Sunshield Corner -->
+    <rect x="14" y="-24" width="8" height="8" fill="#1f2937" stroke="#94a3b8" stroke-width="1"/>
+
+    <!-- =============================================== -->
+    <!-- 2. FLAT RIBBON CABLE RUNS TO ALL EXPERIMENTS    -->
+    <!-- =============================================== -->
+
+    <!-- Cable 1: Central Station to SNAP-27 RTG (South-East, 27.4m) -->
+    <!-- Angle approx +110°, radius ~240px -->
+    <path d="M 12 18 Q 80 120 110 215" class="cable-line"/>
+
+    <!-- Cable 2: Central Station to Passive Seismic Experiment (South, 3m) -->
+    <!-- Radius ~35px -->
+    <line x1="-6" y1="18" x2="-10" y2="45" class="cable-line"/>
+
+    <!-- Cable 3: Central Station to Magnetometer LSM (West-Northwest, 15.2m) -->
+    <!-- Angle -160°, radius ~150px -->
+    <path d="M -24 -6 Q -80 -25 -145 -48" class="cable-line"/>
+
+    <!-- Cable 4: Central Station to Solar Wind Spectrometer SWS (North, 15.2m) -->
+    <!-- Angle -75°, radius ~150px -->
+    <path d="M 6 -18 Q 25 -80 40 -145" class="cable-line"/>
+
+    <!-- Cable 5: Central Station to SIDE / CCGE (East, 16.8m) -->
+    <!-- Angle +10°, radius ~165px -->
+    <path d="M 24 2 Q 90 10 162 18" class="cable-line"/>
+
+    <!-- =============================================== -->
+    <!-- 3. INDIVIDUAL EXPERIMENT INSTRUMENT HARDWARE    -->
+    <!-- =============================================== -->
+
+    <!-- HARDWARE A: SNAP-27 RTG GENERATOR (110, 215) -->
+    <g id="inst-rtg" transform="translate(110, 215)">
+      <!-- Finned Cylindrical Beryllium Radiator (8 Fins) -->
+      <circle cx="0" cy="0" r="14" fill="#1f1813" stroke="#f59e0b" stroke-width="2"/>
+      <circle cx="0" cy="0" r="6" fill="#d97706"/>
+      <!-- 8 Radial Thermal Cooling Fins -->
+      <line x1="-22" y1="0" x2="22" y2="0" stroke="#f59e0b" stroke-width="1.8"/>
+      <line x1="0" y1="-22" x2="0" y2="22" stroke="#f59e0b" stroke-width="1.8"/>
+      <line x1="-16" y1="-16" x2="16" y2="16" stroke="#f59e0b" stroke-width="1.8"/>
+      <line x1="-16" y1="16" x2="16" y2="-16" stroke="#f59e0b" stroke-width="1.8"/>
+      <!-- Thermal Safe Separation Arc -->
+      <circle cx="0" cy="0" r="30" stroke="#d97706" stroke-width="0.8" stroke-dasharray="3,3" fill="none"/>
+    </g>
+
+    <!-- HARDWARE B: PASSIVE SEISMIC EXPERIMENT PSE (-10, 45) -->
+    <g id="inst-pse" transform="translate(-10, 45)">
+      <!-- 10-Layer Gold Thermal Drum Shroud -->
+      <polygon points="
+        -16,-7 0,-14 16,-7
+        16,7 0,14 -16,7
+      " fill="#1e1810" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="5" fill="#d97706"/>
+      <!-- Sensor Leveling Stool Base Legs -->
+      <circle cx="-14" cy="6" r="2" fill="#94a3b8"/>
+      <circle cx="14" cy="6" r="2" fill="#94a3b8"/>
+      <circle cx="0" cy="-12" r="2" fill="#94a3b8"/>
+    </g>
+
+    <!-- HARDWARE C: LUNAR SURFACE MAGNETOMETER LSM (-145, -48) -->
+    <g id="inst-lsm" transform="translate(-145, -48)">
+      <!-- Central Electronics Box -->
+      <rect x="-14" y="-14" width="28" height="28" fill="#0d141e" stroke="#cbd5e1" stroke-width="1.8"/>
+      <!-- Three Orthogonal Fluxgate Sensor Booms (1 Meter Length Each) -->
+      <line x1="0" y1="-14" x2="0" y2="-38" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="0" cy="-38" r="4.5" fill="#f59e0b"/>
+      <line x1="-14" y1="5" x2="-36" y2="18" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="-36" cy="18" r="4.5" fill="#f59e0b"/>
+      <line x1="14" y1="5" x2="36" y2="18" stroke="#cbd5e1" stroke-width="2"/>
+      <circle cx="36" cy="18" r="4.5" fill="#f59e0b"/>
+      <!-- Shadow Compass Level Hub -->
+      <circle cx="0" cy="0" r="4" fill="#64748b"/>
+    </g>
+
+    <!-- HARDWARE D: SOLAR WIND SPECTROMETER SWS (40, -145) -->
+    <g id="inst-sws" transform="translate(40, -145)">
+      <!-- Hexagonal/Faceted Sensor Housing -->
+      <polygon points="-16,-10 0,-18 16,-10 16,10 0,18 -16,10" fill="#0d141e" stroke="#cbd5e1" stroke-width="1.8"/>
+      <!-- 7 Faraday Cup Collectors (Facing Ecliptic) -->
+      <circle cx="0" cy="0" r="4" fill="#f59e0b"/>
+      <circle cx="-8" cy="-5" r="2.5" fill="#94a3b8"/>
+      <circle cx="8" cy="-5" r="2.5" fill="#94a3b8"/>
+      <circle cx="-8" cy="5" r="2.5" fill="#94a3b8"/>
+      <circle cx="8" cy="5" r="2.5" fill="#94a3b8"/>
+      <circle cx="0" cy="-10" r="2.5" fill="#94a3b8"/>
+      <circle cx="0" cy="10" r="2.5" fill="#94a3b8"/>
+    </g>
+
+    <!-- HARDWARE E: SUPRATHERMAL ION DETECTOR SIDE / CCGE (162, 18) -->
+    <g id="inst-side" transform="translate(162, 18)">
+      <!-- Wire Ground Plane Screen Grid -->
+      <rect x="-24" y="-20" width="48" height="40" fill="#080d14" stroke="#475569" stroke-width="1" stroke-dasharray="2,2"/>
+      <!-- SIDE Sensor Housing -->
+      <rect x="-16" y="-12" width="22" height="24" fill="#0d141e" stroke="#cbd5e1" stroke-width="1.8"/>
+      <!-- Velocity Filter / Curved Plate Analyzer Aperture -->
+      <circle cx="-5" cy="0" r="4" stroke="#f59e0b" stroke-width="1.2" fill="#1e293b"/>
+      <!-- Cold Cathode Gauge Experiment (CCGE) Unit -->
+      <rect x="9" y="-8" width="12" height="16" fill="#131d2a" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="6" y1="0" x2="9" y2="0" stroke="#f59e0b" stroke-width="1"/>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 4. DIMENSIONS &amp; CABLE DISTANCE ANNOTATIONS     -->
+    <!-- =============================================== -->
+
+    <!-- RTG Separation Distance Callout (27.4m / 90 ft) -->
+    <line x1="0" y1="0" x2="110" y2="215" stroke="#334155" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <text x="65" y="125" class="dimension-text" transform="rotate(62 65 125)">SEPARATION: 27.4 METERS (90 FT)</text>
+
+    <!-- LSM Distance Callout (15.2m / 50 ft) -->
+    <line x1="0" y1="0" x2="-145" y2="-48" stroke="#334155" stroke-width="0.8" stroke-dasharray="2,2"/>
+    <text x="-95" y="-30" class="dimension-text" transform="rotate(18 -95 -30)">15.2M (50 FT)</text>
+
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CALLOUT LEADER LINES &amp; ARCHIVAL ENGINEERING NOTES   -->
+  <!-- ==================================================== -->
+
+  <!-- Callout 1: SNAP-27 RTG -->
+  <g transform="translate(780, 640)">
+    <path d="M 0 0 L -80 0 L -110 55" class="callout-amber"/>
+    <text x="10" y="-12" class="text-amber">SNAP-27 RADIOISOTOPE GENERATOR (RTG)</text>
+    <text x="10" y="2" class="text-sub">Plutonium-238 thermal core (1,480 thermal watts).</text>
+    <text x="10" y="14" class="text-sub">73.6W continuous electrical output via lead-telluride thermocouples.</text>
+    <text x="10" y="26" class="text-sub">Isolated 27.4m from Central Station to minimize thermal/nuclear noise.</text>
+  </g>
+
+  <!-- Callout 2: Central Station -->
+  <g transform="translate(80, 480)">
+    <path d="M 320 0 L 420 0 L 460 -10" class="callout-line" marker-end="url(#arrowAlsep)"/>
+    <text x="0" y="-4" class="text-label">ALSEP CENTRAL STATION</text>
+    <text x="0" y="10" class="text-sub">Data processing unit, multiplexer &amp; telemetry transmitter.</text>
+    <text x="0" y="22" class="text-sub">Helical S-band antenna aimed at Earth (azimuth 078°).</text>
+    <text x="0" y="34" class="text-sub">Operated continuously until NASA termination on Oct 1, 1977.</text>
+  </g>
+
+  <!-- Callout 3: Passive Seismic Experiment -->
+  <g transform="translate(80, 600)">
+    <path d="M 320 0 L 430 0 L 470 -75" class="callout-amber"/>
+    <text x="0" y="-12" class="text-amber">PASSIVE SEISMIC EXPERIMENT (PSE)</text>
+    <text x="0" y="2" class="text-sub">Long-period and short-period 3-axis seismometers.</text>
+    <text x="0" y="14" class="text-sub">Detected Apollo 12 LM ascent stage impact: rang like a bell for 72 mins.</text>
+    <text x="0" y="26" class="text-sub">Covered by 10-layer aluminized Mylar/gold thermal shroud.</text>
+  </g>
+
+  <!-- Callout 4: Lunar Surface Magnetometer -->
+  <g transform="translate(80, 320)">
+    <path d="M 280 0 L 320 0 L 335 110" class="callout-line" marker-end="url(#arrowAlsep)"/>
+    <text x="0" y="-4" class="text-label">LUNAR SURFACE MAGNETOMETER (LSM)</text>
+    <text x="0" y="10" class="text-sub">3 orthogonal fluxgate sensors mounted on 100cm booms.</text>
+    <text x="0" y="22" class="text-sub">Measured steady-state and time-varying lunar magnetic fields.</text>
+    <text x="0" y="34" class="text-sub">Discovered localized permanent remanent magnetic crustal fields.</text>
+  </g>
+
+  <!-- Callout 5: Solar Wind Spectrometer -->
+  <g transform="translate(780, 280)">
+    <path d="M 0 0 L -80 0 L -180 55" class="callout-line" marker-end="url(#arrowAlsep)"/>
+    <text x="10" y="-4" class="text-label">SOLAR WIND SPECTROMETER (SWS)</text>
+    <text x="10" y="10" class="text-sub">7 modulated Faraday cups measuring solar plasma ions.</text>
+    <text x="10" y="22" class="text-sub">Analyzed velocity, density, and directional flow of solar wind.</text>
+  </g>
+
+  <!-- Callout 6: SIDE / CCGE -->
+  <g transform="translate(780, 440)">
+    <path d="M 0 0 L -60 0 L -55 58" class="callout-line" marker-end="url(#arrowAlsep)"/>
+    <text x="10" y="-4" class="text-label">SUPRATHERMAL ION DETECTOR (SIDE/CCGE)</text>
+    <text x="10" y="10" class="text-sub">Measured positive ion mass and energy in lunar exosphere.</text>
+    <text x="10" y="22" class="text-sub">Cold Cathode Gauge measured ambient neutral atmospheric density.</text>
+  </g>
+
+  <!-- Engineering Revision Stamp (Lower Left) -->
+  <g transform="translate(50, 780)">
+    <rect width="250" height="70" fill="#0b1017" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="22" x2="250" y2="22" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="10" y="15" class="text-meta">REV • DESCRIPTION • DATE • APPROVED</text>
+    <text x="10" y="38" class="text-sub">A • BSR-2760 FLIGHT SPEC • 09-14-69 • H.T.</text>
+    <text x="10" y="52" class="text-sub">B • DEPLOYMENT AS-BUILT • 11-20-69 • M.R.</text>
+    <text x="10" y="64" class="text-amber">C • DECLASSIFIED ARCHIVE RECORD • NASA MSC</text>
+  </g>
+
 </svg>

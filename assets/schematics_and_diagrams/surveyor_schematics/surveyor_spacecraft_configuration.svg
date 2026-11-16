@@ -1,81 +1,389 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%">
   <defs>
+    <!-- Technical Blueprint Grids -->
+    <pattern id="minorGridSurv" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#101722" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="majorGridSurv" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="url(#minorGridSurv)"/>
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#182333" stroke-width="1.2"/>
+    </pattern>
+
+    <!-- Shading Gradients -->
+    <linearGradient id="solarPanelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="1"/>
+    </linearGradient>
+
+    <radialGradient id="retroMotorGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#334155" stop-opacity="0.5"/>
+      <stop offset="70%" stop-color="#1e293b" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#0b0f17" stop-opacity="0.95"/>
+    </radialGradient>
+
+    <!-- Markers -->
+    <marker id="arrowSurv" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowAmberSurv" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#d97706"/>
+    </marker>
+
     <style>
-      .bg { fill: #0b0d12; }
-      .grid { stroke: #1b2230; stroke-width: 1; }
-      .title { fill: #e2e8f0; font-family: monospace; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
-      .subtitle { fill: #94a3b8; font-family: monospace; font-size: 13px; }
-      .frame { stroke: #94a3b8; stroke-width: 2; fill: none; }
-      .antenna { stroke: #38bdf8; stroke-width: 2; fill: rgba(56, 189, 248, 0.2); }
-      .solar { fill: #1e3a8a; stroke: #60a5fa; stroke-width: 1.5; }
-      .retrieved { stroke: #f43f5e; stroke-width: 2.5; fill: rgba(244, 63, 94, 0.2); }
-      .label { fill: #cbd5e1; font-family: monospace; font-size: 11px; }
-      .highlight { fill: #f43f5e; font-family: monospace; font-size: 12px; font-weight: bold; }
+      .bg { fill: #070a0f; }
+      .border-line { stroke: #334155; stroke-width: 1.5; fill: none; }
+      .blueprint-primary { stroke: #94a3b8; stroke-width: 1.4; fill: none; }
+      .blueprint-heavy { stroke: #cbd5e1; stroke-width: 2.2; fill: none; }
+      .tubular-frame { stroke: #cbd5e1; stroke-width: 1.6; stroke-linecap: round; fill: none; }
+      .secondary-frame { stroke: #64748b; stroke-width: 1.0; fill: none; }
+      .centerline { stroke: #475569; stroke-width: 0.8; stroke-dasharray: 24,4,4,4; fill: none; }
+      .dimension-line { stroke: #475569; stroke-width: 0.9; marker-start: url(#arrowSurv); marker-end: url(#arrowSurv); fill: none; }
+      .dimension-text { fill: #94a3b8; font-family: 'Space Mono', monospace; font-size: 9.5px; letter-spacing: 0.08em; }
+      .callout-line { stroke: #64748b; stroke-width: 1; fill: none; }
+      .callout-amber { stroke: #d97706; stroke-width: 1.2; fill: none; marker-end: url(#arrowAmberSurv); }
+      .text-title { fill: #f1f5f9; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; letter-spacing: 0.14em; }
+      .text-meta { fill: #94a3b8; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.06em; }
+      .text-amber { fill: #f59e0b; font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; }
+      .text-label { fill: #cbd5e1; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; }
+      .text-sub { fill: #64748b; font-family: 'Space Mono', monospace; font-size: 8.5px; letter-spacing: 0.04em; }
+      .box-dark { fill: #0d131c; stroke: #334155; stroke-width: 1.2; }
     </style>
   </defs>
-  <rect width="1000" height="800" class="bg"/>
-  <g class="grid">
-    <path d="M0,100 H1000 M0,200 H1000 M0,300 H1000 M0,400 H1000 M0,500 H1000 M0,600 H1000 M0,700 H1000"/>
-    <path d="M100,0 V800 M200,0 V800 M300,0 V800 M400,0 V800 M500,0 V800 M600,0 V800 M700,0 V800 M800,0 V800 M900,0 V800"/>
+
+  <!-- Background and Technical Grid -->
+  <rect width="1200" height="900" class="bg"/>
+  <rect width="1200" height="900" fill="url(#majorGridSurv)"/>
+
+  <!-- Master Sheet Outer Border -->
+  <rect x="25" y="25" width="1150" height="850" class="border-line"/>
+  <rect x="30" y="30" width="1140" height="840" stroke="#1e293b" stroke-width="0.75" fill="none"/>
+
+  <!-- Reseau Corner Ticks -->
+  <path d="M 22 25 L 28 25 M 25 22 L 25 28" stroke="#475569" stroke-width="1"/>
+  <path d="M 1172 25 L 1178 25 M 1175 22 L 1175 28" stroke="#475569" stroke-width="1"/>
+  <path d="M 22 875 L 28 875 M 25 872 L 25 878" stroke="#475569" stroke-width="1"/>
+  <path d="M 1172 875 L 1178 875 M 1175 872 L 1175 878" stroke="#475569" stroke-width="1"/>
+
+  <!-- ============================================== -->
+  <!-- HUGHES AIRCRAFT COMPANY ENGINEERING TITLE BLOCK-->
+  <!-- ============================================== -->
+  <g id="title-block-surv" transform="translate(730, 725)">
+    <rect width="435" height="140" fill="#0b1017" stroke="#334155" stroke-width="1.5"/>
+    <line x1="0" y1="35" x2="435" y2="35" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="70" x2="435" y2="70" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="105" x2="435" y2="105" stroke="#1e293b" stroke-width="1"/>
+    <line x1="220" y1="0" x2="220" y2="70" stroke="#1e293b" stroke-width="1"/>
+    <line x1="330" y1="70" x2="330" y2="140" stroke="#1e293b" stroke-width="1"/>
+
+    <text x="12" y="22" class="text-title">HUGHES AIRCRAFT CO.</text>
+    <text x="232" y="22" class="text-meta">JPL / NASA CONTRACT 950056</text>
+    <text x="12" y="55" class="text-label">SURVEYOR 3 (SC-3) SPACECRAFT</text>
+    <text x="232" y="55" class="text-sub">GENERAL CONFIGURATION &amp; RECOVERY</text>
+
+    <text x="12" y="90" class="text-meta">DWG NO: HAC-SUR-0348-D REV 4</text>
+    <text x="340" y="90" class="text-meta">SCALE: 1:25</text>
+    <text x="12" y="125" class="text-amber">CRATER SITE: 3.0163°S, 23.4180°W</text>
+    <text x="340" y="125" class="text-meta">SHEET 1 OF 1</text>
   </g>
-  <text x="50" y="55" class="title">SURVEYOR 3 SPACECRAFT CONFIGURATION</text>
-  <text x="50" y="78" class="subtitle">HUGHES AIRCRAFT / JPL ROBOTIC LUNAR SOFT LANDER (1967-1969)</text>
 
-  <!-- Central Mast & Solar Array -->
-  <line x1="500" y1="200" x2="500" y2="520" stroke="#94a3b8" stroke-width="4"/>
-  <rect x="440" y="120" width="120" height="80" class="solar"/>
-  <text x="500" y="165" class="label" text-anchor="middle" fill="#93c5fd">SOLAR PANEL (3,960 CELLS)</text>
-  <rect x="510" y="210" width="80" height="45" class="antenna"/>
-  <text x="600" y="235" class="label">PLANAR HIGH-GAIN ANTENNA</text>
+  <!-- Upper Metadata &amp; JPL Mission Record Header -->
+  <g transform="translate(50, 60)">
+    <text x="0" y="0" class="text-title">SURVEYOR 3 SPACECRAFT CONFIGURATION</text>
+    <text x="0" y="20" class="text-meta">JET PROPULSION LABORATORY • CALIFORNIA INSTITUTE OF TECHNOLOGY • NASA</text>
+    <text x="0" y="34" class="text-sub">UNMANNED LUNAR SOFT LANDER • FIRST EXTRATERRESTRIAL ARTIFACT RETRIEVAL IN HUMAN HISTORY</text>
+  </g>
 
-  <!-- Triangular Space Frame -->
-  <polygon points="500,420 380,540 620,540" class="frame" stroke-width="3"/>
-  <!-- Thermal Compartments -->
-  <rect x="410" y="460" width="60" height="40" fill="#e2e8f0" stroke="#64748b"/>
-  <text x="440" y="485" class="label" text-anchor="middle">COMP A</text>
-  <rect x="530" y="460" width="60" height="40" fill="#e2e8f0" stroke="#64748b"/>
-  <text x="560" y="485" class="label" text-anchor="middle">COMP B</text>
+  <!-- Technical Mission Specifications Card -->
+  <g transform="translate(50, 140)">
+    <rect width="220" height="120" fill="#0b1017" stroke="#1e293b" stroke-width="1"/>
+    <text x="12" y="20" class="text-amber">SPACECRAFT SPECIFICATIONS</text>
+    <text x="12" y="38" class="text-sub">TOUCHDOWN MASS: 281 KG (620 LBS)</text>
+    <text x="12" y="54" class="text-sub">SURFACE LIFETIME: 1967-04-20 &gt; 1967-05-03</text>
+    <text x="12" y="70" class="text-sub">IMAGES TRANSMITTED: 6,315 TV FRAMES</text>
+    <text x="12" y="86" class="text-sub">SOIL SAMPLER TRENCH DEPTH: 18 CM</text>
+    <text x="12" y="102" class="text-amber">APOLLO 12 EVA II VISIT: 1969-11-20</text>
+  </g>
 
-  <!-- Legs -->
-  <!-- Leg 1 (Left) -->
-  <line x1="380" y1="540" x2="180" y2="650" class="frame" stroke-width="4"/>
-  <circle cx="180" cy="650" r="16" fill="#94a3b8"/>
-  <text x="130" y="685" class="label">LEG 1 FOOTPAD</text>
+  <!-- Elevation View Orientation Compass -->
+  <g transform="translate(1100, 100)">
+    <circle cx="0" cy="0" r="28" stroke="#334155" stroke-width="1" fill="#0b1017"/>
+    <line x1="0" y1="-28" x2="0" y2="28" stroke="#475569" stroke-width="1"/>
+    <line x1="-28" y1="0" x2="28" y2="0" stroke="#475569" stroke-width="1"/>
+    <path d="M 0 -24 L 5 -12 L 0 -15 L -5 -12 Z" fill="#f59e0b"/>
+    <text x="-7" y="-32" class="text-amber" font-size="9">ZENITH</text>
+    <text x="33" y="3" class="text-meta" font-size="8">+Y</text>
+    <text x="-9" y="40" class="text-sub" font-size="7.5">NADIR</text>
+    <text x="-42" y="3" class="text-meta" font-size="8">-Y</text>
+  </g>
 
-  <!-- Leg 2 (Right) -->
-  <line x1="620" y1="540" x2="820" y2="650" class="frame" stroke-width="4"/>
-  <circle cx="820" cy="650" r="16" fill="#94a3b8"/>
-  <text x="780" y="685" class="label">LEG 2 FOOTPAD</text>
+  <!-- ==================================================== -->
+  <!-- CENTRAL SCHEMATIC: SURVEYOR 3 SPACECRAFT PROFILE     -->
+  <!-- ==================================================== -->
+  <g id="surveyor-profile" transform="translate(560, 480)">
 
-  <!-- Leg 3 (Center Bottom) -->
-  <line x1="500" y1="540" x2="500" y2="690" class="frame" stroke-width="4"/>
-  <circle cx="500" cy="690" r="16" fill="#94a3b8"/>
-  <text x="500" y="725" class="label" text-anchor="middle">LEG 3 FOOTPAD</text>
+    <!-- Centerlines -->
+    <line x1="-360" y1="0" x2="360" y2="0" class="centerline"/>
+    <line x1="0" y1="-380" x2="0" y2="280" class="centerline"/>
 
-  <!-- RETRIEVED COMPONENT 1: TV Camera (On Leg 2 side) -->
-  <rect x="610" y="370" width="40" height="75" class="retrieved" rx="4"/>
-  <line x1="630" y1="370" x2="730" y2="320" stroke="#f43f5e" stroke-width="1.5"/>
-  <circle cx="730" cy="320" r="3" fill="#f43f5e"/>
-  <text x="740" y="315" class="highlight">[RETRIEVED] TV CAMERA UNIT</text>
-  <text x="740" y="335" class="label">Returned to Earth by Apollo 12</text>
-  <text x="740" y="350" class="label">Subject of 31-month space exposure study</text>
+    <!-- Lunar Surface Incline Horizon (12.4° Slope inside Surveyor Crater) -->
+    <line x1="-380" y1="210" x2="380" y2="120" stroke="#334155" stroke-width="1.2" stroke-dasharray="6,4"/>
+    <text x="-370" y="225" class="text-sub">12.4° CRATER SLOPE PROFILE</text>
 
-  <!-- RETRIEVED COMPONENT 2: Surface Sampler Scoop -->
-  <line x1="390" y1="490" x2="300" y2="530" stroke="#94a3b8" stroke-width="3"/>
-  <line x1="300" y1="530" x2="230" y2="570" stroke="#94a3b8" stroke-width="3"/>
-  <polygon points="220,565 240,560 235,580 215,585" class="retrieved"/>
-  <line x1="220" y1="585" x2="120" y2="530" stroke="#f43f5e" stroke-width="1.5"/>
-  <circle cx="120" cy="530" r="3" fill="#f43f5e"/>
-  <text x="30" y="515" class="highlight">[RETRIEVED] SURFACE SAMPLER SCOOP</text>
-  <text x="30" y="535" class="label">Mechanized pantograph cutting arm</text>
-  <text x="30" y="550" class="label">Tested soil bearing strength in 1967</text>
+    <!-- =============================================== -->
+    <!-- 1. SOLID RETROROCKET MOTOR (THIOKOL TE-M-364)   -->
+    <!-- =============================================== -->
+    <!-- Main Spherical Motor Casing (37-inch diameter) -->
+    <circle cx="0" cy="50" r="75" fill="url(#retroMotorGlow)" stroke="#cbd5e1" stroke-width="1.8"/>
+    <circle cx="0" cy="50" r="65" stroke="#334155" stroke-width="0.8" stroke-dasharray="3,3" fill="none"/>
+    <circle cx="0" cy="50" r="6" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+    <!-- Retrorocket Jettison Thermal Skirt -->
+    <path d="M -50 90 L -30 145 L 30 145 L 50 90" stroke="#64748b" stroke-width="1.5" fill="#0d141e"/>
+    <ellipse cx="0" cy="145" rx="30" ry="8" stroke="#94a3b8" stroke-width="1.5" fill="#1e293b"/>
 
-  <!-- Omni Antennas -->
-  <line x1="370" y1="470" x2="270" y2="430" class="antenna"/>
-  <circle cx="270" cy="430" r="8" class="antenna"/>
-  <text x="160" y="425" class="label">OMNI ANTENNA A</text>
+    <!-- =============================================== -->
+    <!-- 2. TUBULAR ALUMINUM 7075 TRUSS SPACE FRAME      -->
+    <!-- =============================================== -->
+    <!-- Triangular Center Body Frame -->
+    <polygon points="0,-120 -110,40 110,40" fill="#0b1017" stroke="#cbd5e1" stroke-width="2.2"/>
+    <polygon points="0,-110 -95,32 95,32" fill="none" stroke="#334155" stroke-width="1"/>
 
-  <line x1="630" y1="470" x2="730" y2="430" class="antenna"/>
-  <circle cx="730" cy="430" r="8" class="antenna"/>
-  <text x="745" y="425" class="label">OMNI ANTENNA B</text>
+    <!-- Internal Cross-Brace Space Truss Tubes -->
+    <line x1="0" y1="-120" x2="0" y2="40" class="tubular-frame"/>
+    <line x1="-55" y1="-40" x2="55" y2="-40" class="tubular-frame"/>
+    <line x1="-55" y1="-40" x2="0" y2="40" class="secondary-frame"/>
+    <line x1="55" y1="-40" x2="0" y2="40" class="secondary-frame"/>
+    <line x1="-110" y1="40" x2="0" y2="-40" class="secondary-frame"/>
+    <line x1="110" y1="40" x2="0" y2="-40" class="secondary-frame"/>
+
+    <!-- Equipment Compartment A (Thermal Control Louvers) -->
+    <rect x="-135" y="-15" width="45" height="50" fill="#0d141e" stroke="#94a3b8" stroke-width="1.5"/>
+    <!-- Louver slats -->
+    <line x1="-130" y1="-5" x2="-95" y2="-5" stroke="#64748b" stroke-width="1"/>
+    <line x1="-130" y1="5" x2="-95" y2="5" stroke="#64748b" stroke-width="1"/>
+    <line x1="-130" y1="15" x2="-95" y2="15" stroke="#64748b" stroke-width="1"/>
+    <line x1="-130" y1="25" x2="-95" y2="25" stroke="#64748b" stroke-width="1"/>
+    <text x="-130" y="32" class="text-sub" font-size="6.5">COMP A</text>
+
+    <!-- Equipment Compartment B (Transponder &amp; Electronics) -->
+    <rect x="90" y="-15" width="45" height="50" fill="#0d141e" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="95" y1="-5" x2="130" y2="-5" stroke="#64748b" stroke-width="1"/>
+    <line x1="95" y1="5" x2="130" y2="5" stroke="#64748b" stroke-width="1"/>
+    <line x1="95" y1="15" x2="130" y2="15" stroke="#64748b" stroke-width="1"/>
+    <text x="95" y="32" class="text-sub" font-size="6.5">COMP B</text>
+
+    <!-- =============================================== -->
+    <!-- 3. VERNIER PROPULSION &amp; PROPELLANT TANKS       -->
+    <!-- =============================================== -->
+    <!-- 3 Spherical MMH / MON-10 Fuel &amp; Oxidizer Tanks -->
+    <circle cx="-65" cy="15" r="20" fill="#141a29" stroke="#64748b" stroke-width="1.2"/>
+    <circle cx="65" cy="15" r="20" fill="#141a29" stroke="#64748b" stroke-width="1.2"/>
+    <circle cx="0" cy="-60" r="18" fill="#141a29" stroke="#64748b" stroke-width="1.2"/>
+    <!-- Vernier Engine 1 (Left Outrigger) -->
+    <path d="M -90 40 L -95 70 L -80 70 L -85 40" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+    <!-- Vernier Engine 2 (Right Outrigger) -->
+    <path d="M 85 40 L 80 70 L 95 70 L 90 40" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+
+    <!-- =============================================== -->
+    <!-- 4. THREE LANDING LEGS &amp; HONEYCOMB FOOTPADS     -->
+    <!-- =============================================== -->
+    <!-- Leg 1 (Left Outrigger Strut) -->
+    <g id="leg-1">
+      <line x1="-110" y1="40" x2="-260" y2="175" class="blueprint-heavy"/>
+      <line x1="-70" y1="40" x2="-260" y2="175" class="tubular-frame"/>
+      <!-- Shock Absorber Honeycomb Column -->
+      <rect x="-240" y="140" width="14" height="24" rx="2" class="box-dark" transform="rotate(-35 -240 140)"/>
+      <!-- Footpad Dish (Crushable Honeycomb Aluminum 29-inch) -->
+      <path d="M -295 185 Q -260 170 -225 185 Z" fill="#0d141e" stroke="#cbd5e1" stroke-width="1.8"/>
+      <line x1="-295" y1="185" x2="-225" y2="185" stroke="#cbd5e1" stroke-width="1.8"/>
+    </g>
+
+    <!-- Leg 2 (Right Outrigger Strut) -->
+    <g id="leg-2">
+      <line x1="110" y1="40" x2="260" y2="135" class="blueprint-heavy"/>
+      <line x1="70" y1="40" x2="260" y2="135" class="tubular-frame"/>
+      <rect x="225" y="110" width="14" height="24" rx="2" class="box-dark" transform="rotate(35 225 110)"/>
+      <path d="M 225 145 Q 260 130 295 145 Z" fill="#0d141e" stroke="#cbd5e1" stroke-width="1.8"/>
+      <line x1="225" y1="145" x2="295" y2="145" stroke="#cbd5e1" stroke-width="1.8"/>
+    </g>
+
+    <!-- Leg 3 (Rear Strut - Foreshortened Perspective) -->
+    <g id="leg-3">
+      <line x1="0" y1="40" x2="0" y2="160" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,2"/>
+      <path d="M -25 160 Q 0 150 25 160 Z" fill="#0d141e" stroke="#475569" stroke-width="1.2"/>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 5. CENTRAL MAST, SOLAR ARRAY &amp; HIGH-GAIN ANTENNA-->
+    <!-- =============================================== -->
+    <!-- Center Mast Tube (Extends upwards from frame apex) -->
+    <rect x="-6" y="-300" width="12" height="180" fill="#0d141e" stroke="#cbd5e1" stroke-width="1.8"/>
+    <line x1="0" y1="-300" x2="0" y2="-120" stroke="#475569" stroke-width="1"/>
+
+    <!-- Dual-Axis Antenna &amp; Solar Panel Positioner Gimbal -->
+    <circle cx="0" cy="-300" r="14" fill="#131d2a" stroke="#cbd5e1" stroke-width="1.5"/>
+    <circle cx="0" cy="-300" r="6" fill="#f59e0b"/>
+
+    <!-- Planar Array High-Gain Antenna (HGA) - Steerable Earth-Pointing -->
+    <g id="hga-antenna" transform="translate(-50, -340) rotate(-15)">
+      <rect x="-40" y="-12" width="80" height="24" rx="3" fill="#141f2e" stroke="#cbd5e1" stroke-width="1.6"/>
+      <!-- Planar Array Radiating Slot Pattern -->
+      <line x1="-30" y1="-6" x2="30" y2="-6" stroke="#64748b" stroke-width="0.8"/>
+      <line x1="-30" y1="0" x2="30" y2="0" stroke="#64748b" stroke-width="0.8"/>
+      <line x1="-30" y1="6" x2="30" y2="6" stroke="#64748b" stroke-width="0.8"/>
+      <!-- Gimbal Articulation Link -->
+      <line x1="0" y1="12" x2="50" y2="40" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+
+    <!-- Solar Panel Array (792 Photovoltaic Cells) -->
+    <g id="solar-panel" transform="translate(60, -320) rotate(20)">
+      <rect x="0" y="-55" width="65" height="110" fill="url(#solarPanelGrad)" stroke="#cbd5e1" stroke-width="1.8"/>
+      <!-- Solar Cell Grid Matrix -->
+      <line x1="22" y1="-55" x2="22" y2="55" stroke="#334155" stroke-width="0.8"/>
+      <line x1="44" y1="-55" x2="44" y2="55" stroke="#334155" stroke-width="0.8"/>
+      <line x1="0" y1="-35" x2="65" y2="-35" stroke="#334155" stroke-width="0.8"/>
+      <line x1="0" y1="-15" x2="65" y2="-15" stroke="#334155" stroke-width="0.8"/>
+      <line x1="0" y1="5" x2="65" y2="5" stroke="#334155" stroke-width="0.8"/>
+      <line x1="0" y1="25" x2="65" y2="25" stroke="#334155" stroke-width="0.8"/>
+      <line x1="0" y1="40" x2="65" y2="40" stroke="#334155" stroke-width="0.8"/>
+      <!-- Mast Hinge Mount -->
+      <line x1="0" y1="0" x2="-60" y2="20" stroke="#94a3b8" stroke-width="1.5"/>
+    </g>
+
+    <!-- Omnidirectional Antenna Booms (Extending sideways) -->
+    <line x1="-135" y1="10" x2="-220" y2="-30" stroke="#94a3b8" stroke-width="1.2"/>
+    <circle cx="-220" cy="-30" r="4" stroke="#cbd5e1" stroke-width="1" fill="#f59e0b"/>
+    <line x1="135" y1="10" x2="220" y2="-30" stroke="#94a3b8" stroke-width="1.2"/>
+    <circle cx="220" cy="-30" r="4" stroke="#cbd5e1" stroke-width="1" fill="#f59e0b"/>
+
+    <!-- =============================================== -->
+    <!-- 6. SURFACE SAMPLER SCOOP (PANTOGRAPH MECHANISM)  -->
+    <!-- =============================================== -->
+    <g id="surface-sampler" transform="translate(45, 10)">
+      <!-- Base Motor Pivot Housing on Frame -->
+      <rect x="0" y="0" width="18" height="18" fill="#131d2a" stroke="#cbd5e1" stroke-width="1.2"/>
+      <circle cx="9" cy="9" r="3" fill="#f59e0b"/>
+
+      <!-- Articulated Scissor / Pantograph Boom Arm -->
+      <line x1="9" y1="9" x2="55" y2="35" class="tubular-frame"/>
+      <line x1="9" y1="15" x2="65" y2="50" class="tubular-frame"/>
+      <line x1="55" y1="35" x2="110" y2="70" class="tubular-frame"/>
+      <line x1="65" y1="50" x2="115" y2="85" class="tubular-frame"/>
+      <line x1="55" y1="35" x2="65" y2="50" stroke="#64748b" stroke-width="1"/>
+      <line x1="110" y1="70" x2="115" y2="85" stroke="#64748b" stroke-width="1"/>
+
+      <!-- Articulated Extension Rod into Regolith -->
+      <line x1="110" y1="70" x2="155" y2="120" stroke="#cbd5e1" stroke-width="1.8"/>
+      <!-- Scoop Bucket with Serrated Teeth Contacting Surface -->
+      <path d="M 155 120 L 175 125 L 182 140 L 158 138 Z" fill="#1e293b" stroke="#f59e0b" stroke-width="1.4"/>
+      <!-- Soil Trench Mark -->
+      <path d="M 150 142 Q 170 148 190 140" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="2,2"/>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 7. HIGHLIGHTED SURVEYOR TV VIDICON CAMERA       -->
+    <!-- =============================================== -->
+    <!-- (Mounted on Upper Right Upper Frame Truss)      -->
+    <g id="tv-camera-turret" transform="translate(-70, -110)">
+      <!-- Amber Target Highlight Ring Indicating Retrieved Subsystem -->
+      <circle cx="0" cy="0" r="42" stroke="#d97706" stroke-width="1.2" stroke-dasharray="4,3" fill="none"/>
+      
+      <!-- Cylindrical Vidicon Camera Housing -->
+      <rect x="-14" y="-28" width="28" height="56" rx="4" fill="#0d141e" stroke="#f59e0b" stroke-width="2"/>
+      
+      <!-- Steerable Azimuth/Elevation Mirror Hood -->
+      <path d="M -14 -28 L 14 -28 L 22 -50 L -6 -50 Z" fill="#131d2a" stroke="#f59e0b" stroke-width="1.8"/>
+      <!-- Optical Mirror Surface Inside Hood -->
+      <line x1="-2" y1="-46" x2="16" y2="-32" stroke="#f59e0b" stroke-width="2.2"/>
+      
+      <!-- 4-Position Optical Filter Wheel Hub -->
+      <circle cx="0" cy="5" r="7" stroke="#cbd5e1" stroke-width="1.2" fill="#1f2937"/>
+      <circle cx="0" cy="5" r="2.5" fill="#f59e0b"/>
+
+      <!-- Structural Mounting Bracket to Mast -->
+      <line x1="14" y1="10" x2="64" y2="0" stroke="#cbd5e1" stroke-width="1.8"/>
+      <line x1="14" y1="-10" x2="64" y2="-10" stroke="#64748b" stroke-width="1.2"/>
+
+      <!-- Bolt-Cutter Shear Point Indicator (Apollo 12 Recovery) -->
+      <g transform="translate(38, -5)">
+        <circle cx="0" cy="0" r="9" stroke="#ef4444" stroke-width="1.2" fill="#2d1215"/>
+        <line x1="-5" y1="-5" x2="5" y2="5" stroke="#ef4444" stroke-width="1.5"/>
+        <line x1="-5" y1="5" x2="5" y2="-5" stroke="#ef4444" stroke-width="1.5"/>
+      </g>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 8. DIMENSIONS &amp; EXTENSION LINES                -->
+    <!-- =============================================== -->
+    <!-- Total Height from Footpads to Mast Tip (3.0 m / 10 ft) -->
+    <line x1="-310" y1="-340" x2="-310" y2="185" class="dimension-line"/>
+    <line x1="-320" y1="-340" x2="-290" y2="-340" stroke="#334155" stroke-width="0.8"/>
+    <line x1="-320" y1="185" x2="-270" y2="185" stroke="#334155" stroke-width="0.8"/>
+    <text x="-305" y="-70" class="dimension-text" transform="rotate(-90 -305 -70)">HEIGHT: 3.05 METERS (10.0 FT)</text>
+
+    <!-- Leg Spread Diameter (4.27 m / 14.0 ft) -->
+    <line x1="-260" y1="215" x2="260" y2="215" class="dimension-line"/>
+    <line x1="-260" y1="185" x2="-260" y2="230" stroke="#334155" stroke-width="0.8"/>
+    <line x1="260" y1="145" x2="260" y2="230" stroke="#334155" stroke-width="0.8"/>
+    <text x="-80" y="232" class="dimension-text">LANDING LEG SPREAD: 4.27 METERS (14.0 FT)</text>
+
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CALLOUT LEADER LINES &amp; ARCHIVAL ENGINEERING NOTES   -->
+  <!-- ==================================================== -->
+
+  <!-- Callout 1: TV Vidicon Camera &amp; Apollo 12 Recovery Highlight -->
+  <g transform="translate(80, 340)">
+    <path d="M 280 0 L 380 0 L 415 30" class="callout-amber"/>
+    <text x="0" y="-12" class="text-amber">TELEVISION VIDICON CAMERA (RETRIEVED)</text>
+    <text x="0" y="2" class="text-sub">Slow-scan 600-line &amp; 200-line television camera.</text>
+    <text x="0" y="14" class="text-sub">Focal length 25-100mm zoom lens &amp; 4-position color wheel.</text>
+    <text x="0" y="26" class="text-amber">&gt; SEVERED &amp; RETRIEVED BY PETE CONRAD &amp; ALAN BEAN (EVA II)</text>
+    <text x="0" y="38" class="text-sub">Streptococcus mitis bacteria culture isolated post-return.</text>
+  </g>
+
+  <!-- Callout 2: High-Gain Planar Antenna -->
+  <g transform="translate(80, 200)">
+    <path d="M 280 0 L 390 0 L 450 -120" class="callout-line" marker-end="url(#arrowSurv)"/>
+    <text x="0" y="-4" class="text-label">PLANAR ARRAY HIGH-GAIN ANTENNA (HGA)</text>
+    <text x="0" y="10" class="text-sub">Transmitted high-rate television frames to Goldstone DSS.</text>
+    <text x="0" y="22" class="text-sub">Maintained earth-pointing lock via solar sensors &amp; gyro.</text>
+  </g>
+
+  <!-- Callout 3: Solar Array -->
+  <g transform="translate(820, 200)">
+    <path d="M 0 0 L -80 0 L -140 -80" class="callout-line" marker-end="url(#arrowSurv)"/>
+    <text x="10" y="-4" class="text-label">PHOTOVOLTAIC SOLAR ARRAY</text>
+    <text x="10" y="10" class="text-sub">792 solar cells delivering 89 Watts peak electrical power.</text>
+    <text x="10" y="22" class="text-sub">Dual-axis motor gimbal tracked lunar solar elevation.</text>
+  </g>
+
+  <!-- Callout 4: Soil Mechanics Surface Sampler -->
+  <g transform="translate(820, 480)">
+    <path d="M 0 0 L -80 0 L -120 70" class="callout-amber"/>
+    <text x="10" y="-12" class="text-amber">SOIL MECHANICS SURFACE SAMPLER</text>
+    <text x="10" y="2" class="text-sub">Articulated pantograph arm with 1.5m extension reach.</text>
+    <text x="10" y="14" class="text-sub">Dug 4 bearing-strength trenches in lunar regolith.</text>
+    <text x="10" y="26" class="text-sub">Sample scoop inspected &amp; photographed by Conrad on EVA II.</text>
+  </g>
+
+  <!-- Callout 5: Solid Retrorocket Motor -->
+  <g transform="translate(820, 620)">
+    <path d="M 0 0 L -110 0 L -210 -80" class="callout-line" marker-end="url(#arrowSurv)"/>
+    <text x="10" y="-4" class="text-label">THIOKOL TE-M-364 MAIN RETROROCKET</text>
+    <text x="10" y="10" class="text-sub">Spherical solid propellant motor. 9,000 lbf thrust.</text>
+    <text x="10" y="22" class="text-sub">Decelerated spacecraft from 2,600 m/s to 110 m/s before jettison.</text>
+  </g>
+
+  <!-- Engineering Revision Stamp (Lower Left) -->
+  <g transform="translate(50, 780)">
+    <rect width="250" height="70" fill="#0b1017" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="22" x2="250" y2="22" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="10" y="15" class="text-meta">REV • DESCRIPTION • DATE • APPROVED</text>
+    <text x="10" y="38" class="text-sub">2 • LAUNCH CONFIGURATION • 04-12-67 • W.B.</text>
+    <text x="10" y="52" class="text-sub">3 • SURFACE OPERATIONS • 05-02-67 • R.L.</text>
+    <text x="10" y="64" class="text-amber">4 • APOLLO 12 RECOVERY RECORD • NASA JPL</text>
+  </g>
+
 </svg>

@@ -1,90 +1,442 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="100%" height="100%">
   <defs>
+    <!-- Grid Pattern -->
+    <pattern id="minorGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#101722" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="majorGrid" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="url(#minorGrid)"/>
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#182333" stroke-width="1.2"/>
+    </pattern>
+
+    <!-- Linear &amp; Radial Gradients for Technical Depth -->
+    <radialGradient id="engineGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#384b66" stop-opacity="0.35"/>
+      <stop offset="70%" stop-color="#141d28" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#080c12" stop-opacity="0.9"/>
+    </radialGradient>
+
+    <linearGradient id="goldMylar" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#b45309" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0.28"/>
+    </linearGradient>
+
+    <!-- Marker Arrowheads -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#d97706"/>
+    </marker>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#94a3b8"/>
+    </marker>
+
     <style>
-      .bg { fill: #0b0d12; }
-      .grid { stroke: #1b2230; stroke-width: 1; }
-      .title { fill: #e2e8f0; font-family: monospace; font-size: 20px; font-weight: bold; letter-spacing: 2px; }
-      .subtitle { fill: #94a3b8; font-family: monospace; font-size: 13px; }
-      .blueprint-line { stroke: #38bdf8; stroke-width: 1.5; fill: none; }
-      .accent-line { stroke: #f59e0b; stroke-width: 2; fill: none; }
-      .gold-foil { fill: rgba(245, 158, 11, 0.15); stroke: #f59e0b; stroke-width: 1.5; }
-      .engine { stroke: #ef4444; stroke-width: 2; fill: rgba(239, 68, 68, 0.1); }
-      .tank { stroke: #10b981; stroke-width: 1.5; fill: rgba(16, 185, 129, 0.1); }
-      .label { fill: #cbd5e1; font-family: monospace; font-size: 11px; }
-      .dimension { fill: #38bdf8; font-family: monospace; font-size: 11px; }
+      .bg { fill: #070a0f; }
+      .border-line { stroke: #334155; stroke-width: 1.5; fill: none; }
+      .hairline { stroke: #1e293b; stroke-width: 0.75; fill: none; }
+      .blueprint-primary { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+      .blueprint-heavy { stroke: #cbd5e1; stroke-width: 2.2; fill: none; }
+      .centerline { stroke: #475569; stroke-width: 0.8; stroke-dasharray: 24,4,4,4; fill: none; }
+      .dimension-line { stroke: #475569; stroke-width: 0.9; marker-start: url(#arrow); marker-end: url(#arrow); fill: none; }
+      .dimension-text { fill: #94a3b8; font-family: 'Space Mono', monospace; font-size: 9.5px; letter-spacing: 0.08em; }
+      .callout-line { stroke: #64748b; stroke-width: 1; fill: none; }
+      .callout-amber { stroke: #d97706; stroke-width: 1.2; fill: none; marker-end: url(#arrowAmber); }
+      .text-title { fill: #f1f5f9; font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; letter-spacing: 0.14em; }
+      .text-meta { fill: #94a3b8; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.06em; }
+      .text-amber { fill: #f59e0b; font-family: 'Space Mono', monospace; font-size: 9px; font-weight: 600; letter-spacing: 0.08em; }
+      .text-label { fill: #cbd5e1; font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; }
+      .text-sub { fill: #64748b; font-family: 'Space Mono', monospace; font-size: 8.5px; letter-spacing: 0.04em; }
+      .box-dark { fill: #0d131c; stroke: #334155; stroke-width: 1.2; }
+      .strut-truss { stroke: #64748b; stroke-width: 1.2; stroke-linecap: round; fill: none; }
     </style>
   </defs>
-  <rect width="1000" height="800" class="bg"/>
-  <!-- Grid -->
-  <g class="grid">
-    <path d="M0,100 H1000 M0,200 H1000 M0,300 H1000 M0,400 H1000 M0,500 H1000 M0,600 H1000 M0,700 H1000"/>
-    <path d="M100,0 V800 M200,0 V800 M300,0 V800 M400,0 V800 M500,0 V800 M600,0 V800 M700,0 V800 M800,0 V800 M900,0 V800"/>
+
+  <!-- Background and Technical Drafting Grid -->
+  <rect width="1200" height="900" class="bg"/>
+  <rect width="1200" height="900" fill="url(#majorGrid)"/>
+
+  <!-- Master Drawing Sheet Outer Border -->
+  <rect x="25" y="25" width="1150" height="850" class="border-line"/>
+  <rect x="30" y="30" width="1140" height="840" stroke="#1e293b" stroke-width="0.75" fill="none"/>
+
+  <!-- Reseau Corner Alignment Marks -->
+  <path d="M 22 25 L 28 25 M 25 22 L 25 28" stroke="#475569" stroke-width="1"/>
+  <path d="M 1172 25 L 1178 25 M 1175 22 L 1175 28" stroke="#475569" stroke-width="1"/>
+  <path d="M 22 875 L 28 875 M 25 872 L 25 878" stroke="#475569" stroke-width="1"/>
+  <path d="M 1172 875 L 1178 875 M 1175 872 L 1175 878" stroke="#475569" stroke-width="1"/>
+
+  <!-- ========================================== -->
+  <!-- GRUMMAN AEROSPACE ENGINEERING TITLE BLOCK  -->
+  <!-- ========================================== -->
+  <g id="title-block" transform="translate(730, 725)">
+    <rect width="435" height="140" fill="#0b1017" stroke="#334155" stroke-width="1.5"/>
+    <line x1="0" y1="35" x2="435" y2="35" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="70" x2="435" y2="70" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="105" x2="435" y2="105" stroke="#1e293b" stroke-width="1"/>
+    <line x1="220" y1="0" x2="220" y2="70" stroke="#1e293b" stroke-width="1"/>
+    <line x1="330" y1="70" x2="330" y2="140" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- Contractor &amp; Project -->
+    <text x="12" y="22" class="text-title">GRUMMAN AEROSPACE</text>
+    <text x="232" y="22" class="text-meta">PROJECT: APOLLO / NASA MSC</text>
+    <text x="12" y="55" class="text-label">LM-6 "INTREPID" DESCENT STAGE</text>
+    <text x="232" y="55" class="text-sub">SUB-SYSTEM STRUCTURAL SCHEMATIC</text>
+
+    <!-- Drawing &amp; Sheet Data -->
+    <text x="12" y="90" class="text-meta">DWG NO: LDW-340-10026-REV E</text>
+    <text x="340" y="90" class="text-meta">SCALE: 1:30</text>
+    <text x="12" y="125" class="text-amber">SITE: 3.0124°S, 23.4216°W (APOLLO 12)</text>
+    <text x="340" y="125" class="text-meta">SHEET 1 OF 1</text>
   </g>
-  <!-- Headers -->
-  <text x="50" y="55" class="title">APOLLO 12 LUNAR MODULE (LM-6 INTREPID)</text>
-  <text x="50" y="78" class="subtitle">DESCENT STAGE SUB-SYSTEM ARCHITECTURE &amp; ARTIFACT PROFILE</text>
-  <rect x="750" y="40" width="200" height="50" fill="#111827" stroke="#38bdf8" stroke-width="1" rx="4"/>
-  <text x="760" y="60" class="subtitle">SITE: 3.0124°S, 23.4216°W</text>
-  <text x="760" y="78" class="subtitle">STATUS: PERMANENT LUNAR</text>
 
-  <!-- Descent Stage Octagonal Body -->
-  <polygon points="380,260 620,260 700,340 700,500 620,580 380,580 300,500 300,340" class="gold-foil"/>
-  <rect x="390" y="280" width="220" height="280" fill="none" stroke="#64748b" stroke-dasharray="4,4"/>
+  <!-- Upper Metadata &amp; NASA Technical Archive Header -->
+  <g transform="translate(50, 60)">
+    <text x="0" y="0" class="text-title">APOLLO 12 LUNAR MODULE (LM-6 INTREPID)</text>
+    <text x="0" y="20" class="text-meta">NATIONAL AERONAUTICS AND SPACE ADMINISTRATION • MANNED SPACECRAFT CENTER</text>
+    <text x="0" y="34" class="text-sub">PRIMARY HARDWARE SUBSYSTEMS, PROPELLANT TANKAGE &amp; EVA EXPERIMENT COMPARTMENTS</text>
+  </g>
 
-  <!-- DPS Engine (Center) -->
-  <circle cx="500" cy="420" r="65" class="engine"/>
-  <circle cx="500" cy="420" r="25" fill="#ef4444" opacity="0.4"/>
-  <text x="500" y="424" class="label" text-anchor="middle">TRW DPS ENGINE</text>
+  <!-- Quadrant Legend / Coordinate Orientation -->
+  <g transform="translate(50, 140)">
+    <rect width="180" height="95" fill="#0b1017" stroke="#1e293b" stroke-width="1"/>
+    <text x="12" y="20" class="text-amber">QUADRANT ASSIGNMENTS</text>
+    <text x="12" y="38" class="text-sub">QUAD I: S-BAND / OXIDIZER</text>
+    <text x="12" y="54" class="text-sub">QUAD II: MESA / TV / PALLET</text>
+    <text x="12" y="70" class="text-sub">QUAD III: HELIUM / FUEL</text>
+    <text x="12" y="86" class="text-sub">QUAD IV: ALSEP / RTG CASK</text>
+  </g>
 
-  <!-- Propellant Tanks -->
-  <!-- Fuel Tank 1 (Quad 1) -->
-  <circle cx="420" cy="350" r="38" class="tank"/>
-  <text x="420" y="354" class="label" text-anchor="middle">AEROZINE 50</text>
-  <!-- Oxidizer Tank 1 (Quad 2) -->
-  <circle cx="580" cy="350" r="38" class="tank"/>
-  <text x="580" y="354" class="label" text-anchor="middle">N2O4 OXIDIZER</text>
-  <!-- Fuel Tank 2 (Quad 3) -->
-  <circle cx="420" cy="490" r="38" class="tank"/>
-  <text x="420" y="494" class="label" text-anchor="middle">AEROZINE 50</text>
-  <!-- Oxidizer Tank 2 (Quad 4) -->
-  <circle cx="580" cy="490" r="38" class="tank"/>
-  <text x="580" y="494" class="label" text-anchor="middle">N2O4 OXIDIZER</text>
+  <!-- Coordinate Orientation Compass (Lunar Surface Relative) -->
+  <g transform="translate(1100, 100)">
+    <circle cx="0" cy="0" r="28" stroke="#334155" stroke-width="1" fill="#0b1017"/>
+    <line x1="0" y1="-28" x2="0" y2="28" stroke="#475569" stroke-width="1"/>
+    <line x1="-28" y1="0" x2="28" y2="0" stroke="#475569" stroke-width="1"/>
+    <path d="M 0 -24 L 5 -12 L 0 -15 L -5 -12 Z" fill="#f59e0b"/>
+    <text x="-4" y="-32" class="text-amber" font-size="9">N</text>
+    <text x="33" y="3" class="text-meta" font-size="8">E</text>
+    <text x="-3" y="40" class="text-meta" font-size="8">S</text>
+    <text x="-42" y="3" class="text-meta" font-size="8">W</text>
+    <text x="-25" y="52" class="text-sub" font-size="7.5">+Z AXIS (LADDER)</text>
+  </g>
 
-  <!-- 4 Landing Gear Legs -->
-  <!-- Forward Leg (Ladder / Quad 1) -->
-  <line x1="380" y1="260" x2="170" y2="130" class="blueprint-line" stroke-width="4"/>
-  <circle cx="170" cy="130" r="18" fill="#38bdf8"/>
-  <line x1="170" y1="130" x2="130" y2="100" stroke="#f59e0b" stroke-width="2"/>
-  <text x="110" y="90" class="label">LUNAR SURFACE SENSING PROBE (1.68m)</text>
-  <!-- Ladder & Plaque -->
-  <rect x="220" y="160" width="40" height="8" fill="#e2e8f0" transform="rotate(32 220 160)"/>
-  <rect x="240" y="175" width="40" height="8" fill="#e2e8f0" transform="rotate(32 240 175)"/>
-  <text x="200" y="230" class="accent-line" style="fill:#f59e0b">EGRESS LADDER &amp; COMMEMORATIVE PLAQUE</text>
+  <!-- ==================================================== -->
+  <!-- CENTRAL SCHEMATIC: LM-6 DESCENT STAGE (CENTER 560,460)-->
+  <!-- ==================================================== -->
+  <g id="schematic-center" transform="translate(560, 460)">
 
-  <!-- Quad 2 Leg (Right Forward) -->
-  <line x1="620" y1="260" x2="830" y2="130" class="blueprint-line" stroke-width="4"/>
-  <circle cx="830" cy="130" r="18" fill="#38bdf8"/>
-  <!-- MESA Bay -->
-  <rect x="650" y="290" width="40" height="50" fill="#3b82f6" opacity="0.3" stroke="#38bdf8"/>
-  <text x="710" y="320" class="label">QUAD II: MESA (TV CAMERA / ROCK BOXES)</text>
+    <!-- Centerlines (Orthogonal Principal Axes) -->
+    <line x1="-380" y1="0" x2="380" y2="0" class="centerline"/>
+    <line x1="0" y1="-340" x2="0" y2="340" class="centerline"/>
 
-  <!-- Quad 3 Leg (Right Aft) -->
-  <line x1="620" y1="580" x2="830" y2="710" class="blueprint-line" stroke-width="4"/>
-  <circle cx="830" cy="710" r="18" fill="#38bdf8"/>
+    <!-- Diagonal Landing Gear Centerlines -->
+    <line x1="-310" y1="-310" x2="310" y2="310" stroke="#334155" stroke-width="0.8" stroke-dasharray="16,4,4,4"/>
+    <line x1="-310" y1="310" x2="310" y2="-310" stroke="#334155" stroke-width="0.8" stroke-dasharray="16,4,4,4"/>
 
-  <!-- Quad 4 Leg (Left Aft) -->
-  <line x1="380" y1="580" x2="170" y2="710" class="blueprint-line" stroke-width="4"/>
-  <circle cx="170" cy="710" r="18" fill="#38bdf8"/>
-  <!-- ALSEP Bay & SNAP-27 Cask -->
-  <rect x="310" y="510" width="45" height="45" fill="#f59e0b" opacity="0.4" stroke="#f59e0b"/>
-  <circle cx="290" cy="560" r="12" fill="#ef4444" stroke="#ffffff" stroke-width="1.5"/>
-  <text x="70" y="555" class="label">SNAP-27 GRAPHITE CASK</text>
-  <text x="70" y="575" class="label">(PLUTONIUM-238 FUEL TRANSPORT)</text>
-  <text x="70" y="600" class="label">QUAD IV: ALSEP SUBPACKAGES 1 &amp; 2</text>
+    <!-- Diagonal Footprint Dimension Circle (9.45 m / 31 ft span) -->
+    <circle cx="0" cy="0" r="320" stroke="#1e293b" stroke-width="0.8" stroke-dasharray="3,3" fill="none"/>
 
-  <!-- Dimension indicators -->
-  <line x1="170" y1="760" x2="830" y2="760" stroke="#38bdf8" stroke-width="1" stroke-dasharray="3,3"/>
-  <line x1="170" y1="750" x2="170" y2="770" stroke="#38bdf8" stroke-width="1"/>
-  <line x1="830" y1="750" x2="830" y2="770" stroke="#38bdf8" stroke-width="1"/>
-  <text x="500" y="755" class="dimension" text-anchor="middle">DIAGONAL FOOTPRINT SPAN: 9.45 METERS (31 FEET)</text>
+    <!-- =============================================== -->
+    <!-- 1. LANDING GEAR STRUT ASSEMBLIES (4 OUTRIGGERS)  -->
+    <!-- =============================================== -->
+
+    <!-- Top-Left (-Y / +Z) A-frame truss &amp; Pad -->
+    <g id="gear-tl">
+      <!-- Outrigger Trusses -->
+      <line x1="-120" y1="-120" x2="-260" y2="-260" class="blueprint-heavy"/>
+      <line x1="-140" y1="-95" x2="-260" y2="-260" class="strut-truss"/>
+      <line x1="-95" y1="-140" x2="-260" y2="-260" class="strut-truss"/>
+      <!-- Shock Absorber Honeycomb Cylinder -->
+      <rect x="-278" y="-278" width="26" height="26" rx="4" class="box-dark" transform="rotate(45 -265 -265)"/>
+      <!-- Footpad (37" Dish Diameter) -->
+      <circle cx="-275" cy="-275" r="28" stroke="#cbd5e1" stroke-width="1.8" fill="#0b1017"/>
+      <circle cx="-275" cy="-275" r="22" stroke="#475569" stroke-width="1" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="-275" cy="-275" r="6" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+      <!-- Lunar Surface Sensing Probe (1.68 m) -->
+      <line x1="-285" y1="-285" x2="-350" y2="-350" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="-350" cy="-350" r="2.5" fill="#f59e0b"/>
+    </g>
+
+    <!-- Top-Right (+Y / +Z) A-frame truss &amp; Pad - FORWARD / EGRESS LADDER GEAR -->
+    <g id="gear-tr-forward">
+      <line x1="120" y1="-120" x2="260" y2="-260" class="blueprint-heavy"/>
+      <line x1="140" y1="-95" x2="260" y2="-260" class="strut-truss"/>
+      <line x1="95" y1="-140" x2="260" y2="-260" class="strut-truss"/>
+      <!-- Primary Strut Housing -->
+      <rect x="252" y="-278" width="26" height="26" rx="4" class="box-dark" transform="rotate(45 265 -265)"/>
+      <!-- Footpad Dish -->
+      <circle cx="275" cy="-275" r="28" stroke="#cbd5e1" stroke-width="1.8" fill="#0b1017"/>
+      <circle cx="275" cy="-275" r="22" stroke="#475569" stroke-width="1" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="275" cy="-275" r="6" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+
+      <!-- EGRESS LADDER ASSEMBLY (MOUNTED ON FORWARD STRUT) -->
+      <g id="egress-ladder" transform="rotate(-45 200 -200)">
+        <!-- Ladder Rails -->
+        <line x1="160" y1="-210" x2="265" y2="-210" stroke="#f1f5f9" stroke-width="2.5"/>
+        <line x1="160" y1="-222" x2="265" y2="-222" stroke="#f1f5f9" stroke-width="2.5"/>
+        <!-- Rungs -->
+        <line x1="170" y1="-210" x2="170" y2="-222" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="185" y1="-210" x2="185" y2="-222" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="200" y1="-210" x2="200" y2="-222" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="215" y1="-210" x2="215" y2="-222" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="230" y1="-210" x2="230" y2="-222" stroke="#cbd5e1" stroke-width="1.5"/>
+        <line x1="245" y1="-210" x2="245" y2="-222" stroke="#cbd5e1" stroke-width="1.5"/>
+        <!-- Commemorative Plaque on Ladder Strut -->
+        <rect x="190" y="-220" width="22" height="8" fill="#d97706" stroke="#f59e0b" stroke-width="1"/>
+      </g>
+      <!-- Note: No sensing probe on forward gear to prevent tripping hazard for astronauts -->
+    </g>
+
+    <!-- Bottom-Left (-Y / -Z) A-frame truss &amp; Pad -->
+    <g id="gear-bl">
+      <line x1="-120" y1="120" x2="-260" y2="260" class="blueprint-heavy"/>
+      <line x1="-140" y1="95" x2="-260" y2="260" class="strut-truss"/>
+      <line x1="-95" y1="140" x2="-260" y2="260" class="strut-truss"/>
+      <rect x="-278" y="252" width="26" height="26" rx="4" class="box-dark" transform="rotate(45 -265 265)"/>
+      <circle cx="-275" cy="275" r="28" stroke="#cbd5e1" stroke-width="1.8" fill="#0b1017"/>
+      <circle cx="-275" cy="275" r="22" stroke="#475569" stroke-width="1" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="-275" cy="275" r="6" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+      <!-- Sensing probe -->
+      <line x1="-285" y1="285" x2="-350" y2="350" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="-350" cy="350" r="2.5" fill="#f59e0b"/>
+    </g>
+
+    <!-- Bottom-Right (+Y / -Z) A-frame truss &amp; Pad -->
+    <g id="gear-br">
+      <line x1="120" y1="120" x2="260" y2="260" class="blueprint-heavy"/>
+      <line x1="140" y1="95" x2="260" y2="260" class="strut-truss"/>
+      <line x1="95" y1="140" x2="260" y2="260" class="strut-truss"/>
+      <rect x="252" y="252" width="26" height="26" rx="4" class="box-dark" transform="rotate(45 265 265)"/>
+      <circle cx="275" cy="275" r="28" stroke="#cbd5e1" stroke-width="1.8" fill="#0b1017"/>
+      <circle cx="275" cy="275" r="22" stroke="#475569" stroke-width="1" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="275" cy="275" r="6" stroke="#94a3b8" stroke-width="1.2" fill="#1e293b"/>
+      <!-- Sensing probe -->
+      <line x1="285" y1="285" x2="350" y2="350" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="350" cy="350" r="2.5" fill="#f59e0b"/>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 2. DESCENT STAGE CHASSIS (OCTAGONAL STRUCTURE)   -->
+    <!-- =============================================== -->
+
+    <!-- Outer Thermal Blanket Envelope (Kapton &amp; Gold Mylar MLI) -->
+    <polygon points="
+      -85,-165 85,-165
+      165,-85 165,85
+      85,165 -85,165
+      -165,85 -165,-85
+    " fill="url(#goldMylar)" stroke="#b45309" stroke-width="1.5"/>
+
+    <!-- Primary Aluminum 2024 Web Bulkhead (Inner Box Beam Chassis) -->
+    <polygon points="
+      -80,-158 80,-158
+      158,-80 158,80
+      80,158 -80,158
+      -158,80 -158,-80
+    " fill="#0d141e" stroke="#cbd5e1" stroke-width="2"/>
+
+    <!-- Internal Cross-Beam Web Stiffeners (Cruciform Architecture) -->
+    <line x1="-80" y1="-80" x2="80" y2="-80" stroke="#334155" stroke-width="1.5"/>
+    <line x1="-80" y1="80" x2="80" y2="80" stroke="#334155" stroke-width="1.5"/>
+    <line x1="-80" y1="-80" x2="-80" y2="80" stroke="#334155" stroke-width="1.5"/>
+    <line x1="80" y1="-80" x2="80" y2="80" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Diagonal Trusses into Center Thrust Tube Ring -->
+    <line x1="-158" y1="-80" x2="-80" y2="-80" stroke="#475569" stroke-width="1"/>
+    <line x1="-80" y1="-158" x2="-80" y2="-80" stroke="#475569" stroke-width="1"/>
+    <line x1="158" y1="-80" x2="80" y2="-80" stroke="#475569" stroke-width="1"/>
+    <line x1="80" y1="-158" x2="80" y2="-80" stroke="#475569" stroke-width="1"/>
+    <line x1="-158" y1="80" x2="-80" y2="80" stroke="#475569" stroke-width="1"/>
+    <line x1="-80" y1="158" x2="-80" y2="80" stroke="#475569" stroke-width="1"/>
+    <line x1="158" y1="80" x2="80" y2="80" stroke="#475569" stroke-width="1"/>
+    <line x1="80" y1="158" x2="80" y2="80" stroke="#475569" stroke-width="1"/>
+
+    <!-- =============================================== -->
+    <!-- 3. PROPULSION: TRW DESCENT ENGINE &amp; TANKS       -->
+    <!-- =============================================== -->
+
+    <!-- Center Engine Bay (Thrust Gimbal Chamber) -->
+    <circle cx="0" cy="0" r="70" fill="url(#engineGlow)" stroke="#475569" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="58" stroke="#334155" stroke-width="1.2" stroke-dasharray="3,3" fill="none"/>
+
+    <!-- TRW DPS Engine Gimbal Ring -->
+    <circle cx="0" cy="0" r="45" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+    <circle cx="0" cy="0" r="32" stroke="#cbd5e1" stroke-width="1.8" fill="#111827"/>
+
+    <!-- Injector Plate Head &amp; Throat -->
+    <circle cx="0" cy="0" r="14" stroke="#f59e0b" stroke-width="1.2" fill="#1f2937"/>
+    <circle cx="0" cy="0" r="5" fill="#f59e0b"/>
+
+    <!-- Engine Gimbal Actuator Struts -->
+    <line x1="-28" y1="-28" x2="-18" y2="-18" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="28" y1="28" x2="18" y2="18" stroke="#f59e0b" stroke-width="2"/>
+    <line x1="-28" y1="28" x2="-18" y2="18" stroke="#94a3b8" stroke-width="2"/>
+    <line x1="28" y1="-28" x2="18" y2="-18" stroke="#94a3b8" stroke-width="2"/>
+
+    <!-- 4 Hypergolic Propellant Spherical Titanium Tanks -->
+    <!-- Tank 1: Fuel (Aerozine 50) - Upper Left -->
+    <g id="tank-fuel-1" transform="translate(-115, -115)">
+      <circle cx="0" cy="0" r="34" fill="#0d1b2a" stroke="#64748b" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="28" stroke="#334155" stroke-width="0.8" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="0" cy="0" r="4" fill="#94a3b8"/>
+      <text x="-16" y="3" class="text-meta" font-size="8">AEROZINE</text>
+    </g>
+
+    <!-- Tank 2: Oxidizer (N2O4) - Upper Right -->
+    <g id="tank-ox-1" transform="translate(115, -115)">
+      <circle cx="0" cy="0" r="34" fill="#141a29" stroke="#64748b" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="28" stroke="#334155" stroke-width="0.8" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="0" cy="0" r="4" fill="#94a3b8"/>
+      <text x="-12" y="3" class="text-meta" font-size="8">N2O4 OX</text>
+    </g>
+
+    <!-- Tank 3: Fuel (Aerozine 50) - Lower Right -->
+    <g id="tank-fuel-2" transform="translate(115, 115)">
+      <circle cx="0" cy="0" r="34" fill="#0d1b2a" stroke="#64748b" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="28" stroke="#334155" stroke-width="0.8" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="0" cy="0" r="4" fill="#94a3b8"/>
+      <text x="-16" y="3" class="text-meta" font-size="8">AEROZINE</text>
+    </g>
+
+    <!-- Tank 4: Oxidizer (N2O4) - Lower Left -->
+    <g id="tank-ox-2" transform="translate(-115, 115)">
+      <circle cx="0" cy="0" r="34" fill="#141a29" stroke="#64748b" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="28" stroke="#334155" stroke-width="0.8" stroke-dasharray="2,2" fill="none"/>
+      <circle cx="0" cy="0" r="4" fill="#94a3b8"/>
+      <text x="-12" y="3" class="text-meta" font-size="8">N2O4 OX</text>
+    </g>
+
+    <!-- Supercritical Liquid Helium Tank (Presurization) -->
+    <g id="tank-helium" transform="translate(-142, 0)">
+      <circle cx="0" cy="0" r="18" fill="#16202e" stroke="#94a3b8" stroke-width="1.2"/>
+      <circle cx="0" cy="0" r="14" stroke="#475569" stroke-width="0.8" fill="none"/>
+      <text x="-8" y="3" class="text-sub" font-size="7">S-He</text>
+    </g>
+
+    <!-- Ambient Helium Tank -->
+    <circle cx="142" cy="0" r="14" fill="#16202e" stroke="#94a3b8" stroke-width="1"/>
+
+    <!-- =============================================== -->
+    <!-- 4. EQUIPMENT QUADRANTS &amp; PAYLOAD STOWAGE        -->
+    <!-- =============================================== -->
+
+    <!-- QUADRANT II (Upper Right): MESA (Modular Equipment Stowage Assembly) -->
+    <g id="quad-mesa" transform="translate(100, -60)">
+      <rect x="0" y="0" width="55" height="50" fill="#131d2a" stroke="#cbd5e1" stroke-width="1.5"/>
+      <!-- Folding Palette Trays &amp; TV Camera Bracket -->
+      <line x1="5" y1="12" x2="50" y2="12" stroke="#475569" stroke-width="1"/>
+      <line x1="5" y1="24" x2="50" y2="24" stroke="#475569" stroke-width="1"/>
+      <line x1="5" y1="36" x2="50" y2="36" stroke="#475569" stroke-width="1"/>
+      <rect x="15" y="16" width="16" height="15" fill="#1e293b" stroke="#f59e0b" stroke-width="1"/>
+      <text x="18" y="27" class="text-amber" font-size="7">TV</text>
+      <!-- Apollo Lunar Sample Return Containers (Rock Boxes) -->
+      <rect x="34" y="16" width="14" height="26" fill="#1e293b" stroke="#94a3b8" stroke-width="1"/>
+      <text x="36" y="31" class="text-sub" font-size="6">SRC</text>
+    </g>
+
+    <!-- QUADRANT IV (Lower Left): ALSEP STOWAGE &amp; SNAP-27 RTG CASK -->
+    <g id="quad-alsep" transform="translate(-155, 10)">
+      <!-- Subpackage 1 Compartment -->
+      <rect x="0" y="0" width="50" height="35" fill="#131d2a" stroke="#cbd5e1" stroke-width="1.5"/>
+      <line x1="0" y1="18" x2="50" y2="18" stroke="#334155" stroke-width="1"/>
+      <text x="6" y="12" class="text-sub" font-size="6.5">SUBPKG 1</text>
+      <text x="6" y="28" class="text-sub" font-size="6.5">SUBPKG 2</text>
+      
+      <!-- SNAP-27 Graphite Fuel Cask (Pu-238 Transport Mount on Outrigger) -->
+      <g transform="translate(-22, 42)">
+        <!-- Finned Cask Hexagon Profile -->
+        <polygon points="-12,-16 12,-16 18,0 12,16 -12,16 -18,0" fill="#1e1512" stroke="#f59e0b" stroke-width="1.5"/>
+        <!-- Cooling Fins -->
+        <line x1="-16" y1="-8" x2="-22" y2="-12" stroke="#f59e0b" stroke-width="1.2"/>
+        <line x1="-18" y1="0" x2="-24" y2="0" stroke="#f59e0b" stroke-width="1.2"/>
+        <line x1="-16" y1="8" x2="-22" y2="12" stroke="#f59e0b" stroke-width="1.2"/>
+        <line x1="16" y1="-8" x2="22" y2="-12" stroke="#f59e0b" stroke-width="1.2"/>
+        <line x1="18" y1="0" x2="24" y2="0" stroke="#f59e0b" stroke-width="1.2"/>
+        <line x1="16" y1="8" x2="22" y2="12" stroke="#f59e0b" stroke-width="1.2"/>
+        <circle cx="0" cy="0" r="5" fill="#d97706"/>
+      </g>
+    </g>
+
+    <!-- =============================================== -->
+    <!-- 5. DIMENSION LINES &amp; EXTENSION ARROWS          -->
+    <!-- =============================================== -->
+
+    <!-- Width Across Flats (4.22 m / 13.8 ft) -->
+    <line x1="-80" y1="185" x2="80" y2="185" class="dimension-line"/>
+    <line x1="-80" y1="165" x2="-80" y2="195" stroke="#334155" stroke-width="0.8"/>
+    <line x1="80" y1="165" x2="80" y2="195" stroke="#334155" stroke-width="0.8"/>
+    <text x="-65" y="200" class="dimension-text">STAGE WIDTH: 4.22 METERS (13.8 FT)</text>
+
+    <!-- Diagonal Footprint Span (9.45 m / 31.0 ft) -->
+    <line x1="-275" y1="310" x2="275" y2="310" class="dimension-line"/>
+    <line x1="-275" y1="275" x2="-275" y2="325" stroke="#334155" stroke-width="0.8"/>
+    <line x1="275" y1="275" x2="275" y2="325" stroke="#334155" stroke-width="0.8"/>
+    <text x="-95" y="325" class="dimension-text">DIAGONAL FOOTPRINT SPAN: 9.45 METERS (31.0 FT)</text>
+
+  </g>
+
+  <!-- ==================================================== -->
+  <!-- CALLOUT LEADER LINES &amp; ARCHIVAL ENGINEERING NOTES   -->
+  <!-- ==================================================== -->
+
+  <!-- Callout 1: Forward Egress Ladder &amp; Plaque -->
+  <g transform="translate(780, 220)">
+    <path d="M 0 0 L -80 0 L -125 55" class="callout-amber"/>
+    <text x="10" y="-4" class="text-amber">EGRESS LADDER &amp; COMMEMORATIVE PLAQUE</text>
+    <text x="10" y="10" class="text-sub">Forward gear strut (+Z Axis). 9-rung titanium assembly.</text>
+    <text x="10" y="22" class="text-sub">Stainless steel lunar plaque affixed between rungs 3 &amp; 4.</text>
+  </g>
+
+  <!-- Callout 2: MESA -->
+  <g transform="translate(820, 360)">
+    <path d="M 0 0 L -80 0 L -165 40" class="callout-line" marker-end="url(#arrow)"/>
+    <text x="10" y="-4" class="text-label">MODULAR EQUIPMENT STOWAGE (MESA)</text>
+    <text x="10" y="10" class="text-sub">Quadrant II. Deployed by Pete Conrad via lanyard.</text>
+    <text x="10" y="22" class="text-sub">Carried Westinghouse color TV camera, tools, rock boxes.</text>
+  </g>
+
+  <!-- Callout 3: TRW Descent Engine -->
+  <g transform="translate(820, 520)">
+    <path d="M 0 0 L -120 0 L -215 -50" class="callout-line" marker-end="url(#arrow)"/>
+    <text x="10" y="-4" class="text-label">TRW THROTTLEABLE DESCENT ENGINE (DPS)</text>
+    <text x="10" y="10" class="text-sub">9,870 lbf max thrust. Deep throttle range 10% - 100%.</text>
+    <text x="10" y="22" class="text-sub">Ablative skirt &amp; titanium radiation cooled columbium bell.</text>
+  </g>
+
+  <!-- Callout 4: SNAP-27 Graphite Cask -->
+  <g transform="translate(80, 680)">
+    <path d="M 320 0 L 220 0 L 265 -160" class="callout-amber"/>
+    <text x="0" y="-12" class="text-amber">SNAP-27 GRAPHITE FUEL CASK (GLFC)</text>
+    <text x="0" y="2" class="text-sub">External outrigger mount. Encased 44,500 Ci of Plutonium-238.</text>
+    <text x="0" y="14" class="text-sub">Fuel capsule extracted with DRT tool and inserted into RTG generator.</text>
+  </g>
+
+  <!-- Callout 5: ALSEP Subpackages -->
+  <g transform="translate(80, 560)">
+    <path d="M 280 0 L 200 0 L 225 -85" class="callout-line" marker-end="url(#arrow)"/>
+    <text x="0" y="-4" class="text-label">QUADRANT IV: ALSEP SUBPACKAGES 1 &amp; 2</text>
+    <text x="0" y="10" class="text-sub">Carried folded Central Station, PSE, LSM, SWS, SIDE.</text>
+    <text x="0" y="22" class="text-sub">Carried 130m NW by Alan Bean using barbell mast carrier.</text>
+  </g>
+
+  <!-- Callout 6: Lunar Surface Sensing Probe -->
+  <g transform="translate(80, 310)">
+    <path d="M 280 0 L 190 0 L 135 -100" class="callout-line" marker-end="url(#arrow)"/>
+    <text x="0" y="-4" class="text-label">LUNAR SURFACE SENSING PROBES (3X)</text>
+    <text x="0" y="10" class="text-sub">1.68m (5.6 ft) electromechanical contact whiskers.</text>
+    <text x="0" y="22" class="text-sub">Triggered blue "LUNAR CONTACT" cockpit light at touchdown.</text>
+  </g>
+
+  <!-- Engineering Revision Stamp (Lower Left) -->
+  <g transform="translate(50, 780)">
+    <rect width="250" height="70" fill="#0b1017" stroke="#1e293b" stroke-width="1"/>
+    <line x1="0" y1="22" x2="250" y2="22" stroke="#1e293b" stroke-width="0.8"/>
+    <text x="10" y="15" class="text-meta">REV • DESCRIPTION • DATE • APPROVED</text>
+    <text x="10" y="38" class="text-sub">C • AS-BUILT LM-6 PROFILE • 10-18-69 • J.K.</text>
+    <text x="10" y="52" class="text-sub">D • ALSEP STOWAGE ADDENDUM • 10-29-69 • R.V.</text>
+    <text x="10" y="64" class="text-amber">E • DECLASSIFIED ARCHIVE PROFILE • NASA MSC</text>
+  </g>
+
 </svg>

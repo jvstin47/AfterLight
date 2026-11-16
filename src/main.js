@@ -109,7 +109,9 @@ async function init() {
 
     // Reveal surface waypoint markers once descending to the landing site
     if (scene && scene.waypointMarkers) {
-      scene.waypointMarkers.setVisible(true, !immediate);
+      setTimeout(() => {
+        scene.waypointMarkers.setVisible(true, true);
+      }, immediate ? 300 : 1600);
     }
 
     // Camera descend to site overview
