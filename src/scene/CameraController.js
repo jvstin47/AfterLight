@@ -37,7 +37,8 @@ export class CameraController {
    */
   constructor(domElement, aspect) {
     this.domElement = domElement;
-    this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 5000);
+    // Expanded far clipping plane to 25,000m for true spherical planetary horizon
+    this.camera = new THREE.PerspectiveCamera(45, aspect, 0.3, 25000);
     this.controls = new OrbitControls(this.camera, this.domElement);
 
     this.isTransitioning = false;

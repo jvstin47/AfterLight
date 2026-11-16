@@ -208,11 +208,79 @@ function createNaturalBoulders() {
   return instancedBoulders;
 }
 
+/**
+ * Creates the continuous spherical planetary horizon ring extending to 16 km.
+ * Eliminates the floating tabletop edge by implementing true lunar curvature:
+ * drop y = -r^2 / (2 * R_moon), where R_moon = 1,737,400m.
+ */
+function createPlanetaryHorizonMesh() {
+  const innerRadius = 410;  // Matches edge of the 850m local landing site
+  const outerRadius = 16000; // 16 km distant lunar horizon
+  const thetaSegments = 128;
+  const phiSegments = 36;
+
+  const geo = new THREE.RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments);
+  geo.rotateX(-Math.PI / 2); // Orient horizontal (XZ plane)
+
+  const pos = geo.attributes.position;
+  const MOON_RADIUS = 1737400; // 1,737.4 km (physical lunar radius)
+
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const z = pos.getZ(i);
+    const r = Math.hypot(x, z);
+
+    // Normalized radial distance (0.0 at inner edge, 1.0 at 16 km horizon)
+    const t = Math.min(1.0, Math.max(0.0, (r - innerRadius) / (outerRadius - innerRadius)));
+
+    // 1. Base elevation at inner ring matched to local terrain edge
+    const angle = Math.atan2(z, x);
+    const edgeX = innerRadius * Math.cos(angle);
+    const edgeZ = innerRadius * Math.sin(angle);
+    const baseEdgeElev = getElevation(edgeX, edgeZ);
+
+    // 2. True Lunar Spherical Curvature Drop: y = -r^2 / (2 * R_moon)
+    const curvatureDrop = -(r * r) / (2 * MOON_RADIUS);
+
+    // 3. Distant Oceanus Procellarum wrinkle ridges & crater rim silhouettes
+    const ridgeNoise =
+      Math.sin(x * 0.00065 + 1.2) * 18.0 +
+      Math.cos(z * 0.00055 - 0.7) * 15.0 +
+      Math.sin((x + z) * 0.00035) * 11.0;
+
+    // Distant crater rim swells around the perimeter (5 to 14 km out)
+    const craterSwell =
+      Math.sin(angle * 5.0) * 16.0 * Math.sin(t * Math.PI) +
+      Math.cos(angle * 3.0 + 1.1) * 12.0 * Math.sin(t * Math.PI);
+
+    // Smoothly blend from local edge elevation to distant curved horizon with ridges
+    const blendEdge = (1.0 - Math.min(1.0, t * 10.0)) * baseEdgeElev;
+    const y = blendEdge + curvatureDrop + (ridgeNoise + craterSwell) * Math.pow(t, 0.65);
+
+    pos.setY(i, y);
+  }
+
+  geo.computeVertexNormals();
+
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0x22252a,
+    roughness: 0.98,
+    metalness: 0.02,
+    flatShading: false
+  });
+
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.name = 'planetary-horizon-ring';
+  mesh.receiveShadow = true;
+  mesh.castShadow = false;
+  return mesh;
+}
+
 export function createLunarTerrain() {
   const terrainGroup = new THREE.Group();
   terrainGroup.name = 'lunar-terrain';
 
-  // 1. High-resolution terrain mesh (850m x 850m, 240x240 grid segments)
+  // 1. High-resolution local terrain mesh (850m x 850m, 240x240 grid segments)
   const width = 850;
   const depth = 850;
   const segments = 240;
@@ -221,10 +289,22 @@ export function createLunarTerrain() {
   geometry.rotateX(-Math.PI / 2); // Orient horizontal (XZ plane)
 
   const posAttr = geometry.attributes.position;
+  const MOON_RADIUS = 1737400;
+
   for (let i = 0; i < posAttr.count; i++) {
     const vx = posAttr.getX(i);
     const vz = posAttr.getZ(i);
-    const vy = getElevation(vx, vz);
+    let vy = getElevation(vx, vz);
+
+    // Apply true lunar curvature drop to the outer corners of local terrain (r > 380m)
+    // so it blends seamlessly into the planetary horizon ring
+    const r = Math.hypot(vx, vz);
+    if (r > 380) {
+      const drop = -(r * r) / (2 * MOON_RADIUS);
+      const blend = (r - 380) / (425 - 380);
+      vy += drop * Math.min(1.0, blend);
+    }
+
     posAttr.setY(i, vy);
   }
 
@@ -236,12 +316,13 @@ export function createLunarTerrain() {
   terrainMesh.castShadow = false;
   terrainGroup.add(terrainMesh);
 
-  // 2. Natural angular fractured rock clusters (replaces platonic dodecahedrons)
+  // 2. Continuous spherical planetary horizon ring extending to 16 km
+  const horizonMesh = createPlanetaryHorizonMesh();
+  terrainGroup.add(horizonMesh);
+
+  // 3. Natural angular fractured rock clusters (replaces platonic dodecahedrons)
   const naturalBoulders = createNaturalBoulders();
   terrainGroup.add(naturalBoulders);
-
-  // NOTE: The 4-sided 3D TubeGeometry footpath has been removed.
-  // Compacted astronaut boot tracks are now rendered directly as ground-level albedo modulation.
 
   return {
     group: terrainGroup,
