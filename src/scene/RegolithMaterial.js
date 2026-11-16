@@ -127,10 +127,93 @@ export function createRegolithMaterial() {
     ctx.fill();
   }
 
-  // 4. Ground-Level Compacted Astronaut Boot Trails
-  // Darkened regolith tracks from Pete Conrad & Alan Bean disturbing the fluffy top layer
-  ctx.strokeStyle = 'rgba(26, 28, 32, 0.82)';
-  ctx.lineWidth = Math.max(2.5, 1.3 * pxPerMeter); // ~1.3m wide path
+  // 4. Ground-Level Compacted Astronaut Boot Trails & Documented Disturbance Zones
+  // Darkened regolith tracks from Pete Conrad & Alan Bean disturbing the high-albedo fluffy top layer
+
+  // 4A. Intrepid Descent Engine Radial Rocket Scouring Plume (Supersonic exhaust scouring)
+  const lmCanvasPos = worldToCanvas(0, 0);
+  const plumeGrad = ctx.createRadialGradient(
+    lmCanvasPos.x, lmCanvasPos.y, 1.5 * pxPerMeter,
+    lmCanvasPos.x, lmCanvasPos.y, 28 * pxPerMeter
+  );
+  plumeGrad.addColorStop(0, 'rgba(18, 20, 24, 0.92)'); // Dark scoured core
+  plumeGrad.addColorStop(0.2, 'rgba(35, 38, 44, 0.65)');
+  plumeGrad.addColorStop(0.7, 'rgba(72, 78, 86, 0.25)'); // Swept lighter halo
+  plumeGrad.addColorStop(1, 'rgba(50, 54, 59, 0)');
+  ctx.fillStyle = plumeGrad;
+  ctx.beginPath();
+  ctx.arc(lmCanvasPos.x, lmCanvasPos.y, 28 * pxPerMeter, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Radial exhaust blast streaks
+  ctx.strokeStyle = 'rgba(24, 26, 30, 0.45)';
+  ctx.lineWidth = 1.5;
+  for (let s = 0; s < 36; s++) {
+    const sAngle = (s * 10) * (Math.PI / 180) + (Math.sin(s * 3) * 0.08);
+    const sLen = (12 + (s % 5) * 4) * pxPerMeter;
+    ctx.beginPath();
+    ctx.moveTo(
+      lmCanvasPos.x + Math.cos(sAngle) * 3 * pxPerMeter,
+      lmCanvasPos.y + Math.sin(sAngle) * 3 * pxPerMeter
+    );
+    ctx.lineTo(
+      lmCanvasPos.x + Math.cos(sAngle) * sLen,
+      lmCanvasPos.y + Math.sin(sAngle) * sLen
+    );
+    ctx.stroke();
+  }
+
+  // 4B. LM Landing Gear Footpad Soil Compaction Impressions
+  // 4 Footpads located along diagonals at r = 4.725m from LM origin
+  const footpads = [
+    { x: 3.34, z: 3.34, label: 'Forward Ladder Pad 1' },
+    { x: 3.34, z: -3.34, label: 'Right Pad 2' },
+    { x: -3.34, z: -3.34, label: 'Aft Pad 3' },
+    { x: -3.34, z: 3.34, label: 'Left Pad 4' }
+  ];
+  footpads.forEach(fp => {
+    const fpp = worldToCanvas(fp.x, fp.z);
+    const fpRad = 0.48 * pxPerMeter; // 0.96m diameter dish
+    ctx.fillStyle = 'rgba(14, 16, 20, 0.95)';
+    ctx.beginPath();
+    ctx.arc(fpp.x, fpp.y, fpRad, 0, Math.PI * 2);
+    ctx.fill();
+    // Compacted rim ring
+    ctx.strokeStyle = 'rgba(68, 74, 82, 0.55)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+
+  // 4C. Surveyor 3 Footpad 2 Soil Trench (Documented in AS12-48-7099)
+  const s3Pos = worldToCanvas(72, 150);
+  ctx.fillStyle = 'rgba(16, 18, 22, 0.9)';
+  ctx.beginPath();
+  ctx.ellipse(s3Pos.x + 1.2 * pxPerMeter, s3Pos.y + 0.8 * pxPerMeter, 1.2 * pxPerMeter, 0.45 * pxPerMeter, -0.6, 0, Math.PI * 2);
+  ctx.fill();
+
+  // 4D. Heavily Trampled Astronaut Activity Work Zones
+  const workZones = [
+    { x: 2.2, z: 2.2, r: 3.5, alpha: 0.75, name: 'MESA Work Area' },
+    { x: 0, z: 7.0, r: 3.0, alpha: 0.8, name: 'US Flag Deployment Site' },
+    { x: -106, z: -75, r: 6.0, alpha: 0.65, name: 'ALSEP Deployment Station' },
+    { x: 72, z: 149, r: 3.2, alpha: 0.7, name: 'Surveyor Inspection Zone' }
+  ];
+  workZones.forEach(wz => {
+    const wp = worldToCanvas(wz.x, wz.z);
+    const wr = wz.r * pxPerMeter;
+    const wGrad = ctx.createRadialGradient(wp.x, wp.y, wr * 0.2, wp.x, wp.y, wr);
+    wGrad.addColorStop(0, `rgba(22, 24, 28, ${wz.alpha})`);
+    wGrad.addColorStop(0.7, `rgba(32, 35, 40, ${wz.alpha * 0.6})`);
+    wGrad.addColorStop(1, 'rgba(50, 54, 59, 0)');
+    ctx.fillStyle = wGrad;
+    ctx.beginPath();
+    ctx.arc(wp.x, wp.y, wr, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // 4E. Astronaut EVA Walking Trails (Dual loping stride tracks)
+  ctx.strokeStyle = 'rgba(24, 26, 30, 0.82)';
+  ctx.lineWidth = Math.max(2.2, 1.1 * pxPerMeter);
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
@@ -138,7 +221,7 @@ export function createRegolithMaterial() {
     // EVA-1: Intrepid -> MESA -> ALSEP deployment
     [
       [0, 0],
-      [2, 2],
+      [2.2, 2.2],
       [-25, -12],
       [-55, -35],
       [-80, -55],
@@ -179,6 +262,32 @@ export function createRegolithMaterial() {
       else ctx.lineTo(p.x, p.y);
     });
     ctx.stroke();
+
+    // Render individual bootprint steps along path for tangible micro-scale fidelity
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [x1, z1] = pts[i];
+      const [x2, z2] = pts[i + 1];
+      const segDist = Math.hypot(x2 - x1, z2 - z1);
+      const stepInterval = 1.35; // 1.35m astronaut 1/6th-g loping stride
+      const steps = Math.floor(segDist / stepInterval);
+
+      for (let s = 1; s <= steps; s++) {
+        const t = s / (steps + 1);
+        const bx = x1 + (x2 - x1) * t;
+        const bz = z1 + (z2 - z1) * t;
+        // Alternating left/right foot offset
+        const normalAngle = Math.atan2(z2 - z1, x2 - x1) + Math.PI / 2;
+        const footOffset = (s % 2 === 0 ? 0.22 : -0.22);
+        const fx = bx + Math.cos(normalAngle) * footOffset;
+        const fz = bz + Math.sin(normalAngle) * footOffset;
+
+        const fp = worldToCanvas(fx, fz);
+        ctx.fillStyle = 'rgba(16, 18, 22, 0.75)';
+        ctx.beginPath();
+        ctx.ellipse(fp.x, fp.y, 0.22 * pxPerMeter, 0.42 * pxPerMeter, normalAngle - Math.PI / 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
   });
 
   // 5. Generate Multi-Scale Coherent Porous Regolith Bump Map (512x512 seamless)

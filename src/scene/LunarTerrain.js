@@ -145,6 +145,20 @@ export function getElevation(x, z) {
 
   y += microRelief * equipmentFootingMask;
 
+  // 6. Micro physical soil impressions (TRW engine scouring & landing gear footpads)
+  if (dLM < 2.8) {
+    const nd = dLM / 2.8;
+    y -= 0.05 * (1.0 - nd * nd);
+  }
+  const fpOffsets = [[3.34, 3.34], [3.34, -3.34], [-3.34, -3.34], [-3.34, 3.34]];
+  for (const [fx, fz] of fpOffsets) {
+    const dFP = Math.hypot(x - fx, z - fz);
+    if (dFP < 0.85) {
+      const nd = dFP / 0.85;
+      y -= 0.065 * (1.0 - nd * nd);
+    }
+  }
+
   return y;
 }
 
