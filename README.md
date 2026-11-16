@@ -2,6 +2,8 @@
 
 > *The machines that stayed behind.*
 
+[![Live Interactive Archive](https://img.shields.io/badge/Live%20Simulation-afterlight--rouge.vercel.app-10b981?style=for-the-badge&logo=vercel)](https://afterlight-rouge.vercel.app/)
+
 An immersive digital archive exploring humanity's abandoned robotic explorers, scientific instruments, and forgotten missions across the Moon and Mars.
 
 ---
