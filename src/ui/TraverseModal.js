@@ -1,6 +1,7 @@
 import anime from 'animejs';
 import { TRAVERSE_DATA } from '../data/traverseData.js';
 import { audioManager } from '../core/AudioManager.js';
+import { eventBus } from '../core/EventBus.js';
 
 export class TraverseModal {
   /**

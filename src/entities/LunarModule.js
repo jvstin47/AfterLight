@@ -10,6 +10,20 @@ import { assetManager } from '../core/AssetManager.js';
 export function createLunarModule(elevationFn, onLoaded, onError) {
   const lmGroup = new THREE.Group();
   lmGroup.name = 'lunar-module-intrepid';
+  lmGroup.userData = { artifactId: 'lm-intrepid' };
+
+  // Generous invisible hit collider for effortless 3D model touch and click selection
+  const hitGeo = new THREE.CylinderGeometry(5.8, 6.2, 5.5, 16);
+  hitGeo.translate(0, 2.75, 0);
+  const hitMat = new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
+  const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+  hitMesh.name = 'hit-target-lm-intrepid';
+  hitMesh.userData = { artifactId: 'lm-intrepid', isHitProxy: true };
+  lmGroup.add(hitMesh);
 
   const posX = 0;
   const posZ = 0;
@@ -48,6 +62,7 @@ export function createLunarModule(elevationFn, onLoaded, onError) {
           meshCount++;
           child.castShadow = true;
           child.receiveShadow = true;
+          child.userData.artifactId = 'lm-intrepid';
 
           // Ensure double-sided rendering for thin foil sheets and proper depth testing
           if (child.material) {

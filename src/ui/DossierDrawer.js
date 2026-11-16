@@ -89,23 +89,13 @@ export class DossierDrawer {
             <dl id="dossier-specs-list" class="specs-grid"></dl>
           </section>
 
-          <!-- Archival Schematics -->
-          <section class="dossier-section" id="dossier-schematic-section">
-            <div class="section-header">
-              <span class="section-title">ENGINEERING SCHEMATICS</span>
-              <span class="section-sub">NASA MSC TECHNICAL ARCHIVE</span>
-            </div>
-            <div class="schematic-viewer" id="schematic-container">
-              <!-- Rendered dynamically -->
-            </div>
-          </section>
-
-          <!-- Archival Photography Carousel -->
+          <!-- Archival Photography & 70mm Hasselblad Imagery -->
           <section class="dossier-section">
             <div class="section-header">
               <span class="section-title">ARCHIVAL PHOTOGRAPHY</span>
               <span class="section-sub">70MM HASSELBLAD SURFACE IMAGERY</span>
             </div>
+            <div id="dossier-hero-photo" class="hero-photo-wrap"></div>
             <div id="dossier-gallery" class="photo-gallery"></div>
           </section>
         </div>
@@ -278,39 +268,47 @@ export class DossierDrawer {
       }
     }
 
-    // Schematic: support schematic or schematicUrl
-    if (schematicContainer) {
-      const schematicSrc = artifact.schematic || artifact.schematicUrl;
-      const schematicCap = artifact.schematicTitle || artifact.schematicCaption || 'Engineering blueprint';
-      if (schematicSrc) {
-        schematicContainer.innerHTML = `
-          <div class="schematic-frame" role="button" tabindex="0" title="Click to view full architectural blueprint">
-            <img src="${schematicSrc}" alt="${schematicCap}" class="schematic-img" loading="lazy" />
-            <figcaption class="schematic-caption">${schematicCap} &bull; <span class="schematic-expand-hint">[EXPAND BLUEPRINT]</span></figcaption>
+    // Archival Photography: Showcase hero photograph + secondary gallery
+    const heroPhotoEl = this.container.querySelector('#dossier-hero-photo');
+    const photos = artifact.photos || artifact.gallery || [];
+
+    if (heroPhotoEl && photos.length > 0) {
+      const hero = photos[0];
+      const heroUrl = hero.url || hero.src;
+      const heroId = hero.id || hero.nasaId || 'NASA ARCHIVE RECORD';
+      const heroCap = hero.caption || hero.title || 'Apollo 12 Archival Surface Photography';
+
+      heroPhotoEl.innerHTML = `
+        <figure class="hero-photo-figure" role="button" tabindex="0" title="Click to enlarge authentic NASA photograph">
+          <div class="hero-photo-img-box">
+            <img src="${heroUrl}" alt="${heroCap}" loading="lazy" />
+            <span class="hero-photo-badge">FEATURED RECORD &bull; [CLICK TO ENLARGE]</span>
           </div>
-        `;
-        const frameEl = schematicContainer.querySelector('.schematic-frame');
-        const triggerZoom = () => this.openZoom(schematicSrc, schematicCap);
-        frameEl?.addEventListener('click', triggerZoom);
-        frameEl?.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            triggerZoom();
-          }
-        });
-        const schemSection = this.container.querySelector('#dossier-schematic-section');
-        if (schemSection) schemSection.style.display = 'block';
-      } else {
-        const schemSection = this.container.querySelector('#dossier-schematic-section');
-        if (schemSection) schemSection.style.display = 'none';
-      }
+          <figcaption class="hero-photo-caption">
+            <span class="hero-photo-id">${heroId}</span>
+            <span class="hero-photo-desc">${heroCap}</span>
+          </figcaption>
+        </figure>
+      `;
+
+      const heroFig = heroPhotoEl.querySelector('.hero-photo-figure');
+      const triggerHeroZoom = () => this.openZoom(heroUrl, `${heroId} — ${heroCap}`);
+      heroFig?.addEventListener('click', triggerHeroZoom);
+      heroFig?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          triggerHeroZoom();
+        }
+      });
+    } else if (heroPhotoEl) {
+      heroPhotoEl.innerHTML = '';
     }
 
-    // Photo Gallery: support both artifact.photos and artifact.gallery
     if (galleryEl) {
-      const photos = artifact.photos || artifact.gallery || [];
-      if (photos.length > 0) {
-        galleryEl.innerHTML = photos
+      // Remaining photos in gallery grid
+      const remainingPhotos = photos.slice(1);
+      if (remainingPhotos.length > 0) {
+        galleryEl.innerHTML = remainingPhotos
           .map(
             (photo) => `
             <figure class="gallery-item" data-full="${photo.url || photo.src}">
@@ -336,7 +334,7 @@ export class DossierDrawer {
           });
         });
       } else {
-        galleryEl.innerHTML = '<p class="gallery-empty">Archival photography indexed under primary mission documentation.</p>';
+        galleryEl.innerHTML = '';
       }
     }
   }

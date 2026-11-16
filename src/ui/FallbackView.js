@@ -28,13 +28,13 @@ export class FallbackView {
               <article class="fallback-card">
                 <div class="fallback-card-tag">${art.designation} &bull; ${art.status}</div>
                 <h3 class="fallback-card-title">${art.name}</h3>
-                <p class="fallback-card-desc">${art.narrative.origin.content}</p>
+                <p class="fallback-card-desc">${art.narrative?.origin?.text || ''}</p>
                 
                 <div class="fallback-specs">
                   <strong>Specifications:</strong>
                   <ul>
-                    ${Object.entries(art.specs)
-                      .map(([k, v]) => `<li><em>${k}:</em> ${v}</li>`)
+                    ${(art.keySpecs || [])
+                      .map((spec) => `<li><em>${spec.label}:</em> ${spec.value}</li>`)
                       .join('')}
                   </ul>
                 </div>

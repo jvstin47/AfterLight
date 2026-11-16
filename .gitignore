@@ -37,6 +37,7 @@ out/
 .cache/
 .parcel-cache/
 .turbo/
+docs/audit_screenshots/
 
 # Logs & Diagnostics
 *.log

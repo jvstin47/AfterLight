@@ -20,9 +20,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(2, 4, 7, 0.78);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(to right, rgba(2, 4, 7, 0.08) 0%, rgba(2, 4, 7, 0.35) 60%, rgba(2, 4, 7, 0.5) 100%);
+  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(1.5px);
   pointer-events: auto;
   opacity: 0;
   transition: opacity 0.3s var(--ease-cinematic);
@@ -371,45 +371,84 @@
   font-weight: 400;
 }
 
-/* Schematics */
-.schematic-frame {
-  background: #04070c;
+/* Featured Hero Archival Photograph */
+.hero-photo-wrap {
+  margin-bottom: 16px;
+}
+
+.hero-photo-figure {
+  margin: 0;
+  background: #020407;
   border: 1px solid var(--color-border-subtle);
-  padding: 14px;
-  text-align: center;
+  padding: 8px;
   cursor: zoom-in;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.schematic-frame:hover,
-.schematic-frame:focus-visible {
-  border-color: var(--color-archival-amber);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(217, 119, 6, 0.15);
-  outline: none;
-}
-
-.schematic-img {
-  max-width: 100%;
-  height: auto;
-  max-height: 340px;
-  object-fit: contain;
-  filter: contrast(1.05) brightness(1.02);
+  transition: all 0.25s var(--ease-cinematic);
   display: block;
-  margin: 0 auto;
 }
 
-.schematic-caption {
+.hero-photo-figure:hover,
+.hero-photo-figure:focus-visible {
+  border-color: var(--color-amber-accent);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(201, 151, 56, 0.2);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.hero-photo-img-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #06090e;
+}
+
+.hero-photo-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s var(--ease-cinematic);
+}
+
+.hero-photo-figure:hover .hero-photo-img-box img {
+  transform: scale(1.02);
+}
+
+.hero-photo-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  color: var(--color-text-secondary);
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  color: var(--color-parchment);
+  background: rgba(4, 7, 12, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  padding: 3px 8px;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.hero-photo-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   margin-top: 10px;
+}
+
+.hero-photo-id {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--color-amber-accent);
   text-transform: uppercase;
 }
 
-.schematic-expand-hint {
-  color: var(--color-archival-amber);
-  font-weight: 500;
+.hero-photo-desc {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
 }
 
 /* Photo Gallery */

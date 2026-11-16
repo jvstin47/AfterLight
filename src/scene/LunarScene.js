@@ -24,6 +24,12 @@ export class LunarScene {
     this.isRunning = false;
     this.animationFrameId = null;
 
+    // Interactive 3D raycasting and touch target detection
+    this.raycaster = new THREE.Raycaster();
+    this.pointer = new THREE.Vector2();
+    this.pointerDownPos = { x: 0, y: 0, time: 0 };
+    this.interactiveRoots = [];
+
     this.initRenderer();
     this.initScene();
     this.initEntities();
@@ -79,6 +85,9 @@ export class LunarScene {
     this.lunarModule = new LunarModule(this.scene, elevationFn);
     try {
       await this.lunarModule.init();
+      if (this.lunarModule.group) {
+        this.interactiveRoots.push(this.lunarModule.group);
+      }
     } catch (err) {
       console.error('[LunarScene] LM-6 init failed:', err);
     }
@@ -101,12 +110,27 @@ export class LunarScene {
     ]).then(([s3Result, alsepResult]) => {
       if (s3Result.status === 'rejected') {
         console.error('[LunarScene] Surveyor 3 init failed:', s3Result.reason);
+      } else if (this.surveyor3.group) {
+        this.interactiveRoots.push(this.surveyor3.group);
       }
       if (alsepResult.status === 'rejected') {
         console.error('[LunarScene] ALSEP init failed:', alsepResult.reason);
+      } else if (this.alsep.group) {
+        this.interactiveRoots.push(this.alsep.group);
       }
       eventBus.emit('artifacts:all-loaded');
     });
+  }
+
+  getArtifactIdFromObject(obj) {
+    let curr = obj;
+    while (curr && curr !== this.scene) {
+      if (curr.userData && curr.userData.artifactId) {
+        return curr.userData.artifactId;
+      }
+      curr = curr.parent;
+    }
+    return null;
   }
 
   initEventListeners() {
@@ -122,6 +146,53 @@ export class LunarScene {
     this.unbindArtifactSelect = eventBus.on('artifact:selected', ({ id, artifact }) => {
       this.focusArtifact(id);
     });
+
+    // Direct 3D Raycasting & Touch Targets on lander models
+    this.onPointerDown = (e) => {
+      this.pointerDownPos = { x: e.clientX, y: e.clientY, time: performance.now() };
+    };
+
+    this.onPointerUp = (e) => {
+      const dx = e.clientX - this.pointerDownPos.x;
+      const dy = e.clientY - this.pointerDownPos.y;
+      const elapsed = performance.now() - this.pointerDownPos.time;
+
+      // Distinguish tap / click from camera orbit drag gesture
+      if (Math.hypot(dx, dy) < 10 && elapsed < 500) {
+        const rect = this.canvas.getBoundingClientRect();
+        this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        this.raycaster.setFromCamera(this.pointer, this.camera);
+        const intersects = this.raycaster.intersectObjects(this.interactiveRoots, true);
+
+        for (const hit of intersects) {
+          const artifactId = this.getArtifactIdFromObject(hit.object);
+          if (artifactId && ARTIFACTS[artifactId]) {
+            eventBus.emit('artifact:selected', { id: artifactId, artifact: ARTIFACTS[artifactId] });
+            break;
+          }
+        }
+      }
+    };
+
+    this.onPointerMove = (e) => {
+      if (e.buttons > 0) return; // Orbiting/dragging
+
+      const rect = this.canvas.getBoundingClientRect();
+      this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      this.raycaster.setFromCamera(this.pointer, this.camera);
+      const intersects = this.raycaster.intersectObjects(this.interactiveRoots, true);
+      const isOverInteractive = intersects.some((hit) => this.getArtifactIdFromObject(hit.object));
+
+      this.canvas.style.cursor = isOverInteractive ? 'pointer' : '';
+    };
+
+    this.canvas.addEventListener('pointerdown', this.onPointerDown);
+    this.canvas.addEventListener('pointerup', this.onPointerUp);
+    this.canvas.addEventListener('pointermove', this.onPointerMove);
   }
 
   /**
@@ -228,6 +299,9 @@ export class LunarScene {
   dispose() {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize);
+    this.canvas.removeEventListener('pointerdown', this.onPointerDown);
+    this.canvas.removeEventListener('pointerup', this.onPointerUp);
+    this.canvas.removeEventListener('pointermove', this.onPointerMove);
     if (this.unbindPresetChange) this.unbindPresetChange();
     if (this.unbindArtifactSelect) this.unbindArtifactSelect();
 

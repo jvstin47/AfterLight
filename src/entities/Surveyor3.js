@@ -11,6 +11,20 @@ import { assetManager } from '../core/AssetManager.js';
 export function createSurveyor3(elevationFn, onLoaded, onError) {
   const surveyorGroup = new THREE.Group();
   surveyorGroup.name = 'surveyor-3-spacecraft';
+  surveyorGroup.userData = { artifactId: 'surveyor-3' };
+
+  // Generous invisible hit collider for effortless 3D model touch and click selection
+  const hitGeo = new THREE.SphereGeometry(4.2, 16, 12);
+  hitGeo.translate(0, 1.8, 0);
+  const hitMat = new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
+  const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+  hitMesh.name = 'hit-target-surveyor-3';
+  hitMesh.userData = { artifactId: 'surveyor-3', isHitProxy: true };
+  surveyorGroup.add(hitMesh);
 
   // Authentic landing location inside Surveyor Crater (163m from Intrepid at Azimuth 155°)
   const posX = 72;
@@ -37,6 +51,7 @@ export function createSurveyor3(elevationFn, onLoaded, onError) {
               meshCount++;
               child.castShadow = true;
               child.receiveShadow = true;
+              child.userData.artifactId = 'surveyor-3';
 
               if (child.material) {
                 child.material.side = THREE.DoubleSide;

@@ -129,6 +129,22 @@ export function getElevation(x, z) {
     }
   }
 
+  // 5. Multi-frequency micro-relief undulations (5m to 40m wavelengths)
+  // Reconstructs realistic mare ground texture, dunelets, and gentle basalt mounds
+  const u1 = Math.sin(x * 0.035 + z * 0.02) * Math.cos(z * 0.028 - x * 0.015) * 0.35;
+  const u2 = Math.sin(x * 0.08 - z * 0.065 + 1.2) * 0.18;
+  const u3 = Math.cos(x * 0.16 + z * 0.13 - 0.7) * 0.08;
+  const microRelief = u1 + u2 + u3;
+
+  // Mask micro-relief near equipment to ensure perfectly level, stable footing
+  const dLM = Math.hypot(x, z);
+  const dS3 = Math.hypot(x - 72, z - 150);
+  const dALSEP = Math.hypot(x - (-106), z - (-75));
+  const minDist = Math.min(dLM, dS3, dALSEP);
+  const equipmentFootingMask = Math.min(1.0, Math.max(0.0, (minDist - 6.0) / 6.0));
+
+  y += microRelief * equipmentFootingMask;
+
   return y;
 }
 
@@ -206,6 +222,53 @@ function createNaturalBoulders() {
 
   instancedBoulders.instanceMatrix.needsUpdate = true;
   return instancedBoulders;
+}
+
+/**
+ * Creates natural fine gravel and fractured basalt pebble scatter across the landing site
+ * Adds tangible physical texture at human eye level without slowing GPU fill rate.
+ */
+function createGravelScatter() {
+  const pebbleGeo = createAngularRockGeometry(0.35);
+  const pebbleMat = new THREE.MeshStandardMaterial({
+    color: 0x3a3d44,
+    roughness: 0.98,
+    metalness: 0.02,
+    flatShading: true
+  });
+
+  const pebbleCount = 180;
+  const instancedPebbles = new THREE.InstancedMesh(pebbleGeo, pebbleMat, pebbleCount);
+  instancedPebbles.castShadow = true;
+  instancedPebbles.receiveShadow = true;
+
+  const dummy = new THREE.Object3D();
+  let pIdx = 0;
+
+  // Scatter pebbles along crater rim crests and traverse areas
+  for (let i = 0; i < pebbleCount; i++) {
+    // Golden angle distribution for natural non-repeating dispersion
+    const angle = (i * 137.5) * (Math.PI / 180);
+    const dist = 12 + ((i * 19.3) % 280);
+    const px = dist * Math.cos(angle);
+    const pz = dist * Math.sin(angle);
+
+    // Keep clear of exact landing gear footpads
+    if (Math.hypot(px, pz) < 6.5) continue;
+
+    const py = getElevation(px, pz);
+    const scale = 0.15 + (Math.sin(i * 17) * 0.5 + 0.5) * 0.55;
+
+    dummy.position.set(px, py + scale * 0.12, pz);
+    dummy.scale.set(scale, scale * 0.65, scale * 0.85);
+    dummy.rotation.set(Math.sin(i * 3) * Math.PI, Math.cos(i * 5) * Math.PI, 0);
+    dummy.updateMatrix();
+
+    instancedPebbles.setMatrixAt(pIdx++, dummy.matrix);
+  }
+
+  instancedPebbles.instanceMatrix.needsUpdate = true;
+  return instancedPebbles;
 }
 
 /**
@@ -323,6 +386,10 @@ export function createLunarTerrain() {
   // 3. Natural angular fractured rock clusters (replaces platonic dodecahedrons)
   const naturalBoulders = createNaturalBoulders();
   terrainGroup.add(naturalBoulders);
+
+  // 4. Natural fine gravel and pebble scatter along crater rims
+  const gravelScatter = createGravelScatter();
+  terrainGroup.add(gravelScatter);
 
   return {
     group: terrainGroup,

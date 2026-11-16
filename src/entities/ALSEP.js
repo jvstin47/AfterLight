@@ -13,6 +13,20 @@ import { assetManager } from '../core/AssetManager.js';
 export function createALSEP(elevationFn, onLoaded, onError) {
   const alsepGroup = new THREE.Group();
   alsepGroup.name = 'alsep-array-a';
+  alsepGroup.userData = { artifactId: 'alsep' };
+
+  // Generous invisible hit collider for effortless 3D model touch and click selection
+  const hitGeo = new THREE.CylinderGeometry(6.5, 6.5, 3.5, 16);
+  hitGeo.translate(0, 1.5, 0);
+  const hitMat = new THREE.MeshBasicMaterial({
+    transparent: true,
+    opacity: 0,
+    depthWrite: false
+  });
+  const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+  hitMesh.name = 'hit-target-alsep';
+  hitMesh.userData = { artifactId: 'alsep', isHitProxy: true };
+  alsepGroup.add(hitMesh);
 
   // Authentic deployment location: 130m northwest of Intrepid at Azimuth 305°
   const originX = -106;
@@ -55,6 +69,7 @@ export function createALSEP(elevationFn, onLoaded, onError) {
         if (child.isMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
+          child.userData.artifactId = 'alsep';
           if (child.material) {
             child.material.side = THREE.DoubleSide;
             // Upgrade to physically defensible PBR values
@@ -85,6 +100,7 @@ export function createALSEP(elevationFn, onLoaded, onError) {
         if (child.isMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
+          child.userData.artifactId = 'alsep';
           if (child.material) {
             child.material.side = THREE.DoubleSide;
             // High-emissivity dark thermal radiative coating over beryllium casing
@@ -112,6 +128,7 @@ export function createALSEP(elevationFn, onLoaded, onError) {
         if (child.isMesh) {
           child.castShadow = true;
           child.receiveShadow = true;
+          child.userData.artifactId = 'alsep';
           if (child.material) {
             child.material.side = THREE.DoubleSide;
             const name = (child.material.name || '').toLowerCase();

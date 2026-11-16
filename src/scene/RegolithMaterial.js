@@ -181,7 +181,7 @@ export function createRegolithMaterial() {
     ctx.stroke();
   });
 
-  // 5. Generate Micro-Porous Regolith Bump Map (512x512 tiled high-frequency noise)
+  // 5. Generate Multi-Scale Coherent Porous Regolith Bump Map (512x512 seamless)
   const bumpCanvas = document.createElement('canvas');
   bumpCanvas.width = 512;
   bumpCanvas.height = 512;
@@ -189,15 +189,52 @@ export function createRegolithMaterial() {
   const bImg = bCtx.createImageData(512, 512);
   const bData = bImg.data;
 
-  for (let i = 0; i < bData.length; i += 4) {
-    const n = Math.floor(128 + (Math.random() - 0.5) * 80 + (Math.random() - 0.5) * 40);
-    const val = Math.min(255, Math.max(0, n));
-    bData[i] = val;
-    bData[i + 1] = val;
-    bData[i + 2] = val;
-    bData[i + 3] = 255;
+  // Multi-octave continuous regolith height synthesis
+  // Creates organic porous soil clumping rather than uncorrelated TV static
+  const twoPi = Math.PI * 2;
+  for (let y = 0; y < 512; y++) {
+    const ny = y / 512;
+    for (let x = 0; x < 512; x++) {
+      const nx = x / 512;
+      const idx = (y * 512 + x) * 4;
+
+      // Coherent harmonic wave interference (seamless periodic boundary)
+      const w1 = Math.sin(nx * twoPi * 6) * Math.cos(ny * twoPi * 6);
+      const w2 = Math.sin((nx + ny) * twoPi * 12 + 0.5) * 0.5;
+      const w3 = Math.cos((nx * 2 - ny) * twoPi * 24 + 1.2) * 0.25;
+      const w4 = Math.sin((nx + ny * 2) * twoPi * 48) * 0.12;
+
+      // Micro-grit high frequency component
+      const grit = (Math.random() - 0.5) * 0.18;
+
+      let h = 0.5 + (w1 * 0.35 + w2 + w3 + w4) * 0.28 + grit;
+      const val = Math.min(255, Math.max(0, Math.floor(h * 255)));
+
+      bData[idx] = val;
+      bData[idx + 1] = val;
+      bData[idx + 2] = val;
+      bData[idx + 3] = 255;
+    }
   }
   bCtx.putImageData(bImg, 0, 0);
+
+  // Stamp 60 micro-crater indentations with raised rims into the bump map
+  for (let c = 0; c < 60; c++) {
+    const cx = (c * 79 + 37) % 512;
+    const cy = (c * 113 + 53) % 512;
+    const rad = 4 + (c % 7) * 2.5;
+
+    const microGrad = bCtx.createRadialGradient(cx, cy, 0, cx, cy, rad * 1.5);
+    microGrad.addColorStop(0, 'rgba(30, 30, 30, 0.6)');
+    microGrad.addColorStop(0.7, 'rgba(80, 80, 80, 0.3)');
+    microGrad.addColorStop(0.9, 'rgba(230, 230, 230, 0.45)'); // Raised rim
+    microGrad.addColorStop(1, 'rgba(128, 128, 128, 0)');
+
+    bCtx.fillStyle = microGrad;
+    bCtx.beginPath();
+    bCtx.arc(cx, cy, rad * 1.5, 0, twoPi);
+    bCtx.fill();
+  }
 
   const albedoTexture = new THREE.CanvasTexture(albedoCanvas);
   albedoTexture.wrapS = THREE.ClampToEdgeWrapping;
@@ -207,19 +244,19 @@ export function createRegolithMaterial() {
   const bumpTexture = new THREE.CanvasTexture(bumpCanvas);
   bumpTexture.wrapS = THREE.RepeatWrapping;
   bumpTexture.wrapT = THREE.RepeatWrapping;
-  bumpTexture.repeat.set(64, 64);
+  bumpTexture.repeat.set(48, 48);
 
-  // PBR Material setup
+  // PBR Material setup calibrated for lunar mare basalt regolith
   const material = new THREE.MeshStandardMaterial({
     map: albedoTexture,
     bumpMap: bumpTexture,
-    bumpScale: 0.35,
-    roughness: 0.94,
+    bumpScale: 0.24,
+    roughness: 0.95,
     metalness: 0.02,
     flatShading: false
   });
 
-  // Heiligenschein / Retroreflective Opposition Surge
+  // Heiligenschein / Retroreflective Opposition Surge (Hapke Coherent Backscatter)
   material.onBeforeCompile = (shader) => {
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <dithering_fragment>',
@@ -229,9 +266,11 @@ export function createRegolithMaterial() {
       vec3 viewDir = normalize(vViewPosition);
       vec3 sunDirView = normalize((viewMatrix * vec4(450.0, 105.0, 75.0, 0.0)).xyz);
       float alignment = max(0.0, dot(viewDir, sunDirView));
-      // Non-linear backscatter surge modulated by surface albedo
-      float surge = pow(alignment, 22.0) * 0.42;
-      gl_FragColor.rgb += gl_FragColor.rgb * surge * 1.8;
+      // Sharp coherent retroreflective backscatter peak + broad surge
+      float peakSurge = pow(alignment, 36.0) * 0.52;
+      float broadSurge = pow(alignment, 8.0) * 0.20;
+      float totalSurge = peakSurge + broadSurge;
+      gl_FragColor.rgb += gl_FragColor.rgb * totalSurge * 1.6;
       `
     );
   };
