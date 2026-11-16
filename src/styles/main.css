@@ -20,11 +20,13 @@
   --color-border-subtle: rgba(255, 255, 255, 0.10);
   --color-border-focus: rgba(201, 151, 56, 0.6);
 
-  /* Historical & Technical Typography */
-  --font-serif: "Cinzel", "Times New Roman", Georgia, serif;
-  --font-quote: "Newsreader", "Times New Roman", Georgia, serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  /* Clean, Ultra-Legible Modern Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-display);
+  --font-quote: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
   /* Semantic Aliases */
   --color-amber-accent: var(--color-archival-amber);
@@ -32,8 +34,6 @@
   --color-text-muted: var(--color-text-tertiary);
   --color-foil-gold: var(--color-archival-amber);
   --color-telemetry: var(--color-telemetry-slate);
-  --font-display: var(--font-serif);
-  --font-body: var(--font-sans);
 
   /* Transitions */
   --ease-cinematic: cubic-bezier(0.19, 1, 0.22, 1);

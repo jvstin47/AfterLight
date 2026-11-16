@@ -135,15 +135,15 @@ export class SpatialProjector {
     ctx.strokeStyle = 'rgba(201, 151, 56, 0.35)';
     ctx.strokeRect(36, 616, 952, 116);
 
-    ctx.font = 'bold 22px monospace';
+    ctx.font = '500 20px "JetBrains Mono", monospace';
     ctx.fillStyle = '#c99738';
     ctx.fillText(`${config.plateId} // NASA ARCHIVAL RECORD`, 56, 650);
 
-    ctx.font = '26px sans-serif';
+    ctx.font = '600 24px Inter, -apple-system, sans-serif';
     ctx.fillStyle = '#f0efe9';
     ctx.fillText(config.title, 56, 684);
 
-    ctx.font = '18px sans-serif';
+    ctx.font = '400 17px Inter, -apple-system, sans-serif';
     ctx.fillStyle = '#9ca3af';
     ctx.fillText(config.subtitle.toUpperCase(), 56, 712);
 

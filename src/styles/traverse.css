@@ -82,10 +82,9 @@
 .traverse-title {
   font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 400;
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--color-parchment);
-  text-transform: uppercase;
   margin: 0;
 }
 
@@ -93,9 +92,10 @@
   background: transparent;
   border: 1px solid var(--color-border-subtle);
   color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   padding: 6px 12px;
   cursor: pointer;
   display: inline-flex;
@@ -305,18 +305,18 @@
 .detail-title {
   font-family: var(--font-display);
   font-size: 17px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-parchment);
   margin-bottom: 10px;
 }
 
 .detail-body {
   font-family: var(--font-body);
-  font-size: 13px;
-  line-height: 1.7;
-  color: var(--color-text-secondary);
-  font-weight: 300;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #cdd3de;
+  font-weight: 400;
   margin-bottom: 18px;
 }
 
@@ -333,17 +333,17 @@
   display: block;
   font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--color-amber-accent);
   margin-bottom: 8px;
   text-transform: uppercase;
 }
 
 .notes-text {
-  font-family: var(--font-quote);
+  font-family: var(--font-sans);
   font-size: 13.5px;
   line-height: 1.6;
-  font-style: italic;
+  font-style: normal;
   color: var(--color-parchment);
 }
 
