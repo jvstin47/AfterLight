@@ -8,7 +8,7 @@ import { eventBus } from '../core/EventBus.js';
 import { ARTIFACTS } from '../data/artifactsData.js';
 
 const QUICK_TARGETS = [
-  ...ARTIFACTS.map(a => ({ id: a.id, title: a.name, category: a.category, type: 'artifact' })),
+  ...Object.values(ARTIFACTS).map(a => ({ id: a.id, title: a.name, category: a.category, type: 'artifact' })),
   { id: 'OVERVIEW', title: 'Site Overview (Orbit Perspective)', category: 'Vantage 01', type: 'camera' },
   { id: 'EYE_LEVEL', title: 'Astronaut Eye-Level (A7L View)', category: 'Vantage 02', type: 'camera' },
   { id: 'SURVEYOR_RIM', title: 'Surveyor Crater North Rim', category: 'Vantage 03', type: 'camera' },
@@ -154,7 +154,7 @@ export class QuickSearch {
   handleSelect(id, type) {
     this.close();
     if (type === 'artifact') {
-      const art = ARTIFACTS.find(a => a.id === id);
+      const art = ARTIFACTS[id] || Object.values(ARTIFACTS).find(a => a.id === id);
       if (art) eventBus.emit('artifact:selected', art);
     } else if (type === 'camera') {
       eventBus.emit('camera:preset', id);
