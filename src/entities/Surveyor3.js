@@ -93,6 +93,36 @@ export function createSurveyor3(elevationFn, onLoaded, onError) {
           const bbox = new THREE.Box3().setFromObject(object);
           object.position.y = -bbox.min.y;
 
+          // Documented Apollo 12 Field Work Detail:
+          // Severed TV camera mounting collar with shear cut marks left by Pete Conrad's shears
+          // (The camera itself was severed on Nov 20, 1969 and returned to the Lunar Receiving Lab)
+          const cutCollarGeo = new THREE.CylinderGeometry(0.045, 0.048, 0.065, 8);
+          const cutCollarMat = new THREE.MeshStandardMaterial({
+            color: 0x9ba2ad, // Fresh unoxidized 6061-T6 aluminum shear face
+            roughness: 0.32,
+            metalness: 0.94
+          });
+          const cutCollar = new THREE.Mesh(cutCollarGeo, cutCollarMat);
+          cutCollar.name = 'surveyor-severed-camera-collar';
+          cutCollar.position.set(-0.35, 1.35, 0.22);
+          cutCollar.rotation.z = Math.PI / 6;
+          cutCollar.castShadow = true;
+          object.add(cutCollar);
+
+          // Documented Soil Mechanics Surface Sampler scoop trench (scraped during Surveyor mission in April 1967)
+          const trenchGeo = new THREE.BoxGeometry(0.12, 0.04, 0.45);
+          const trenchMat = new THREE.MeshStandardMaterial({
+            color: 0x14161a, // Dark disturbed subsurface lunar basalt
+            roughness: 0.94,
+            metalness: 0.02
+          });
+          const trench = new THREE.Mesh(trenchGeo, trenchMat);
+          trench.name = 'surveyor-scoop-trench';
+          trench.position.set(0.65, 0.02, -0.45);
+          trench.rotation.y = THREE.MathUtils.degToRad(25);
+          trench.receiveShadow = true;
+          object.add(trench);
+
           surveyorGroup.add(object);
 
           console.log(`[Surveyor3] SUCCESS: Authentic Surveyor 3 model loaded with ${meshCount} meshes on 11.8° crater slope.`);
