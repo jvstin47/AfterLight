@@ -257,6 +257,31 @@ class AudioManager {
     osc.start();
     osc.stop(this.ctx.currentTime + 0.04);
   }
+
+  playBlip(freq = 600, duration = 0.04) {
+    if (this.isMuted || !this.ctx) return;
+    this.ensureContext();
+
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(10, freq * 0.5), this.ctx.currentTime + duration);
+
+      gain.gain.setValueAtTime(0.025, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch {
+      // Audio context safety
+    }
+  }
 }
 
 export const audioManager = new AudioManager();

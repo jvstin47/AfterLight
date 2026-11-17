@@ -1,121 +1,53 @@
 /**
- * AFTERLIGHT — Lunar Expeditions & Planetary Rovers Registry Modal
- * Interactive catalog of humanity's lunar rovers, roving expeditions,
- * and candidate expansion landing sites across the Moon.
+ * AFTERLIGHT — Global Lunar Heritage & Planetary Human Artifacts Registry Modal
+ * Interactive catalog of humanity's lunar rovers, manned Apollo bases,
+ * vanguard robotic soft-landers, and permanent extraterrestrial monuments across the Moon.
  */
 
 import anime from 'animejs';
 import { audioManager } from '../core/AudioManager.js';
 import { eventBus } from '../core/EventBus.js';
-
-export const EXPEDITION_SITES = [
-  {
-    id: 'apollo-12',
-    code: 'SITE 12',
-    status: 'ACTIVE MONUMENT',
-    isActive: true,
-    mission: 'Apollo 12 / Statio Cognitum',
-    vehicle: 'LM-6 "Intrepid" & Surveyor 3 Rendezvous',
-    coordinates: '3.01239° S, 23.42157° W',
-    region: 'Oceanus Procellarum (Ocean of Storms)',
-    description: 'Humanity\'s first precision extraterrestrial landing and the only historical expedition to inspect, sample, and retrieve components from a previously landed robotic spacecraft.',
-    specs: [
-      { key: 'Exploration Type', val: 'Manned Foot Traverse' },
-      { key: 'Total Traverse', val: '2.44 km (2 EVAs)' },
-      { key: 'Key Artifacts', val: 'LM-6, Surveyor 3, ALSEP' },
-      { key: 'Landing Date', val: 'Nov 19, 1969' }
-    ]
-  },
-  {
-    id: 'apollo-15',
-    code: 'SITE 15',
-    status: 'ROVER MONUMENT',
-    isActive: false,
-    mission: 'Apollo 15 / Hadley-Apennine',
-    vehicle: 'Boeing / GM Lunar Roving Vehicle (LRV-1)',
-    coordinates: '26.1322° N, 3.6339° E',
-    region: 'Hadley-Apennine Gorge',
-    description: 'The historic debut of the motorized Lunar Roving Vehicle. David Scott and James Irwin drove across 27.9 kilometers of terrain to the sheer 300-meter canyon rim of Hadley Rille and recovered the 4.1-billion-year-old anorthosite Genesis Rock.',
-    specs: [
-      { key: 'Vehicle Mass', val: '210 kg (empty) / 700 kg' },
-      { key: 'Drive System', val: '4x 0.25 hp DC series motors' },
-      { key: 'Total Traverse', val: '27.9 km' },
-      { key: 'Tires', val: 'Zinc-coated steel mesh + titanium' }
-    ]
-  },
-  {
-    id: 'apollo-17',
-    code: 'SITE 17',
-    status: 'ROVER MONUMENT',
-    isActive: false,
-    mission: 'Apollo 17 / Taurus-Littrow',
-    vehicle: 'LRV-3 "The Challenger Rover"',
-    coordinates: '20.1908° N, 30.7717° E',
-    region: 'Taurus-Littrow Valley',
-    description: 'Humanity\'s longest human driving expedition on another world. Gene Cernan and geologist Harrison Schmitt drove 35.7 km, discovered orange pyroclastic volcanic glass at Shorty Crater, and famously repaired a torn rear fender using duct tape and lunar charts.',
-    specs: [
-      { key: 'Max Speed', val: '18.0 km/h (lunar record)' },
-      { key: 'Total Traverse', val: '35.7 km (3 EVAs)' },
-      { key: 'Max Range from LM', val: '7.6 km' },
-      { key: 'Samples Returned', val: '110.5 kg' }
-    ]
-  },
-  {
-    id: 'luna-17',
-    code: 'LUNA 17',
-    status: 'ROBOTIC ROVER',
-    isActive: false,
-    mission: 'Luna 17 / Lunokhod 1',
-    vehicle: 'Soviet 8-Wheeled Robotic Rover',
-    coordinates: '38.28° N, 35.00° W',
-    region: 'Mare Imbrium (Sea of Rains)',
-    description: 'The first successful robotic wheeled exploration rover on another celestial body. Operating for 322 Earth days (November 1970 – October 1971), Lunokhod 1 drove 10.5 kilometers, transmitted over 20,000 television frames, and conducted 500 soil penetrometry tests.',
-    specs: [
-      { key: 'Rover Mass', val: '756 kg' },
-      { key: 'Chassis', val: '8 independently driven mesh wheels' },
-      { key: 'Power System', val: 'Solar lid + Po-210 thermal decay' },
-      { key: 'Total Traverse', val: '10.54 km' }
-    ]
-  },
-  {
-    id: 'chandrayaan-3',
-    code: 'CH-3',
-    status: 'POLAR ROVER',
-    isActive: false,
-    mission: 'Chandrayaan-3 / Pragyan',
-    vehicle: 'ISRO Southern Polar Exploration Rover',
-    coordinates: '69.373° S, 32.319° E',
-    region: 'Shiv Shakti Point (High Southern Latitude)',
-    description: 'India\'s historic August 2023 landing near the lunar south pole. The 6-wheeled Pragyan rover deployed via ramp to navigate rugged southern terrain, utilizing Laser-Induced Breakdown Spectroscopy (LIBS) to confirm elemental sulfur and metallic signatures in polar regolith.',
-    specs: [
-      { key: 'Rover Mass', val: '26 kg' },
-      { key: 'Suspension', val: '6-wheel rocker-bogie' },
-      { key: 'Payloads', val: 'LIBS & APXS spectrometers' },
-      { key: 'Touchdown', val: 'August 23, 2023' }
-    ]
-  }
-];
+import { LUNAR_HERITAGE_SITES } from '../data/lunarHeritageData.js';
 
 export class ExpeditionsModal {
   constructor(container) {
     this.container = container;
     this.isOpen = false;
+    this.activeFilter = 'all'; // 'all' | 'rovers' | 'manned' | 'vanguard' | 'impacts'
+    this.selectedSite = null;
 
     this.render();
     this.bindEvents();
   }
 
+  getFilteredSites() {
+    if (this.activeFilter === 'all') {
+      return LUNAR_HERITAGE_SITES;
+    }
+    return LUNAR_HERITAGE_SITES.filter(s => s.group === this.activeFilter);
+  }
+
   render() {
+    const counts = {
+      all: LUNAR_HERITAGE_SITES.length,
+      rovers: LUNAR_HERITAGE_SITES.filter(s => s.group === 'rovers').length,
+      manned: LUNAR_HERITAGE_SITES.filter(s => s.group === 'manned').length,
+      vanguard: LUNAR_HERITAGE_SITES.filter(s => s.group === 'vanguard').length,
+      impacts: LUNAR_HERITAGE_SITES.filter(s => s.group === 'impacts').length
+    };
+
     this.container.innerHTML = `
       <div class="expeditions-backdrop"></div>
       <div class="expeditions-panel" role="dialog" aria-modal="true" aria-labelledby="expeditions-modal-title">
+        
+        <!-- Header -->
         <header class="expeditions-header">
           <div class="expeditions-meta">
             <div class="expeditions-tag">
               <span>+</span>
-              <span>LUNAR EXPLORATION FLEET &bull; SITES & ROVERS REGISTRY</span>
+              <span>GLOBAL LUNAR HUMAN HERITAGE &bull; PLANETARY ARTIFACT ATLAS</span>
             </div>
-            <h2 id="expeditions-modal-title" class="expeditions-title">HUMAN & ROBOTIC LUNAR ROVERS</h2>
+            <h2 id="expeditions-modal-title" class="expeditions-title">HUMAN ARTIFACTS & ROVERS ON THE MOON</h2>
           </div>
           <button id="expeditions-close" class="expeditions-close-btn" aria-label="Close Expeditions Registry">
             <span>CLOSE</span>
@@ -123,55 +55,127 @@ export class ExpeditionsModal {
           </button>
         </header>
 
+        <!-- Category Filter Tabs -->
+        <nav class="expeditions-nav-bar" role="tablist" aria-label="Filter Lunar Sites">
+          <button class="exp-filter-tab ${this.activeFilter === 'all' ? 'is-active' : ''}" data-filter="all">
+            <span>ALL NOTABLE SITES</span>
+            <span class="exp-tab-count">${counts.all}</span>
+          </button>
+          <button class="exp-filter-tab ${this.activeFilter === 'rovers' ? 'is-active' : ''}" data-filter="rovers">
+            <span>LUNAR ROVERS</span>
+            <span class="exp-tab-count">${counts.rovers}</span>
+          </button>
+          <button class="exp-filter-tab ${this.activeFilter === 'manned' ? 'is-active' : ''}" data-filter="manned">
+            <span>APOLLO BASES & RELICS</span>
+            <span class="exp-tab-count">${counts.manned}</span>
+          </button>
+          <button class="exp-filter-tab ${this.activeFilter === 'vanguard' ? 'is-active' : ''}" data-filter="vanguard">
+            <span>VANGUARD ROBOTICS</span>
+            <span class="exp-tab-count">${counts.vanguard}</span>
+          </button>
+          <button class="exp-filter-tab ${this.activeFilter === 'impacts' ? 'is-active' : ''}" data-filter="impacts">
+            <span>HISTORIC IMPACTS</span>
+            <span class="exp-tab-count">${counts.impacts}</span>
+          </button>
+        </nav>
+
+        <!-- Main Body -->
         <div class="expeditions-body">
-          <p class="expeditions-intro">
-            While Apollo 12 was a walking mission that proved precision landing by meeting Surveyor 3 on foot, subsequent missions introduced motorized vehicles and robotic rovers that expanded humanity's traverse radius across mountains, craters, and polar rilles. Explore the fleet of machines that traversed the Moon:
-          </p>
+          <div class="expeditions-intro-bar">
+            <p class="expeditions-intro">
+              Over 200 metric tons of human engineering monuments, scientific observatories, and robotic exploratory vehicles remain preserved across the Moon. Explore the complete constellation of humanity's lunar heritage:
+            </p>
+            <div class="expeditions-origin-badge">
+              <span>CURRENT DATUM:</span>
+              <span>STATIO COGNITUM (3.01° S, 23.42° W)</span>
+            </div>
+          </div>
 
-          <div class="expeditions-grid">
-            ${EXPEDITION_SITES.map(site => `
-              <article class="expedition-card ${site.isActive ? 'is-active-site' : ''}">
-                <div class="card-top">
-                  <span class="card-badge-status ${site.isActive ? 'card-badge-active' : 'card-badge-registered'}">
-                    ${site.isActive ? '● CURRENT VIEWPORT' : '○ REGISTERED SITE'}
-                  </span>
-                  <span class="card-code">${site.code}</span>
-                </div>
-
-                <div class="card-title-group">
-                  <h3 class="card-mission">${site.mission}</h3>
-                  <div class="card-vehicle">${site.vehicle}</div>
-                  <div class="card-coords">${site.coordinates} &bull; ${site.region}</div>
-                </div>
-
-                <p class="card-desc">${site.description}</p>
-
-                <div class="card-specs-table">
-                  ${site.specs.map(s => `
-                    <div class="spec-cell">
-                      <span class="spec-key">${s.key}</span>
-                      <span class="spec-val">${s.val}</span>
-                    </div>
-                  `).join('')}
-                </div>
-
-                <div class="card-action-bar">
-                  ${site.isActive ? `
-                    <button class="card-btn card-btn-active" data-action="explore-active">
-                      EXPLORING STATIO COGNITUM
-                    </button>
-                  ` : `
-                    <button class="card-btn card-btn-explore" data-site-id="${site.id}">
-                      EXPEDITION ARCHIVE RECORD
-                    </button>
-                  `}
-                </div>
-              </article>
-            `).join('')}
+          <div id="expeditions-grid" class="expeditions-grid">
+            ${this.renderCardsHtml()}
           </div>
         </div>
+
+        <!-- In-Modal Deep Archival Record Inspector -->
+        <div id="site-detail-modal" class="site-detail-modal">
+          <button id="detail-back-btn" class="detail-back-btn">
+            <span>&larr;</span>
+            <span>BACK TO REGISTRY</span>
+          </button>
+          <div id="detail-modal-content"></div>
+        </div>
+
       </div>
     `;
+  }
+
+  renderCardsHtml() {
+    const sites = this.getFilteredSites();
+
+    return sites.map(site => `
+      <article class="expedition-card ${site.isActiveSite ? 'is-active-site' : ''}" data-site-id="${site.id}">
+        <div class="card-top">
+          <span class="card-badge-status ${site.isActiveSite ? 'card-badge-active' : 'card-badge-registered'}">
+            ${site.isActiveSite ? '● ACTIVE 3D VIEWPORT' : '○ PERMANENT SITE'}
+          </span>
+          ${site.distanceKm > 0 ? `
+            <span class="card-distance-pill" title="Great-circle distance and bearing from Apollo 12">
+              &Delta; ${site.distanceKm.toLocaleString()} km &bull; ${String(site.bearingDeg).padStart(3, '0')}&deg;
+            </span>
+          ` : `
+            <span class="card-distance-pill" style="color: var(--color-archival-amber); border-color: rgba(223,172,78,0.3);">
+              ORIGIN DATUM
+            </span>
+          `}
+        </div>
+
+        <div class="card-title-group">
+          <h3 class="card-mission">${site.name}</h3>
+          <div class="card-designation">${site.designation}</div>
+          <div class="card-agency-crew">
+            <span>${site.agency}</span>
+            ${site.astronauts ? `&bull; <span>${site.astronauts}</span>` : ''}
+          </div>
+          <div class="card-coords">${site.coordinates} &bull; ${site.region}</div>
+        </div>
+
+        <p class="card-desc">${site.description}</p>
+
+        <!-- Key Artifacts Left Behind on the Lunar Surface -->
+        <div class="card-artifacts-box">
+          <span class="artifacts-header">KEY HUMAN ARTIFACTS IN SITU ON THE MOON</span>
+          <div class="artifacts-tags">
+            ${site.keyArtifacts.slice(0, 4).map((art, idx) => `
+              <span class="artifact-tag ${idx === 0 ? 'highlight' : ''}">${art}</span>
+            `).join('')}
+            ${site.keyArtifacts.length > 4 ? `
+              <span class="artifact-tag" style="color: var(--color-text-tertiary);">+${site.keyArtifacts.length - 4} more</span>
+            ` : ''}
+          </div>
+        </div>
+
+        <div class="card-specs-table">
+          ${site.technicalSpecs.map(s => `
+            <div class="spec-cell">
+              <span class="spec-key">${s.label}</span>
+              <span class="spec-val">${s.value}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="card-action-bar">
+          ${site.isActiveSite ? `
+            <button class="card-btn card-btn-active" data-action="explore-active">
+              EXPLORING STATIO COGNITUM
+            </button>
+          ` : `
+            <button class="card-btn card-btn-explore" data-site-id="${site.id}">
+              EXPEDITION ARCHIVE DOSSIER &rarr;
+            </button>
+          `}
+        </div>
+      </article>
+    `).join('');
   }
 
   bindEvents() {
@@ -181,32 +185,59 @@ export class ExpeditionsModal {
     closeBtn?.addEventListener('click', () => this.close());
     backdrop?.addEventListener('click', () => this.close());
 
-    // Card buttons
-    this.container.querySelectorAll('.card-btn-explore').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const siteId = e.currentTarget.dataset.siteId;
-        const site = EXPEDITION_SITES.find(s => s.id === siteId);
-        if (site) {
-          audioManager.playBlip(750, 0.05);
-          alert(`${site.mission}\n\nVehicle: ${site.vehicle}\nCoordinates: ${site.coordinates}\n\n${site.description}\n\n[Candidate expansion site for future AFTERLIGHT multi-station release]`);
+    // Category filter tabs
+    this.container.querySelectorAll('.exp-filter-tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        const filter = e.currentTarget.dataset.filter;
+        if (filter !== this.activeFilter) {
+          this.activeFilter = filter;
+          try {
+            if (typeof audioManager.playBlip === 'function') audioManager.playBlip(620, 0.04);
+            else if (typeof audioManager.playClick === 'function') audioManager.playClick();
+          } catch {}
+
+          // Update active tab class
+          this.container.querySelectorAll('.exp-filter-tab').forEach(t => t.classList.remove('is-active'));
+          e.currentTarget.classList.add('is-active');
+
+          // Re-render grid with animation
+          const grid = this.container.querySelector('#expeditions-grid');
+          if (grid) {
+            grid.innerHTML = this.renderCardsHtml();
+            this.bindCardActions();
+            anime({
+              targets: grid.children,
+              opacity: [0, 1],
+              translateY: [15, 0],
+              delay: anime.stagger(40),
+              duration: 250,
+              easing: 'easeOutCubic'
+            });
+          }
         }
       });
     });
 
-    const activeBtn = this.container.querySelector('[data-action="explore-active"]');
-    activeBtn?.addEventListener('click', () => {
-      audioManager.playBlip(880, 0.06);
-      this.close();
+    this.bindCardActions();
+
+    // Deep Detail Inspector Back Button
+    const detailBackBtn = this.container.querySelector('#detail-back-btn');
+    detailBackBtn?.addEventListener('click', () => {
+      this.closeDetailModal();
     });
 
     // Keyboard navigation
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isOpen) {
-        this.close();
+        const detailModal = this.container.querySelector('#site-detail-modal');
+        if (detailModal?.classList.contains('is-open')) {
+          this.closeDetailModal();
+        } else {
+          this.close();
+        }
       }
       if ((e.key === 'e' || e.key === 'E') && !this.isOpen) {
-        // Toggle when not typing in an input
-        if (document.activeElement?.tagName !== 'INPUT') {
+        if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
           this.open();
         }
       }
@@ -214,6 +245,134 @@ export class ExpeditionsModal {
 
     eventBus.on('ui:expeditions:toggle', () => {
       this.toggle();
+    });
+
+    eventBus.on('ui:expeditions:open', (siteId) => {
+      this.open();
+      if (siteId) {
+        const site = LUNAR_HERITAGE_SITES.find(s => s.id === siteId);
+        if (site) {
+          setTimeout(() => {
+            this.openDetailModal(site);
+          }, 250);
+        }
+      }
+    });
+  }
+
+  bindCardActions() {
+    this.container.querySelectorAll('.card-btn-explore').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const siteId = e.currentTarget.dataset.siteId;
+        const site = LUNAR_HERITAGE_SITES.find(s => s.id === siteId);
+        if (site) {
+          try {
+            if (typeof audioManager.playBlip === 'function') audioManager.playBlip(750, 0.05);
+            else if (typeof audioManager.playClick === 'function') audioManager.playClick();
+          } catch {}
+          this.openDetailModal(site);
+        }
+      });
+    });
+
+    const activeBtn = this.container.querySelector('[data-action="explore-active"]');
+    activeBtn?.addEventListener('click', () => {
+      try {
+        if (typeof audioManager.playBlip === 'function') audioManager.playBlip(880, 0.06);
+        else if (typeof audioManager.playClick === 'function') audioManager.playClick();
+      } catch {}
+      this.close();
+    });
+  }
+
+  openDetailModal(site) {
+    this.selectedSite = site;
+    const detailModal = this.container.querySelector('#site-detail-modal');
+    const content = this.container.querySelector('#detail-modal-content');
+    if (!detailModal || !content) return;
+
+    content.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 20px; max-width: 900px;">
+        <header style="display: flex; flex-direction: column; gap: 6px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--color-archival-amber); letter-spacing: 0.15em;">
+            ${site.code} &bull; ${site.category.toUpperCase()} &bull; ${site.status}
+          </div>
+          <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--color-text-primary);">
+            ${site.name}
+          </h2>
+          <div style="font-family: var(--font-sans); font-size: 15px; color: var(--color-archival-amber);">
+            ${site.designation}
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: var(--color-text-secondary);">
+            Coordinates: ${site.coordinates} &bull; Region: ${site.region} &bull; Touchdown: ${site.landingDate}
+          </div>
+          ${site.distanceKm > 0 ? `
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--color-text-tertiary);">
+              Spatial Separation from Statio Cognitum: ${site.distanceKm.toLocaleString()} km across lunar surface (Bearing: ${String(site.bearingDeg).padStart(3, '0')}°)
+            </div>
+          ` : ''}
+        </header>
+
+        <section style="display: flex; flex-direction: column; gap: 10px;">
+          <h4 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--color-text-tertiary); text-transform: uppercase;">
+            Historical Narrative & Scientific Significance
+          </h4>
+          <p style="font-family: var(--font-sans); font-size: 14.5px; line-height: 1.7; color: var(--color-text-secondary);">
+            ${site.description}
+          </p>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 12px;">
+          <h4 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--color-archival-amber); text-transform: uppercase;">
+            Human Artifacts & Hardware In Situ on the Moon
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;">
+            ${site.keyArtifacts.map(art => `
+              <div style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;">
+                <span style="color: var(--color-archival-amber);">&bull;</span>
+                <span style="font-family: var(--font-sans); font-size: 13px; color: var(--color-text-primary);">${art}</span>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 10px; padding-top: 10px;">
+          <h4 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--color-text-tertiary); text-transform: uppercase;">
+            Engineering & Telemetry Specifications
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+            ${site.technicalSpecs.map(s => `
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--color-archival-amber);">
+                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); text-transform: uppercase;">${s.label}</span>
+                <span style="font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--color-text-primary);">${s.value}</span>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      </div>
+    `;
+
+    detailModal.classList.add('is-open');
+    anime({
+      targets: detailModal,
+      opacity: [0, 1],
+      duration: 250,
+      easing: 'easeOutCubic'
+    });
+  }
+
+  closeDetailModal() {
+    const detailModal = this.container.querySelector('#site-detail-modal');
+    if (!detailModal) return;
+    anime({
+      targets: detailModal,
+      opacity: [1, 0],
+      duration: 180,
+      easing: 'easeInCubic',
+      complete: () => {
+        detailModal.classList.remove('is-open');
+        this.selectedSite = null;
+      }
     });
   }
 
@@ -226,7 +385,10 @@ export class ExpeditionsModal {
       this.container.classList.add('is-open');
     });
 
-    audioManager.playBlip(520, 0.06);
+    try {
+      if (typeof audioManager.playBlip === 'function') audioManager.playBlip(520, 0.06);
+      else if (typeof audioManager.playClick === 'function') audioManager.playClick();
+    } catch {}
     eventBus.emit('expeditions:opened');
 
     anime({
@@ -242,7 +404,11 @@ export class ExpeditionsModal {
     if (!this.isOpen) return;
     this.isOpen = false;
 
-    audioManager.playBlip(440, 0.04);
+    this.closeDetailModal();
+    try {
+      if (typeof audioManager.playBlip === 'function') audioManager.playBlip(440, 0.04);
+      else if (typeof audioManager.playClick === 'function') audioManager.playClick();
+    } catch {}
     this.container.classList.remove('is-open');
 
     anime({

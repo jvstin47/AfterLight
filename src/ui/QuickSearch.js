@@ -6,14 +6,38 @@
 import anime from 'animejs';
 import { eventBus } from '../core/EventBus.js';
 import { ARTIFACTS } from '../data/artifactsData.js';
+import { LUNAR_HERITAGE_SITES } from '../data/lunarHeritageData.js';
 
 const QUICK_TARGETS = [
-  ...Object.values(ARTIFACTS).map(a => ({ id: a.id, title: a.name, category: a.category, type: 'artifact' })),
-  { id: 'OVERVIEW', title: 'Site Overview (Orbit Perspective)', category: 'Vantage 01', type: 'camera' },
-  { id: 'EYE_LEVEL', title: 'Astronaut Eye-Level (A7L View)', category: 'Vantage 02', type: 'camera' },
-  { id: 'SURVEYOR_RIM', title: 'Surveyor Crater North Rim', category: 'Vantage 03', type: 'camera' },
-  { id: 'ALSEP_SITE', title: 'ALSEP Nuclear Deployment Field', category: 'Vantage 04', type: 'camera' },
-  { id: 'TRAVERSE', title: 'EVA-1 & EVA-2 Traverse Route', category: 'Map', type: 'modal' }
+  ...Object.values(ARTIFACTS).map(a => ({
+    id: a.id,
+    title: a.name,
+    category: a.category,
+    type: 'artifact',
+    keywords: [a.shortDesc, a.description, a.historicalSignificance, ...(a.tags || [])].filter(Boolean).join(' ').toLowerCase()
+  })),
+  { id: 'OVERVIEW', title: 'Site Overview (Orbit Perspective)', category: 'Vantage 01', type: 'camera', keywords: 'orbit overhead wide camera view' },
+  { id: 'EYE_LEVEL', title: 'Astronaut Eye-Level (A7L View)', category: 'Vantage 02', type: 'camera', keywords: 'astronaut ground helmet visor a7l' },
+  { id: 'SURVEYOR_RIM', title: 'Surveyor Crater North Rim', category: 'Vantage 03', type: 'camera', keywords: 'surveyor crater slope shadow' },
+  { id: 'ALSEP_SITE', title: 'ALSEP Nuclear Deployment Field', category: 'Vantage 04', type: 'camera', keywords: 'alsep nuclear rtg snap-27' },
+  { id: 'CELESTIAL_EARTH', title: 'Earth from Statio Cognitum (64.5° Sky View)', category: 'Vantage 05', type: 'camera', keywords: 'earth sky celestial terminator blue marble gibbous' },
+  { id: 'TRAVERSE', title: 'EVA-1 & EVA-2 Traverse Route', category: 'Cartography', type: 'modal', keywords: 'traverse path eva map distance route bean conrad' },
+  { id: 'EXPEDITIONS', title: 'Human Artifacts & Rovers on the Moon (Global Atlas)', category: 'Planetary Atlas', type: 'modal', keywords: 'rovers sites atlas lunar heritage all missions' },
+  ...LUNAR_HERITAGE_SITES.map(s => ({
+    id: s.id,
+    title: `${s.name} (${s.designation})`,
+    category: s.category,
+    type: 'expedition',
+    keywords: [
+      s.name,
+      s.designation,
+      s.agency,
+      s.region,
+      s.astronauts,
+      ...(s.keyArtifacts || []),
+      s.description
+    ].filter(Boolean).join(' ').toLowerCase()
+  }))
 ];
 
 export class QuickSearch {
@@ -79,8 +103,14 @@ export class QuickSearch {
 
     input?.addEventListener('input', (e) => {
       const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        this.renderResults(QUICK_TARGETS);
+        return;
+      }
       const filtered = QUICK_TARGETS.filter(t =>
-        t.title.toLowerCase().includes(q) || t.category.toLowerCase().includes(q)
+        t.title.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q) ||
+        (t.keywords && t.keywords.includes(q))
       );
       this.renderResults(filtered);
     });
@@ -160,6 +190,10 @@ export class QuickSearch {
       eventBus.emit('camera:preset', id);
     } else if (type === 'modal' && id === 'TRAVERSE') {
       eventBus.emit('ui:traverse:toggle');
+    } else if (type === 'expedition') {
+      eventBus.emit('ui:expeditions:open', id);
+    } else if (type === 'modal' && id === 'EXPEDITIONS') {
+      eventBus.emit('ui:expeditions:toggle');
     }
   }
 
