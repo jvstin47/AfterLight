@@ -75,15 +75,15 @@ export class TraverseModal {
 
                 <!-- Bench Crater -->
                 <circle cx="-140" cy="45" r="35" class="map-crater" />
-                <text x="-140" y="28" class="map-crater-label" text-anchor="middle">BENCH (70m)</text>
+                <text x="-155" y="24" class="map-crater-label" text-anchor="middle">BENCH (70m)</text>
 
                 <!-- Sharp Crater -->
                 <circle cx="-210" cy="95" r="10" class="map-crater" />
-                <text x="-210" y="80" class="map-crater-label">SHARP</text>
+                <text x="-210" y="80" class="map-crater-label" text-anchor="middle">SHARP</text>
 
                 <!-- Halo Crater -->
                 <circle cx="-100" cy="130" r="15" class="map-crater" />
-                <text x="-100" y="130" class="map-crater-label">HALO</text>
+                <text x="-100" y="112" class="map-crater-label" text-anchor="middle">HALO</text>
 
                 <!-- Block Crater -->
                 <circle cx="60" cy="85" r="8" class="map-crater" />
@@ -297,8 +297,21 @@ export class TraverseModal {
         circle.setAttribute('class', 'station-node');
 
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        const xOffset = st.id === 'station-7' ? -24 : (st.id === 'station-3' ? 10 : 6);
-        const yOffset = st.id === 'station-7' ? -4 : (st.id === 'station-3' ? 8 : 3);
+        let xOffset = 6;
+        let yOffset = 3;
+        if (st.id === 'station-7') {
+          xOffset = -24;
+          yOffset = -4;
+        } else if (st.id === 'station-2') {
+          xOffset = 8;
+          yOffset = -4;
+        } else if (st.id === 'station-3') {
+          xOffset = 8;
+          yOffset = 10;
+        } else if (st.id === 'station-5') {
+          xOffset = 8;
+          yOffset = 8;
+        }
         label.setAttribute('x', st.pos[0] + xOffset);
         label.setAttribute('y', st.pos[2] + yOffset);
         label.setAttribute('class', 'station-label');

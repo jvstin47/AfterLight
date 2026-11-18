@@ -51,6 +51,7 @@
 
 /* Header */
 .expeditions-header {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -110,6 +111,8 @@
    Top-Level Mode Switcher (4 Modes)
    ========================================================================== */
 .expeditions-mode-switcher {
+  flex-shrink: 0;
+  min-height: 52px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -192,6 +195,7 @@
    Missions Facets & Sub-filters
    ========================================================================== */
 .missions-facets-container {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
