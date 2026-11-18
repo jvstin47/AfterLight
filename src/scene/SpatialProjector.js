@@ -33,8 +33,8 @@ export class SpatialProjector {
         yOffset: 2.1,
         width: 2.8,
         height: 2.1,
-        imageSrc: '/assets/photographs/apollo_12/as12_46_6739_conrad_mesa.jpg',
-        plateId: 'AS12-46-6739',
+        imageSrc: '/assets/photography/intrepid_lm/AS12-47-6913_Conrad_MESA_Lunar_Module.jpg',
+        plateId: 'AS12-47-6913',
         title: 'MESA EXTRACTION // LM-6 INTREPID',
         subtitle: 'Pete Conrad deploying modular equipment stowage assembly'
       },
@@ -44,10 +44,10 @@ export class SpatialProjector {
         yOffset: 1.8,
         width: 2.7,
         height: 2.0,
-        imageSrc: '/assets/photographs/apollo_12/as12_48_7133_bean_surveyor.jpg',
+        imageSrc: '/assets/photography/surveyor_3_rendezvous/AS12-48-7133_Conrad_Examining_Surveyor_Camera.jpg',
         plateId: 'AS12-48-7133',
         title: 'SURVEYOR III RENDEZVOUS',
-        subtitle: 'Alan Bean inspecting severed vidicon TV camera struts'
+        subtitle: 'Pete Conrad inspecting severed vidicon TV camera struts'
       },
       {
         artifactId: 'alsep',
@@ -55,10 +55,10 @@ export class SpatialProjector {
         yOffset: 1.7,
         width: 2.7,
         height: 2.0,
-        imageSrc: '/assets/photographs/apollo_12/as12_46_6813_bean_carrying_alsep.jpg',
-        plateId: 'AS12-46-6813',
+        imageSrc: '/assets/photography/alsep_deployment/AS12-46-6807_Bean_Carrying_ALSEP_Pallets.jpg',
+        plateId: 'AS12-46-6807',
         title: 'ALSEP ARRAY DEPLOYMENT',
-        subtitle: 'Barbell carrier transport to 130m station zone'
+        subtitle: 'Alan Bean carrying ALSEP pallets to 130m station zone'
       }
     ];
 
