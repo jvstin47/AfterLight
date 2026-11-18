@@ -368,7 +368,7 @@
     0 1px 1px rgba(0, 0, 0, 0.4),
     0 24px 48px -24px rgba(0, 0, 0, 0.7);
   font-family: var(--font-mono, monospace);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
   pointer-events: auto;
   position: fixed;
   bottom: 24px;
