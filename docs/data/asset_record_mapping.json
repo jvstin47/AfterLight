@@ -1,0 +1,107 @@
+{
+  "project": "AFTERLIGHT",
+  "document": "Asset-to-Record Experience Mapping",
+  "mappings": [
+    {
+      "sourceAssetPath": "assets/3d_models/lunar_module/apollo_lunar_module.glb",
+      "format": "GLTF 2.0 Binary",
+      "currentDestination": "Apollo 12 (LM-6 Intrepid)",
+      "targetDestinations": [
+        {
+          "missionId": "apollo-11",
+          "targetName": "LM-5 Eagle Descent Stage",
+          "fidelityTier": "Tier 1 Flagship",
+          "modificationsRequired": "Plaque texture swap (Eagle plaque), remove MESA deployment gear, replace ladder banner."
+        },
+        {
+          "missionId": "apollo-14",
+          "targetName": "LM-8 Antares Descent Stage",
+          "fidelityTier": "Tier 2 Historic Site",
+          "modificationsRequired": "Plaque texture swap, add MET handcart model adjacent."
+        },
+        {
+          "missionId": "apollo-15",
+          "targetName": "LM-10 Falcon Descent Stage",
+          "fidelityTier": "Tier 2 Historic Site",
+          "modificationsRequired": "J-series extended propellant tanks and LRV deployment bay geometry."
+        },
+        {
+          "missionId": "apollo-16",
+          "targetName": "LM-11 Orion Descent Stage",
+          "fidelityTier": "Tier 2 Historic Site",
+          "modificationsRequired": "J-series configuration, add Far UV telescope camera in shadow."
+        },
+        {
+          "missionId": "apollo-17",
+          "targetName": "LM-12 Challenger Descent Stage",
+          "fidelityTier": "Tier 1 Flagship",
+          "modificationsRequired": "J-series configuration, add LRV-3 parking location."
+        }
+      ]
+    },
+    {
+      "sourceAssetPath": "assets/3d_models/surveyor_3/surveyor_3_lander.obj",
+      "format": "Wavefront OBJ",
+      "currentDestination": "Apollo 12 / Surveyor 3 in crater",
+      "targetDestinations": [
+        {
+          "missionId": "surveyor-01",
+          "targetName": "Surveyor 1 Lander",
+          "fidelityTier": "Tier 3 Geographic Record",
+          "modificationsRequired": "Remove soil scoop arm (Surveyor 1 had no scoop); restore intact TV camera turret."
+        },
+        {
+          "missionId": "surveyor-05",
+          "targetName": "Surveyor 5 Lander",
+          "fidelityTier": "Tier 3 Geographic Record",
+          "modificationsRequired": "Add alpha-scattering sensor on deployment cord; restore intact TV camera."
+        },
+        {
+          "missionId": "surveyor-06",
+          "targetName": "Surveyor 6 Lander",
+          "fidelityTier": "Tier 3 Geographic Record",
+          "modificationsRequired": "Add alpha-scattering sensor; position at hop displacement location."
+        },
+        {
+          "missionId": "surveyor-07",
+          "targetName": "Surveyor 7 Lander",
+          "fidelityTier": "Tier 3 Geographic Record",
+          "modificationsRequired": "Include soil scoop and alpha-scattering sensor; place on Tycho crater rim slope."
+        }
+      ]
+    },
+    {
+      "sourceAssetPath": "assets/3d_models/alsep_instruments/snap27_rtg.obj",
+      "format": "Wavefront OBJ",
+      "currentDestination": "Apollo 12 SNAP-27 RTG",
+      "targetDestinations": [
+        { "missionId": "apollo-14", "targetName": "Apollo 14 SNAP-27 Generator", "fidelityTier": "Tier 2", "modificationsRequired": "None (identical GE hardware)." },
+        { "missionId": "apollo-15", "targetName": "Apollo 15 SNAP-27 Generator", "fidelityTier": "Tier 2", "modificationsRequired": "None." },
+        { "missionId": "apollo-16", "targetName": "Apollo 16 SNAP-27 Generator", "fidelityTier": "Tier 2", "modificationsRequired": "None." },
+        { "missionId": "apollo-17", "targetName": "Apollo 17 SNAP-27 Generator", "fidelityTier": "Tier 1", "modificationsRequired": "None." }
+      ]
+    },
+    {
+      "sourceAssetPath": "assets/3d_models/alsep_instruments/alsep_central_station.obj",
+      "format": "Wavefront OBJ",
+      "currentDestination": "Apollo 12 ALSEP Central Station",
+      "targetDestinations": [
+        { "missionId": "apollo-14", "targetName": "Apollo 14 ALSEP Central Station", "fidelityTier": "Tier 2", "modificationsRequired": "None (Bendix standardized enclosure)." },
+        { "missionId": "apollo-15", "targetName": "Apollo 15 ALSEP Central Station", "fidelityTier": "Tier 2", "modificationsRequired": "None." },
+        { "missionId": "apollo-16", "targetName": "Apollo 16 ALSEP Central Station", "fidelityTier": "Tier 2", "modificationsRequired": "None." },
+        { "missionId": "apollo-17", "targetName": "Apollo 17 ALSEP Central Station", "fidelityTier": "Tier 1", "modificationsRequired": "None." }
+      ]
+    },
+    {
+      "sourceAssetPath": "assets/3d_models/alsep_instruments/alsep_passive_seismic_experiment.obj",
+      "format": "Wavefront OBJ",
+      "currentDestination": "Apollo 12 PSE",
+      "targetDestinations": [
+        { "missionId": "apollo-11", "targetName": "EASEP Passive Seismic Experiment", "fidelityTier": "Tier 1", "modificationsRequired": "Attach solar panel wings (Apollo 11 PSE was solar powered, not RTG powered)." },
+        { "missionId": "apollo-14", "targetName": "Apollo 14 PSE", "fidelityTier": "Tier 2", "modificationsRequired": "None." },
+        { "missionId": "apollo-15", "targetName": "Apollo 15 PSE", "fidelityTier": "Tier 2", "modificationsRequired": "None." },
+        { "missionId": "apollo-16", "targetName": "Apollo 16 PSE", "fidelityTier": "Tier 2", "modificationsRequired": "None." }
+      ]
+    }
+  ]
+}

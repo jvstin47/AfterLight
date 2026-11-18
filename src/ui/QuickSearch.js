@@ -11,7 +11,12 @@ import { navigationService } from '../services/NavigationService.js';
 import { store } from '../state/Store.js';
 import { ActionTypes } from '../state/actions.js';
 import { ARTIFACTS } from '../data/artifactsData.js';
-import { LUNAR_HERITAGE_SITES } from '../data/lunarHeritageData.js';
+import {
+  GLOBAL_MISSIONS,
+  FLAGS_OF_THE_MOON,
+  LUNAR_SCIENCE_EXPERIMENTS,
+  LUNAR_GEOLOGY_MODULES
+} from '../data/globalLunarData.js';
 
 const QUICK_TARGETS = [
   ...Object.values(ARTIFACTS).map((a) => ({
@@ -30,8 +35,13 @@ const QUICK_TARGETS = [
   { id: 'ALSEP_SITE', title: 'ALSEP Nuclear Deployment Field', category: 'Vantage 04', type: 'camera', keywords: 'alsep nuclear rtg snap-27' },
   { id: 'CELESTIAL_EARTH', title: 'Earth from Statio Cognitum (64.5° Sky View)', category: 'Vantage 05', type: 'camera', keywords: 'earth sky celestial terminator blue marble gibbous' },
   { id: 'TRAVERSE', title: 'EVA-1 & EVA-2 Traverse Route', category: 'Cartography', type: 'modal', keywords: 'traverse path eva map distance route bean conrad' },
-  { id: 'EXPEDITIONS', title: 'Human Artifacts & Rovers on the Moon (Global Atlas)', category: 'Planetary Atlas', type: 'modal', keywords: 'rovers sites atlas lunar heritage all missions' },
-  ...LUNAR_HERITAGE_SITES.map((s) => ({
+  { id: 'EXPEDITIONS', title: 'Global Lunar Heritage Atlas (22 Missions & Rovers)', category: 'Planetary Atlas', type: 'modal', keywords: 'rovers sites atlas lunar heritage all missions chang\'e chandrayaan apollo luna surveyor slim' },
+  { id: 'FLAGS', title: 'Flags of the Moon (National Markers & Outer Space Treaty)', category: 'Heritage Layer', type: 'modal', keywords: 'flags outer space treaty law united states china ussr india apollo flag nylon basalt' },
+  { id: 'SCIENCE', title: 'Lunar Science Experiments (ALSEP, LRRR & Modern)', category: 'Planetary Science', type: 'modal', keywords: 'science alsep experiments pse seismometer retroreflector lrrr laser hfe heat flow swc lsm libs' },
+  { id: 'GEOLOGY', title: 'Lunar Geology & Planetary Evolution (Theia & Maria)', category: 'Astrophysics', type: 'modal', keywords: 'geology theia giant impact magma ocean anorthosite regolith space weathering polar water ice' },
+  
+  // All 22 Global Missions
+  ...GLOBAL_MISSIONS.map((s) => ({
     id: s.id,
     title: `${s.name} (${s.designation})`,
     category: s.category,
@@ -40,10 +50,73 @@ const QUICK_TARGETS = [
       s.name,
       s.designation,
       s.agency,
+      s.country,
       s.region,
+      s.basin,
       s.astronauts,
+      s.eraLabel,
       ...(s.keyArtifacts || []),
       s.description
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+  })),
+
+  // All 9 Documented Flags
+  ...FLAGS_OF_THE_MOON.map((f) => ({
+    id: f.id,
+    title: `${f.flagTitle} (${f.country})`,
+    category: 'Flags of the Moon',
+    type: 'flag',
+    keywords: [
+      f.flagTitle,
+      f.country,
+      f.agency,
+      f.material,
+      f.conditionLabel,
+      f.orbitalEvidence,
+      f.significance,
+      'flag national marker outer space treaty'
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+  })),
+
+  // All 6 Lunar Science Experiments
+  ...LUNAR_SCIENCE_EXPERIMENTS.map((e) => ({
+    id: e.id,
+    title: `${e.name} [${e.acronym}]`,
+    category: 'Lunar Science',
+    type: 'science',
+    keywords: [
+      e.name,
+      e.acronym,
+      e.missions,
+      e.whatWasMeasured,
+      e.whyWasMeasured,
+      e.howItWorked,
+      e.discoveries,
+      'experiment instrument alsep'
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+  })),
+
+  // All 4 Geology Modules
+  ...LUNAR_GEOLOGY_MODULES.map((g) => ({
+    id: g.id,
+    title: `${g.title}: ${g.subtitle}`,
+    category: 'Lunar Geology',
+    type: 'geology',
+    keywords: [
+      g.title,
+      g.subtitle,
+      g.summary,
+      g.body,
+      'geology moon origin theia magma ocean regolith ice'
     ]
       .filter(Boolean)
       .join(' ')
@@ -80,14 +153,14 @@ export class QuickSearch {
     `;
 
     this.modalEl.innerHTML = `
-      <div class="search-dialog" style="width: min(520px, 90vw); display: flex; flex-direction: column; gap: 12px; pointer-events: auto;">
+      <div class="search-dialog" style="width: min(540px, 92vw); display: flex; flex-direction: column; gap: 12px; pointer-events: auto;">
         <!-- Pill Search Bar (.cir-search) -->
         <label class="cir-search" style="width: 100%;">
           <svg class="cir-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.34-4.34"></path>
           </svg>
-          <input id="cir-search-input" class="cir-search__field" type="search" placeholder="Search lunar artifacts, stations, coordinates..." aria-label="Search" autocomplete="off" />
+          <input id="cir-search-input" class="cir-search__field" type="search" placeholder="Search lunar artifacts, rovers, flags, science..." aria-label="Search" autocomplete="off" />
           <kbd class="cir-search__kbd">ESC</kbd>
         </label>
 
@@ -97,86 +170,94 @@ export class QuickSearch {
           border: 1px solid var(--color-edge);
           border-radius: 18px;
           padding: 8px;
-          max-height: 340px;
+          max-height: 380px;
           overflow-y: auto;
-          box-shadow: 0 24px 48px -20px rgba(0,0,0,0.8);
-          font-family: var(--font-mono, monospace);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
         "></div>
       </div>
     `;
 
     document.body.appendChild(this.modalEl);
-    this.renderResults(QUICK_TARGETS);
   }
 
   bindEvents() {
-    const input = this.modalEl.querySelector('#cir-search-input');
-
-    input?.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      if (!q) {
-        this.renderResults(QUICK_TARGETS);
-        return;
-      }
-      const filtered = QUICK_TARGETS.filter((t) =>
-        t.title.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q) ||
-        (t.keywords && t.keywords.includes(q))
-      );
-      this.renderResults(filtered);
-    });
-
-    this.modalEl.addEventListener('click', (e) => {
-      if (e.target === this.modalEl) {
-        this.close();
-      }
-    });
-
-    eventBus.on('ui:search:toggle', () => {
-      this.toggle();
-    });
-
     window.addEventListener('keydown', (e) => {
-      // ⌘ K or Ctrl+K
-      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         this.toggle();
       } else if (e.key === 'Escape' && this.isOpen) {
         this.close();
       }
     });
+
+    eventBus.on('quicksearch:open', () => this.open());
+    eventBus.on('quicksearch:close', () => this.close());
+    eventBus.on('quicksearch:toggle', () => this.toggle());
+
+    this.modalEl.addEventListener('click', (e) => {
+      if (e.target === this.modalEl) this.close();
+    });
+
+    const input = this.modalEl.querySelector('#cir-search-input');
+    input.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      if (!q) {
+        this.renderResults(QUICK_TARGETS.slice(0, 15));
+        return;
+      }
+      const filtered = QUICK_TARGETS.filter((t) =>
+        t.title.toLowerCase().includes(q) ||
+        t.category.toLowerCase().includes(q) ||
+        t.keywords.includes(q)
+      );
+      this.renderResults(filtered);
+    });
   }
 
   renderResults(items) {
-    const resultsContainer = this.modalEl.querySelector('#cir-search-results');
-    if (!resultsContainer) return;
+    const container = this.modalEl.querySelector('#cir-search-results');
+    if (!container) return;
 
     if (items.length === 0) {
-      resultsContainer.innerHTML = `
-        <div style="padding: 16px; text-align: center; color: var(--color-mist); font-size: 11px;">
-          NO MATCHING ARCHIVAL RECORDS FOUND
+      container.innerHTML = `
+        <div style="padding: 16px; text-align: center; color: var(--color-text-secondary); font-family: var(--font-sans); font-size: 13px;">
+          No archival records match query. Try searching for "apollo", "rover", "flag", "lrrr", "seismic", or "theia".
         </div>
       `;
       return;
     }
 
-    resultsContainer.innerHTML = items.map((item) => `
-      <div class="search-item" data-id="${item.id}" data-type="${item.type}" style="
+    container.innerHTML = items
+      .map(
+        (item) => `
+      <div class="search-result-row" data-id="${item.id}" data-type="${item.type}" style="
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 14px;
+        padding: 8px 12px;
         border-radius: 12px;
         cursor: pointer;
         transition: background 0.15s ease;
       ">
-        <span style="font-size: 12px; color: var(--color-ink);">${item.title}</span>
-        <span style="font-size: 10px; color: var(--color-signal); text-transform: uppercase;">${item.category}</span>
+        <div style="display: flex; flex-direction: column; gap: 2px;">
+          <span style="font-family: var(--font-sans); font-size: 13.5px; color: var(--color-text-primary); font-weight: 500;">
+            ${item.title}
+          </span>
+          <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-secondary); text-transform: uppercase;">
+            ${item.category}
+          </span>
+        </div>
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-archival-amber); opacity: 0.85;">
+          ${item.type.toUpperCase()} &rarr;
+        </span>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
-    // Bind clicks
-    const rowEls = resultsContainer.querySelectorAll('.search-item');
+    const rowEls = container.querySelectorAll('.search-result-row');
     rowEls.forEach((el) => {
       el.addEventListener('mouseenter', () => {
         el.style.background = 'rgba(255, 255, 255, 0.08)';
@@ -206,6 +287,12 @@ export class QuickSearch {
       eventBus.emit('ui:expeditions:open', id);
     } else if (type === 'modal' && id === 'EXPEDITIONS') {
       eventBus.emit('ui:expeditions:toggle');
+    } else if (type === 'flag' || (type === 'modal' && id === 'FLAGS')) {
+      eventBus.emit('ui:expeditions:open-flags');
+    } else if (type === 'science' || (type === 'modal' && id === 'SCIENCE')) {
+      eventBus.emit('ui:expeditions:open-science');
+    } else if (type === 'geology' || (type === 'modal' && id === 'GEOLOGY')) {
+      eventBus.emit('ui:expeditions:open-geology');
     }
   }
 
@@ -240,7 +327,7 @@ export class QuickSearch {
     const input = this.modalEl.querySelector('#cir-search-input');
     if (input) {
       input.value = '';
-      this.renderResults(QUICK_TARGETS);
+      this.renderResults(QUICK_TARGETS.slice(0, 15));
       setTimeout(() => input.focus(), 50);
     }
   }

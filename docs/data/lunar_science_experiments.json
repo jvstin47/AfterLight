@@ -1,0 +1,80 @@
+[
+  {
+    "id": "passive-seismic-experiment",
+    "name": "Passive Seismic Experiment (PSE)",
+    "acronym": "PSE",
+    "deployedMissions": ["apollo-11", "apollo-12", "apollo-14", "apollo-15", "apollo-16"],
+    "whatWasMeasured": "Three-axis long-period and single-axis vertical short-period ground motion vibrations, with displacement sensitivity down to 0.3 nanometers.",
+    "whyWasMeasured": "To determine whether the Moon is geologically and seismically active, measure the thickness of the crust, detect impact vibrations, and determine whether a metallic core exists.",
+    "howItWorked": "Inertial pendulums and proof masses suspended by quartz springs inside a sealed beryllium/vacuum chamber; capacitive displacement transducers converted ground motion into analog voltages, digitized to 10-bit words and transmitted via ALSEP S-band transmitter.",
+    "keyDiscoveries": "Identified four classes of moonquakes (deep tidal quakes at 700-1200 km, shallow tectonic faults, thermal diurnal quakes, and meteoroid impacts). Discovered the extreme low-attenuation 'ringing' of the bone-dry lunar crust (55+ minutes). Established average near-side crustal thickness of 30-38 km.",
+    "isCurrentlyOperating": false,
+    "operationalLifespan": "Apollo 11 operated 21 days; Apollo 12, 14, 15, 16 operated continuously until formal NASA decommission on September 30, 1977 (7 years, 10 months).",
+    "scientificLegacy": "Formed the foundational planetary seismology model of the Moon, proving the small core and differentiated mantle structure."
+  },
+  {
+    "id": "laser-ranging-retroreflector",
+    "name": "Laser Ranging Retroreflector (LRRR)",
+    "acronym": "LRRR",
+    "deployedMissions": ["apollo-11", "apollo-14", "apollo-15", "luna-17", "luna-21"],
+    "whatWasMeasured": "Round-trip transit time of pulsed laser photons fired from terrestrial astronomical observatories to millimeter-scale timing precision.",
+    "whyWasMeasured": "To calculate the precise Earth-Moon distance over decades, measure lunar physical librations (wobbles), track continental drift on Earth, and test Einstein's General Theory of Relativity.",
+    "howItWorked": "Passive optical arrays of 100 to 300 fused-silica corner-cube prisms. Each corner-cube features three mutually perpendicular reflecting surfaces that bounce light back directly parallel to the incoming vector, requiring zero electrical power.",
+    "keyDiscoveries": "1. Proved the Moon is spiraling away from Earth at 3.82 cm/year due to tidal dissipation. 2. Detected physical libration signatures confirming the Moon possesses a fluid outer core. 3. Verified Einstein's Equivalence Principle to 1 part in 10^13.",
+    "isCurrentlyOperating": true,
+    "operationalLifespan": "Active and operational today (55+ years continuous service).",
+    "scientificLegacy": "The longest continuously operating scientific experiment in the history of space exploration."
+  },
+  {
+    "id": "heat-flow-experiment",
+    "name": "Heat Flow Experiment (HFE)",
+    "acronym": "HFE",
+    "deployedMissions": ["apollo-15", "apollo-17"],
+    "whatWasMeasured": "Vertical temperature gradients and in situ thermal conductivity of undisturbed lunar regolith between 1.0 and 2.5 meters depth.",
+    "whyWasMeasured": "To determine the steady-state geothermal heat loss flowing from radioactive decay of Uranium, Thorium, and Potassium in the lunar interior, establishing the thermal evolution of the Moon.",
+    "howItWorked": "Two slender fibreglass probe tubes inserted into 2.5m boreholes drilled with the Apollo Lunar Surface Drill (ALSD). High-precision platinum resistance thermometers measured temperatures with 0.001°C sensitivity across gradient bridges.",
+    "keyDiscoveries": "Measured steady-state lunar heat flow of 21 mW/m² (Apollo 15) and 16 mW/m² (Apollo 17). Proved radioactive heat-producing elements are concentrated in the crust rather than deep mantle.",
+    "isCurrentlyOperating": false,
+    "operationalLifespan": "Operated continuously from deployment until September 30, 1977.",
+    "scientificLegacy": "Constrained global radioactive element abundances and core thermal cooling models."
+  },
+  {
+    "id": "solar-wind-composition",
+    "name": "Solar Wind Composition Experiment (SWC)",
+    "acronym": "SWC",
+    "deployedMissions": ["apollo-11", "apollo-12", "apollo-14", "apollo-15", "apollo-16"],
+    "whatWasMeasured": "Elemental and isotopic abundances of noble gases (Helium-3, Helium-4, Neon-20, Neon-22, Argon-36, Argon-40) in the undisturbed solar wind.",
+    "whyWasMeasured": "To obtain pristine samples of the Sun's outer convective zone without contamination by Earth's geomagnetic field or atmospheric filtering.",
+    "howItWorked": "A 30 cm x 140 cm sheet of ultra-pure aluminum/platinum foil unfurled on an aluminum staff and pointed toward the Sun. Solar wind ions (traveling at 400 km/s) embedded directly into the outer 10nm of the metal lattice. Re-rolled and returned to Earth for laboratory mass spectrometry.",
+    "keyDiscoveries": "Provided the first definitive measurements of the 3He/4He ratio in solar wind, resolving foundational questions about primordial nucleosynthesis in the early solar nebula.",
+    "isCurrentlyOperating": false,
+    "operationalLifespan": "Duration of each Apollo surface stay (ranging from 1.3 hours to 67 hours).",
+    "scientificLegacy": "Established the universal standard baseline for solar isotopic abundances."
+  },
+  {
+    "id": "lunar-surface-magnetometer",
+    "name": "Lunar Surface Magnetometer (LSM)",
+    "acronym": "LSM",
+    "deployedMissions": ["apollo-12", "apollo-15", "apollo-16"],
+    "whatWasMeasured": "Local steady-state and time-varying vector magnetic fields on the lunar surface down to 0.2 gammas (nanoteslas).",
+    "whyWasMeasured": "To test whether the Moon possessed a dipole field, measure electrical conductivity of the lunar mantle via electromagnetic induction, and survey localized crustal magnetic anomalies.",
+    "howItWorked": "Three orthogonal fluxgate magnetometer sensors mounted on three 1-meter fiberglass arms extending from a central electronics box. Equipped with motorized 180° flip mechanisms to calibrate instrumental zero drift.",
+    "keyDiscoveries": "Discovered that the global dipole field is less than 0.05 gammas, but local crustal rocks possess strong remnant thermoremanent magnetization (up to 327 gammas at Apollo 16), proving the young Moon had an active core dynamo 4 billion years ago.",
+    "isCurrentlyOperating": false,
+    "operationalLifespan": "Operated continuously from 1969 to 1977.",
+    "scientificLegacy": "Proved the existence of an ancient extinct lunar core dynamo."
+  },
+  {
+    "id": "libs-laser-spectroscopy",
+    "name": "Laser-Induced Breakdown Spectroscopy (LIBS)",
+    "acronym": "LIBS",
+    "deployedMissions": ["chandrayaan-3"],
+    "whatWasMeasured": "Atomic emission spectra of localized regolith micro-plasmas generated by pulsed laser ablation.",
+    "whyWasMeasured": "To determine unambiguous in situ elemental composition of high-latitude southern polar regolith.",
+    "howItWorked": "Mounted on Pragyan rover; focused high-power 1,064nm laser pulses onto soil grains, creating hot plasma. Dispersed light captured by spectrometers across 200–800nm wavelengths.",
+    "keyDiscoveries": "Confirmed unambiguous elemental Sulfur (S) in southern polar soil alongside Aluminum, Calcium, Iron, Chromium, Titanium, and Oxygen.",
+    "isCurrentlyOperating": false,
+    "operationalLifespan": "Completed primary mission during lunar day in August-September 2023.",
+    "scientificLegacy": "First direct in situ atomic proof of polar sulfur deposits."
+  }
+]
