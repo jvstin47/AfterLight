@@ -171,6 +171,16 @@ export class HUDController {
       store.dispatch(ActionTypes.TOGGLE_VIDICON_SCAN);
       eventBus.emit('ui:vidicon:toggle');
     });
+
+    // Dynamic site updates when transiting to international sites
+    eventBus.on('site:transited', (site) => {
+      const stationEl = this.container.querySelector('.hud-brand-station');
+      const coordsEl = this.container.querySelector('.hud-brand-coords');
+      const telemCoordsEl = this.container.querySelector('.telemetry-val');
+      if (stationEl) stationEl.textContent = site.shortName || site.name;
+      if (coordsEl) coordsEl.textContent = site.coords;
+      if (telemCoordsEl) telemCoordsEl.textContent = site.coords;
+    });
   }
 
   setupStoreSubscriptions() {

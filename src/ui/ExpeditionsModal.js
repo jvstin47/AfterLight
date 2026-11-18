@@ -18,6 +18,7 @@ import {
   LUNAR_GEOLOGY_MODULES,
   OUTER_SPACE_TREATY_DISCLAIMER
 } from '../data/globalLunarData.js';
+import { ArtifactHoloViewer } from './ArtifactHoloViewer.js';
 
 export class ExpeditionsModal {
   constructor(container) {
@@ -29,6 +30,7 @@ export class ExpeditionsModal {
     this.activeEra = 'all';
     this.selectedSite = null;
     this.activeTier = 1; // 1 | 2 | 3 | 4 for deep inspection drawer
+    this.holoViewer = null;
 
     this.render();
     this.bindEvents();
@@ -631,6 +633,10 @@ export class ExpeditionsModal {
       this.toggle();
     });
 
+    eventBus.on('ui:expeditions:close', () => {
+      this.close();
+    });
+
     eventBus.on('ui:expeditions:open', (siteId) => {
       this.open();
       if (siteId) {
@@ -771,6 +777,9 @@ export class ExpeditionsModal {
             <span class="tier-indicator">TIER 1 &bull; MISSION DISCOVERY & PROFILE</span>
           </div>
           <div class="discovery-hero-card">
+            <!-- Interactive 3D Artifact Holo-Plinth -->
+            <div id="holo-viewer-mount" style="margin-bottom: 20px;"></div>
+
             <div class="discovery-summary">
               <h4 class="tier-subheading">MISSION OVERVIEW</h4>
               <p class="discovery-desc">${site.description}</p>
@@ -933,9 +942,56 @@ export class ExpeditionsModal {
         </div>
       </div>
     `;
+
+    // Mount interactive 3D Holo-Viewer in Tier 1
+    if (this.activeTier === 1) {
+      const mountEl = content.querySelector('#holo-viewer-mount');
+      if (mountEl) {
+        if (!this.holoViewer) {
+          this.holoViewer = new ArtifactHoloViewer(mountEl);
+        } else {
+          this.holoViewer.mountElement = mountEl;
+        }
+        const entityType = this.mapSiteToEntityType(site.id);
+        this.holoViewer.mount(entityType, site.id);
+      }
+    } else {
+      if (this.holoViewer) {
+        this.holoViewer.destroy();
+        this.holoViewer = null;
+      }
+    }
+  }
+
+  mapSiteToEntityType(siteId) {
+    const map = {
+      'apollo-12': 'statio-cognitum',
+      'luna-17': 'lunokhod-1',
+      'luna-21': 'lunokhod-2',
+      'apollo-15': 'apollo-15-lrv',
+      'apollo-16': 'apollo-16-lrv',
+      'apollo-17': 'apollo-17-lrv',
+      'change-3': 'change-3-yutu',
+      'change-4': 'change-4-yutu2',
+      'chandrayaan-3': 'chandrayaan-3-pragyan',
+      'slim': 'slim-sora-q',
+      'luna-9': 'luna-9',
+      'luna-16': 'luna-16',
+      'luna-20': 'luna-16',
+      'luna-24': 'luna-16',
+      'luna-2': 'luna-2',
+      'chandrayaan-1': 'luna-2',
+      'beresheet': 'luna-2',
+      'smart-1': 'luna-2'
+    };
+    return map[siteId] || 'lunokhod-1';
   }
 
   closeDetailModal() {
+    if (this.holoViewer) {
+      this.holoViewer.destroy();
+      this.holoViewer = null;
+    }
     const detailModal = this.container.querySelector('#site-detail-modal');
     if (!detailModal) return;
     anime({

@@ -8,6 +8,7 @@ import { ALSEP } from '../entities/ALSEP.js';
 import { FlagAndEquipment } from '../entities/FlagAndEquipment.js';
 import { WaypointMarkers } from '../entities/WaypointMarkers.js';
 import { SpatialProjector } from './SpatialProjector.js';
+import { GlobalSiteManager } from './GlobalSiteManager.js';
 import { ARTIFACTS } from '../data/artifactsData.js';
 import { eventBus } from '../core/EventBus.js';
 import { audioManager } from '../core/AudioManager.js';
@@ -133,6 +134,9 @@ export class LunarScene {
       }
       eventBus.emit('artifacts:all-loaded');
     });
+
+    // 4. Global Multi-Site Transit Manager (Soviet, Chinese, Indian, Japanese & Apollo sites)
+    this.globalSiteManager = new GlobalSiteManager(this.scene, elevationFn);
   }
 
   getArtifactIdFromObject(obj) {
@@ -158,6 +162,34 @@ export class LunarScene {
     // Listen for artifact focus events
     this.unbindArtifactSelect = eventBus.on('artifact:selected', ({ id, artifact }) => {
       this.focusArtifact(id);
+    });
+
+    // Toggle Apollo 12 base site visibility when transiting to another world site
+    eventBus.on('scene:statio-cognitum-visibility', (visible) => {
+      if (this.lunarModule?.group) this.lunarModule.group.visible = visible;
+      if (this.flagAndEquip?.group) this.flagAndEquip.group.visible = visible;
+      if (this.surveyor3?.group) this.surveyor3.group.visible = visible;
+      if (this.alsep?.group) this.alsep.group.visible = visible;
+      if (this.spatialProjector?.group) this.spatialProjector.group.visible = visible;
+      if (this.markerContainer) {
+        this.markerContainer.style.display = visible ? 'block' : 'none';
+      }
+    });
+
+    // Site transited event: smooth camera trajectory to the new rover / lander
+    eventBus.on('site:transited', (site) => {
+      if (site.id !== 'statio-cognitum') {
+        const targetPos = new THREE.Vector3(0, 0.75, 0);
+        const camPos = new THREE.Vector3(0, 1.85, 3.8);
+        this.cameraController.flyTo(camPos, targetPos, 2000);
+      } else {
+        this.cameraController.setPreset('overview');
+      }
+
+      // Hide Earth if far side (e.g. Chang'e 4)
+      if (this.lighting && this.lighting.earthMesh) {
+        this.lighting.earthMesh.visible = site.hasEarth !== false;
+      }
     });
 
     // Direct 3D Raycasting & Touch Targets on lander models
