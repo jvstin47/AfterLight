@@ -159,12 +159,15 @@ export class ApproachOverlay {
       .add({
         targets: '.approach-title',
         opacity: [0, 1],
+        filter: ['blur(14px)', 'blur(0px)'],
+        scale: [1.08, 1],
         letterSpacing: ['0.3em', '0.14em'],
-        duration: 1100,
+        duration: 1200,
       }, '-=500')
       .add({
         targets: '.approach-subtitle',
         opacity: [0, 0.95],
+        filter: ['blur(8px)', 'blur(0px)'],
         translateY: [10, 0],
         duration: 800,
       }, '-=700')
