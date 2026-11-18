@@ -169,9 +169,12 @@ export class QuickSearch {
           background: rgba(14, 16, 20, 0.95);
           border: 1px solid var(--color-edge);
           border-radius: 18px;
-          padding: 8px;
+          padding: 8px 8px 16px 8px;
           max-height: 380px;
           overflow-y: auto;
+          overflow-x: hidden;
+          scrollbar-width: thin;
+          scrollbar-color: rgba(232, 178, 85, 0.3) transparent;
           display: flex;
           flex-direction: column;
           gap: 4px;
@@ -236,20 +239,21 @@ export class QuickSearch {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 12px;
         padding: 8px 12px;
         border-radius: 12px;
         cursor: pointer;
         transition: background 0.15s ease;
       ">
-        <div style="display: flex; flex-direction: column; gap: 2px;">
-          <span style="font-family: var(--font-sans); font-size: 13.5px; color: var(--color-text-primary); font-weight: 500;">
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1;">
+          <span style="font-family: var(--font-sans); font-size: 13.5px; color: var(--color-text-primary); font-weight: 500; word-break: break-word;">
             ${item.title}
           </span>
           <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-secondary); text-transform: uppercase;">
             ${item.category}
           </span>
         </div>
-        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-archival-amber); opacity: 0.85;">
+        <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-archival-amber); opacity: 0.85; white-space: nowrap; flex-shrink: 0;">
           ${item.type.toUpperCase()} &rarr;
         </span>
       </div>

@@ -120,10 +120,12 @@ export class VidiconOverlay {
 
     if (this.isActive) {
       this.overlay.classList.add('is-active');
+      document.body.classList.add('vidicon-active');
       if (this.canvasEl) this.canvasEl.classList.add('vidicon-mode');
       audioService.playQuindarIntro();
     } else {
       this.overlay.classList.remove('is-active');
+      document.body.classList.remove('vidicon-active');
       if (this.canvasEl) this.canvasEl.classList.remove('vidicon-mode');
     }
 

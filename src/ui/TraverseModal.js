@@ -67,15 +67,15 @@ export class TraverseModal {
               <g class="craters-layer">
                 <!-- Surveyor Crater -->
                 <circle cx="65" cy="145" r="100" class="map-crater" />
-                <text x="65" y="145" class="map-crater-label">SURVEYOR CRATER (200m)</text>
+                <text x="65" y="122" class="map-crater-label" text-anchor="middle">SURVEYOR CRATER (200m)</text>
 
                 <!-- Head Crater -->
                 <circle cx="-95" cy="25" r="70" class="map-crater" />
-                <text x="-95" y="25" class="map-crater-label">HEAD CRATER (140m)</text>
+                <text x="-95" y="10" class="map-crater-label" text-anchor="middle">HEAD CRATER (140m)</text>
 
                 <!-- Bench Crater -->
                 <circle cx="-140" cy="45" r="35" class="map-crater" />
-                <text x="-140" y="45" class="map-crater-label">BENCH (70m)</text>
+                <text x="-140" y="28" class="map-crater-label" text-anchor="middle">BENCH (70m)</text>
 
                 <!-- Sharp Crater -->
                 <circle cx="-210" cy="95" r="10" class="map-crater" />
@@ -105,7 +105,7 @@ export class TraverseModal {
 
                 <!-- Surveyor 3 -->
                 <polygon points="72,146 76,154 68,154" class="map-landmark-surveyor" />
-                <text x="82" y="153" class="map-landmark-label">SURVEYOR 3</text>
+                <text x="72" y="165" class="map-landmark-label" text-anchor="middle">SURVEYOR 3</text>
               </g>
 
               <!-- Interactive Waypoint / Station Nodes -->
@@ -297,10 +297,12 @@ export class TraverseModal {
         circle.setAttribute('class', 'station-node');
 
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', st.pos[0] + 6);
-        label.setAttribute('y', st.pos[2] + 3);
+        const xOffset = st.id === 'station-7' ? -24 : (st.id === 'station-3' ? 10 : 6);
+        const yOffset = st.id === 'station-7' ? -4 : (st.id === 'station-3' ? 8 : 3);
+        label.setAttribute('x', st.pos[0] + xOffset);
+        label.setAttribute('y', st.pos[2] + yOffset);
         label.setAttribute('class', 'station-label');
-        label.textContent = st.name.split(' ')[0];
+        label.textContent = `STA ${st.id.replace('station-', '')}`;
 
         g.appendChild(circle);
         g.appendChild(label);

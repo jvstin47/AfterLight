@@ -71,3 +71,5 @@ temp/
 scratch/
 
 # NOTE: Do NOT ignore assets, 3D models (*.glb, *.obj), cartography, photography, or documentation.
+.vercel
+.env*

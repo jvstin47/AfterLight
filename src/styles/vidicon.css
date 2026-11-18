@@ -155,42 +155,25 @@
   text-align: right;
 }
 
-/* Telemetry Signal Indicator Blinker */
-.telemetry-pulse {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--color-accent-amber, #e2c97c);
-  border-radius: 50%;
-  margin-right: 6px;
-  box-shadow: 0 0 6px rgba(226, 201, 124, 0.8);
-  animation: telemetryBlink 1.4s ease-in-out infinite;
-}
-
-@keyframes telemetryBlink {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
-}
-
-/* Tone grading on WebGL Canvas when Vidicon mode is active */
-#webgl-canvas.vidicon-mode {
-  filter: contrast(1.16) brightness(1.04) sepia(0.18) hue-rotate(-12deg);
-  transition: filter 0.5s ease;
+/* Offset MissionStatsCard when Vidicon mode is active to prevent overlapping */
+body.vidicon-active .cir-stat {
+  top: 176px !important;
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .vidicon-telemetry-corner.top-right,
+@media (max-width: 1280px) {
+  .vidicon-telemetry-corner.bottom-left,
   .vidicon-telemetry-corner.bottom-right {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .vidicon-telemetry-corner.top-right {
     display: none;
   }
   .vidicon-telemetry-corner.top-left {
     top: 64px;
-    left: 16px;
-    font-size: 8.5px;
-  }
-  .vidicon-telemetry-corner.bottom-left {
-    bottom: 74px;
     left: 16px;
     font-size: 8.5px;
   }
