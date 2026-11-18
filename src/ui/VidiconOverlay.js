@@ -5,7 +5,9 @@
  */
 
 import { eventBus } from '../core/EventBus.js';
-import { audioManager } from '../core/AudioManager.js';
+import { audioService } from '../services/AudioService.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
 
 export class VidiconOverlay {
   /**
@@ -119,11 +121,13 @@ export class VidiconOverlay {
     if (this.isActive) {
       this.overlay.classList.add('is-active');
       if (this.canvasEl) this.canvasEl.classList.add('vidicon-mode');
-      if (audioManager) audioManager.playQuindarIntro();
+      audioService.playQuindarIntro();
     } else {
       this.overlay.classList.remove('is-active');
       if (this.canvasEl) this.canvasEl.classList.remove('vidicon-mode');
     }
+
+    store.dispatch(ActionTypes.SET_VIDICON_SCAN, this.isActive);
 
     eventBus.emit('vidicon:toggled', this.isActive);
     return this.isActive;

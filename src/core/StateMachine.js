@@ -1,21 +1,27 @@
 /**
  * AFTERLIGHT — Application State Machine
+ * Coordinates formal stage transitions and syncs with the central Store.
  */
 
+import { APP_STAGES } from '../config/constants.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
 import { events } from './EventBus.js';
+import { logger } from '../utils/logger.js';
 
-export const STATES = {
-  APPROACH: 'APPROACH',       // Stage A: Cinematic orbital approach & title
-  ENVIRONMENT: 'ENVIRONMENT', // Stage B: Free exploration of landing site
-  INSPECTION: 'INSPECTION',   // Stage C: Artifact inspection & dossier open
-  TRAVERSE: 'TRAVERSE'        // Modal: 2D/3D traverse routes map
-};
+export const STATES = APP_STAGES;
 
 class StateMachine {
   constructor() {
-    this.current = STATES.APPROACH;
-    this.selectedArtifact = null;
     this.previousState = null;
+  }
+
+  get current() {
+    return store.getState().app.stage;
+  }
+
+  get selectedArtifact() {
+    return store.getState().inspection.selectedArtifact;
   }
 
   getState() {
@@ -31,30 +37,36 @@ class StateMachine {
   }
 
   transitionTo(newState, data = null) {
-    if (this.current === newState && (!data || data === this.selectedArtifact)) {
+    const currentState = this.current;
+    if (currentState === newState && (!data || data === this.selectedArtifact)) {
       return;
     }
 
-    const oldState = this.current;
-    this.previousState = oldState;
-    this.current = newState;
+    this.previousState = currentState;
 
     if (newState === STATES.INSPECTION) {
-      this.selectedArtifact = data;
+      store.dispatch(ActionTypes.SELECT_ARTIFACT, data);
     } else if (newState === STATES.ENVIRONMENT) {
-      this.selectedArtifact = null;
+      if (currentState === STATES.INSPECTION) {
+        store.dispatch(ActionTypes.CLOSE_INSPECTION);
+      } else {
+        store.dispatch(ActionTypes.SET_STAGE, STATES.ENVIRONMENT);
+      }
+    } else {
+      store.dispatch(ActionTypes.SET_STAGE, newState);
     }
 
-    console.log(`[StateMachine] Transition: ${oldState} -> ${newState}`, data ? `(Artifact: ${data})` : '');
+    logger.debug(`[StateMachine] ${currentState} -> ${newState}`, data ? `(Artifact: ${data?.id || data})` : '');
+
     events.emit('state:changed', {
-      from: oldState,
+      from: currentState,
       to: newState,
       artifact: this.selectedArtifact
     });
   }
 
   back() {
-    if (this.current === STATES.INSPECTION || this.current === STATES.TRAVERSE) {
+    if (this.current === STATES.INSPECTION || this.current === STATES.TRAVERSE || this.current === STATES.EXPEDITIONS) {
       this.transitionTo(STATES.ENVIRONMENT);
     }
   }

@@ -1,15 +1,21 @@
 /**
  * AFTERLIGHT — Modern Navigation Dock Rail (.cir-rail)
  * Provides rapid one-click access to all primary instrument overlays and vantage modes.
+ * Refactored to pure presentation consuming services and the reactive Store.
  */
 
 import { eventBus } from '../core/EventBus.js';
+import { navigationService } from '../services/NavigationService.js';
+import { audioService } from '../services/AudioService.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
 
 export class NavRail {
   constructor() {
     this.container = null;
     this.render();
     this.bindEvents();
+    this.setupStoreSubscriptions();
   }
 
   render() {
@@ -92,63 +98,80 @@ export class NavRail {
     const btnSearch = this.container.querySelector('#rail-btn-search');
 
     btnOverview?.addEventListener('click', () => {
-      eventBus.emit('camera:preset', 'OVERVIEW');
+      audioService.playClick();
+      navigationService.setPreset('OVERVIEW');
     });
 
     btnVidicon?.addEventListener('click', () => {
+      audioService.playClick();
+      store.dispatch(ActionTypes.TOGGLE_VIDICON_SCAN);
       eventBus.emit('ui:vidicon:toggle');
     });
 
     btnTraverse?.addEventListener('click', () => {
+      audioService.playClick();
       eventBus.emit('ui:traverse:toggle');
     });
 
     btnExpeditions?.addEventListener('click', () => {
+      audioService.playClick();
       eventBus.emit('ui:expeditions:toggle');
     });
 
     btnAudio?.addEventListener('click', () => {
-      eventBus.emit('audio:toggle');
+      audioService.toggleMute();
     });
 
     btnSearch?.addEventListener('click', () => {
+      audioService.playClick();
       eventBus.emit('ui:search:toggle');
-    });
-
-    // Synchronize active states with events
-    eventBus.on('vidicon:toggled', (active) => {
-      btnVidicon?.classList.toggle('cir-rail__b--active', active);
-    });
-
-    eventBus.on('camera:preset', (preset) => {
-      btnOverview?.classList.toggle('cir-rail__b--active', preset === 'OVERVIEW');
-    });
-
-    eventBus.on('audio:muted', (isMuted) => {
-      btnAudio?.classList.toggle('cir-rail__b--active', !isMuted);
     });
 
     eventBus.on('approach:complete', () => {
       this.container.style.opacity = '1';
     });
+  }
 
-    const hideRail = () => {
-      this.container.style.opacity = '0';
-      this.container.style.pointerEvents = 'none';
-      this.container.style.visibility = 'hidden';
-    };
+  setupStoreSubscriptions() {
+    const btnOverview = this.container.querySelector('#rail-btn-overview');
+    const btnVidicon = this.container.querySelector('#rail-btn-vidicon');
+    const btnExpeditions = this.container.querySelector('#rail-btn-expeditions');
+    const btnTraverse = this.container.querySelector('#rail-btn-traverse');
+    const btnAudio = this.container.querySelector('#rail-btn-audio');
 
-    const showRail = () => {
-      this.container.style.visibility = 'visible';
-      this.container.style.opacity = '1';
-      this.container.style.pointerEvents = 'auto';
-    };
+    store.subscribe(
+      (s) => s.camera.activePreset,
+      (preset) => {
+        btnOverview?.classList.toggle('cir-rail__b--active', preset === 'OVERVIEW');
+      }
+    );
 
-    eventBus.on('dossier:opened', hideRail);
-    eventBus.on('dossier:closed', showRail);
-    eventBus.on('traverse:opened', hideRail);
-    eventBus.on('traverse:closed', showRail);
-    eventBus.on('expeditions:opened', hideRail);
-    eventBus.on('expeditions:closed', showRail);
+    store.subscribe(
+      (s) => s.modals.isVidiconActive,
+      (isActive) => {
+        btnVidicon?.classList.toggle('cir-rail__b--active', isActive);
+      }
+    );
+
+    store.subscribe(
+      (s) => s.modals.isExpeditionsOpen,
+      (isOpen) => {
+        btnExpeditions?.classList.toggle('cir-rail__b--active', isOpen);
+      }
+    );
+
+    store.subscribe(
+      (s) => s.modals.isTraverseOpen,
+      (isOpen) => {
+        btnTraverse?.classList.toggle('cir-rail__b--active', isOpen);
+      }
+    );
+
+    store.subscribe(
+      (s) => s.audio.isMuted,
+      (isMuted) => {
+        btnAudio?.classList.toggle('cir-rail__b--active', !isMuted);
+      }
+    );
   }
 }

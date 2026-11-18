@@ -2,11 +2,13 @@
  * AFTERLIGHT — Mission Audio & Air-to-Ground Comm Capsule
  * Uses Anime.js for waveform physics and live MET timecode interpolation.
  * Styled with the Astronaut UI component suite (.cir-note, .cir-btn).
+ * Refactored to pure presentation consuming services and the reactive Store.
  */
 
 import anime from 'animejs';
+import { audioService } from '../services/AudioService.js';
+import { store } from '../state/Store.js';
 import { eventBus } from '../core/EventBus.js';
-import { audioManager } from '../core/AudioManager.js';
 
 const TRANSCRIPT_LINES = [
   { speaker: 'LMP BEAN', text: '“We can see the Surveyor! It’s right on the edge of the crater... exactly where Pete said it would be.”', met: 'MET 131:59:12' },
@@ -26,6 +28,7 @@ export class MissionAudioCapsule {
 
     this.render();
     this.bindEvents();
+    this.setupStoreSubscriptions();
   }
 
   render() {
@@ -63,7 +66,7 @@ export class MissionAudioCapsule {
       </div>
       <div class="cir-note__act">
         <button id="comm-mute-btn" class="cir-note__btn" type="button" aria-label="Mute or unmute comm audio">
-          MUTE
+          ${store.getState().audio.isMuted ? 'UNMUTE' : 'MUTE'}
         </button>
         <button id="comm-close-btn" class="cir-note__close" type="button" aria-label="Dismiss transmission card">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -82,146 +85,127 @@ export class MissionAudioCapsule {
     const closeBtn = this.container.querySelector('#comm-close-btn');
 
     muteBtn?.addEventListener('click', () => {
-      audioManager.init();
-      const isLive = audioManager.toggleMute();
-      muteBtn.textContent = isLive ? 'MUTE' : 'UNMUTE';
-      if (isLive) {
-        this.startWaveform();
-      } else {
-        this.stopWaveform();
-      }
+      audioService.toggleMute();
     });
 
     closeBtn?.addEventListener('click', () => {
       this.hide();
     });
 
-    // Listen to global audio mute event
-    eventBus.on('audio:muted', (isMuted) => {
-      if (muteBtn) muteBtn.textContent = isMuted ? 'UNMUTE' : 'MUTE';
-      if (!isMuted) {
-        this.show();
-        this.startWaveform();
-      } else {
-        this.stopWaveform();
+    // Automatically reveal capsule when entering Surveyor 3 vantage point
+    eventBus.on('camera:preset', (preset) => {
+      if (preset === 'SURVEYOR_RIM') {
+        setTimeout(() => this.show(), 800);
       }
     });
 
-    // Rotate transcript lines every 12 seconds
+    // Cycle through real historical radio transcripts periodically
     setInterval(() => {
       if (this.isOpen) {
-        this.cycleTranscript();
+        this.currentLineIdx = (this.currentLineIdx + 1) % TRANSCRIPT_LINES.length;
+        this.updateTranscript(TRANSCRIPT_LINES[this.currentLineIdx]);
       }
-    }, 11000);
+    }, 14000);
   }
 
-  show() {
-    this.isOpen = true;
-    this.container.classList.remove('is-hidden');
+  setupStoreSubscriptions() {
+    const muteBtn = this.container.querySelector('#comm-mute-btn');
 
-    // Smooth spring slide-up using Anime.js
-    anime.remove(this.container);
-    anime({
-      targets: this.container,
-      translateY: ['120%', '0%'],
-      opacity: [0, 1],
-      duration: 650,
-      easing: 'easeOutElastic(1, 0.75)'
-    });
-
-    this.startTimer();
-    this.startWaveform();
+    store.subscribe(
+      (s) => s.audio.isMuted,
+      (isMuted) => {
+        if (muteBtn) {
+          muteBtn.textContent = isMuted ? 'UNMUTE' : 'MUTE';
+        }
+        if (!isMuted && this.isOpen) {
+          this.startWaveform();
+        } else {
+          this.stopWaveform();
+        }
+      }
+    );
   }
 
-  hide() {
-    this.isOpen = false;
-    anime.remove(this.container);
+  updateTranscript(item) {
+    const speakerEl = this.container.querySelector('#comm-speaker');
+    const metEl = this.container.querySelector('#comm-met');
+    const textEl = this.container.querySelector('#comm-transcript');
+
     anime({
-      targets: this.container,
-      translateY: ['0%', '120%'],
+      targets: [speakerEl, metEl, textEl],
       opacity: [1, 0],
-      duration: 400,
-      easing: 'easeInCubic',
+      duration: 200,
+      easing: 'easeInQuad',
       complete: () => {
-        this.container.classList.add('is-hidden');
+        if (speakerEl) speakerEl.textContent = item.speaker;
+        if (metEl) metEl.textContent = item.met;
+        if (textEl) textEl.textContent = item.text;
+
+        anime({
+          targets: [speakerEl, metEl, textEl],
+          opacity: [0, 1],
+          duration: 350,
+          easing: 'easeOutQuad'
+        });
       }
     });
-    this.stopWaveform();
-    this.stopTimer();
   }
 
   startWaveform() {
-    if (this.waveformAnim) return;
     const bars = this.container.querySelectorAll('.comm-waveform span');
+    if (this.waveformAnim) this.waveformAnim.pause();
+
     this.waveformAnim = anime({
       targets: bars,
-      height: () => anime.random(3, 16),
-      delay: anime.stagger(50),
-      duration: 220,
+      height: () => anime.random(4, 20),
+      duration: 160,
       direction: 'alternate',
       loop: true,
-      easing: 'easeInOutSine'
+      easing: 'easeInOutSine',
+      delay: anime.stagger(30)
     });
   }
 
   stopWaveform() {
     if (this.waveformAnim) {
       this.waveformAnim.pause();
-      this.waveformAnim = null;
     }
     const bars = this.container.querySelectorAll('.comm-waveform span');
     anime({
       targets: bars,
-      height: 2,
+      height: 4,
       duration: 200,
       easing: 'easeOutQuad'
     });
   }
 
-  startTimer() {
-    if (this.timerInterval) return;
-    this.timerInterval = setInterval(() => {
-      this.secondsElapsed += 1;
-      const h = Math.floor(this.secondsElapsed / 3600);
-      const m = Math.floor((this.secondsElapsed % 3600) / 60);
-      const s = this.secondsElapsed % 60;
-      const pad = (n) => String(n).padStart(2, '0');
-      const metEl = this.container.querySelector('#comm-met');
-      if (metEl) {
-        metEl.textContent = `MET ${h}:${pad(m)}:${pad(s)}`;
-      }
-    }, 1000);
-  }
+  show() {
+    this.isOpen = true;
+    this.container.classList.remove('is-hidden');
+    anime({
+      targets: this.container,
+      translateY: [20, 0],
+      opacity: [0, 1],
+      duration: 300,
+      easing: 'easeOutCubic'
+    });
 
-  stopTimer() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = null;
+    if (!audioService.isMuted()) {
+      this.startWaveform();
     }
   }
 
-  cycleTranscript() {
-    this.currentLineIdx = (this.currentLineIdx + 1) % TRANSCRIPT_LINES.length;
-    const line = TRANSCRIPT_LINES[this.currentLineIdx];
-
-    const speakerEl = this.container.querySelector('#comm-speaker');
-    const textEl = this.container.querySelector('#comm-transcript');
-
-    // Smooth Anime.js text fade transition
+  hide() {
+    this.isOpen = false;
+    this.stopWaveform();
     anime({
-      targets: [speakerEl, textEl],
+      targets: this.container,
+      translateY: [0, 20],
       opacity: [1, 0],
       duration: 250,
-      easing: 'easeInQuad',
+      easing: 'easeInCubic',
       complete: () => {
-        if (speakerEl) speakerEl.textContent = line.speaker;
-        if (textEl) textEl.textContent = line.text;
-        anime({
-          targets: [speakerEl, textEl],
-          opacity: [0, 1],
-          duration: 350,
-          easing: 'easeOutQuad'
-        });
+        this.container.classList.add('is-hidden');
       }
     });
   }

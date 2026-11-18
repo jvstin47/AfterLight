@@ -2,18 +2,22 @@
  * AFTERLIGHT — Global Lunar Heritage & Planetary Human Artifacts Registry Modal
  * Interactive catalog of humanity's lunar rovers, manned Apollo bases,
  * vanguard robotic soft-landers, and permanent extraterrestrial monuments across the Moon.
+ * Refactored to pure presentation consuming services and the reactive Store.
  */
 
 import anime from 'animejs';
-import { audioManager } from '../core/AudioManager.js';
+import { audioService } from '../services/AudioService.js';
+import { lunarAtlasService } from '../services/LunarAtlasService.js';
 import { eventBus } from '../core/EventBus.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
 import { LUNAR_HERITAGE_SITES } from '../data/lunarHeritageData.js';
 
 export class ExpeditionsModal {
   constructor(container) {
     this.container = container;
     this.isOpen = false;
-    this.activeFilter = 'all'; // 'all' | 'rovers' | 'manned' | 'vanguard' | 'impacts'
+    this.activeFilter = store.getState().atlas.activeFilter.toLowerCase();
     this.selectedSite = null;
 
     this.render();
@@ -24,16 +28,16 @@ export class ExpeditionsModal {
     if (this.activeFilter === 'all') {
       return LUNAR_HERITAGE_SITES;
     }
-    return LUNAR_HERITAGE_SITES.filter(s => s.group === this.activeFilter);
+    return LUNAR_HERITAGE_SITES.filter((s) => s.group === this.activeFilter);
   }
 
   render() {
     const counts = {
       all: LUNAR_HERITAGE_SITES.length,
-      rovers: LUNAR_HERITAGE_SITES.filter(s => s.group === 'rovers').length,
-      manned: LUNAR_HERITAGE_SITES.filter(s => s.group === 'manned').length,
-      vanguard: LUNAR_HERITAGE_SITES.filter(s => s.group === 'vanguard').length,
-      impacts: LUNAR_HERITAGE_SITES.filter(s => s.group === 'impacts').length
+      rovers: LUNAR_HERITAGE_SITES.filter((s) => s.group === 'rovers').length,
+      manned: LUNAR_HERITAGE_SITES.filter((s) => s.group === 'manned').length,
+      vanguard: LUNAR_HERITAGE_SITES.filter((s) => s.group === 'vanguard').length,
+      impacts: LUNAR_HERITAGE_SITES.filter((s) => s.group === 'impacts').length
     };
 
     this.container.innerHTML = `
@@ -98,13 +102,16 @@ export class ExpeditionsModal {
 
         <!-- In-Modal Deep Archival Record Inspector -->
         <div id="site-detail-modal" class="site-detail-modal">
-          <button id="detail-back-btn" class="detail-back-btn">
-            <span>&larr;</span>
-            <span>BACK TO REGISTRY</span>
-          </button>
-          <div id="detail-modal-content"></div>
+          <div class="detail-modal-header">
+            <button id="detail-back-btn" class="detail-back-btn">
+              <span>&larr; BACK TO REGISTRY</span>
+            </button>
+            <div class="detail-datum-tag">
+              <span>DATUM: STATIO COGNITUM &bull; APOLLO 12</span>
+            </div>
+          </div>
+          <div id="detail-modal-content" class="detail-modal-content"></div>
         </div>
-
       </div>
     `;
   }
@@ -112,70 +119,76 @@ export class ExpeditionsModal {
   renderCardsHtml() {
     const sites = this.getFilteredSites();
 
-    return sites.map(site => `
-      <article class="expedition-card ${site.isActiveSite ? 'is-active-site' : ''}" data-site-id="${site.id}">
-        <div class="card-top">
-          <span class="card-badge-status ${site.isActiveSite ? 'card-badge-active' : 'card-badge-registered'}">
-            ${site.isActiveSite ? '● ACTIVE 3D VIEWPORT' : '○ PERMANENT SITE'}
-          </span>
-          ${site.distanceKm > 0 ? `
-            <span class="card-distance-pill" title="Great-circle distance and bearing from Apollo 12">
-              &Delta; ${site.distanceKm.toLocaleString()} km &bull; ${String(site.bearingDeg).padStart(3, '0')}&deg;
-            </span>
-          ` : `
-            <span class="card-distance-pill" style="color: var(--color-archival-amber); border-color: rgba(223,172,78,0.3);">
-              ORIGIN DATUM
-            </span>
-          `}
-        </div>
+    return sites.map((site) => {
+      const isApollo12 = site.id === 'apollo-12';
+      const distanceLabel = isApollo12
+        ? 'CURRENT LOCATION (0 KM)'
+        : `${site.distanceKm.toLocaleString()} KM FROM APOLLO 12`;
 
-        <div class="card-title-group">
-          <h3 class="card-mission">${site.name}</h3>
-          <div class="card-designation">${site.designation}</div>
-          <div class="card-agency-crew">
-            <span>${site.agency}</span>
-            ${site.astronauts ? `&bull; <span>${site.astronauts}</span>` : ''}
+      return `
+        <article class="exp-card ${isApollo12 ? 'is-active-site' : ''}" data-id="${site.id}">
+          <header class="exp-card-header">
+            <div class="exp-card-tag-row">
+              <span class="exp-card-code">${site.code}</span>
+              <span class="exp-card-category">${site.category}</span>
+            </div>
+            <div class="exp-card-status-badge ${site.status.includes('Active') ? 'badge-active' : ''}">
+              <span class="badge-dot"></span>
+              <span>${site.status}</span>
+            </div>
+          </header>
+
+          <div class="exp-card-main">
+            <h3 class="exp-card-title">${site.name}</h3>
+            <div class="exp-card-designation">${site.designation}</div>
+            <p class="exp-card-desc">${site.description}</p>
           </div>
-          <div class="card-coords">${site.coordinates} &bull; ${site.region}</div>
-        </div>
 
-        <p class="card-desc">${site.description}</p>
+          <!-- Highlight Relics In Situ Tags -->
+          <div class="exp-card-relics">
+            <span class="relic-label">KEY RELICS IN SITU:</span>
+            <div class="relic-tags">
+              ${site.keyArtifacts.slice(0, 3).map((art) => `
+                <span class="relic-pill">${art}</span>
+              `).join('')}
+              ${site.keyArtifacts.length > 3 ? `<span class="relic-pill-more">+${site.keyArtifacts.length - 3} MORE</span>` : ''}
+            </div>
+          </div>
 
-        <!-- Key Artifacts Left Behind on the Lunar Surface -->
-        <div class="card-artifacts-box">
-          <span class="artifacts-header">KEY HUMAN ARTIFACTS IN SITU ON THE MOON</span>
-          <div class="artifacts-tags">
-            ${site.keyArtifacts.slice(0, 4).map((art, idx) => `
-              <span class="artifact-tag ${idx === 0 ? 'highlight' : ''}">${art}</span>
-            `).join('')}
-            ${site.keyArtifacts.length > 4 ? `
-              <span class="artifact-tag" style="color: var(--color-text-tertiary);">+${site.keyArtifacts.length - 4} more</span>
+          <!-- Spatial Telemetry Bar -->
+          <div class="exp-card-telemetry">
+            <div class="telemetry-item">
+              <span class="t-label">COORDINATES</span>
+              <span class="t-val">${site.coordinates}</span>
+            </div>
+            <div class="telemetry-item">
+              <span class="t-label">SURFACE DISTANCE</span>
+              <span class="t-val ${isApollo12 ? 't-val-active' : ''}">${distanceLabel}</span>
+            </div>
+            ${site.bearingDeg !== undefined && !isApollo12 ? `
+              <div class="telemetry-item">
+                <span class="t-label">BEARING</span>
+                <span class="t-val">${String(site.bearingDeg).padStart(3, '0')}°</span>
+              </div>
             ` : ''}
           </div>
-        </div>
 
-        <div class="card-specs-table">
-          ${site.technicalSpecs.map(s => `
-            <div class="spec-cell">
-              <span class="spec-key">${s.label}</span>
-              <span class="spec-val">${s.value}</span>
-            </div>
-          `).join('')}
-        </div>
-
-        <div class="card-action-bar">
-          ${site.isActiveSite ? `
-            <button class="card-btn card-btn-active" data-action="explore-active">
-              EXPLORING STATIO COGNITUM
-            </button>
-          ` : `
-            <button class="card-btn card-btn-explore" data-site-id="${site.id}">
-              EXPEDITION ARCHIVE DOSSIER &rarr;
-            </button>
-          `}
-        </div>
-      </article>
-    `).join('');
+          <footer class="exp-card-footer">
+            ${isApollo12 ? `
+              <button class="exp-card-btn btn-active-site" data-action="explore-active">
+                <span>EXPLORING NOW IN 3D MONUMENT</span>
+                <span>&rarr;</span>
+              </button>
+            ` : `
+              <button class="exp-card-btn card-btn-explore" data-site-id="${site.id}">
+                <span>EXPEDITION ARCHIVE DOSSIER</span>
+                <span>&rarr;</span>
+              </button>
+            `}
+          </footer>
+        </article>
+      `;
+    }).join('');
   }
 
   bindEvents() {
@@ -186,18 +199,16 @@ export class ExpeditionsModal {
     backdrop?.addEventListener('click', () => this.close());
 
     // Category filter tabs
-    this.container.querySelectorAll('.exp-filter-tab').forEach(tab => {
+    this.container.querySelectorAll('.exp-filter-tab').forEach((tab) => {
       tab.addEventListener('click', (e) => {
         const filter = e.currentTarget.dataset.filter;
         if (filter !== this.activeFilter) {
           this.activeFilter = filter;
-          try {
-            if (typeof audioManager.playBlip === 'function') audioManager.playBlip(620, 0.04);
-            else if (typeof audioManager.playClick === 'function') audioManager.playClick();
-          } catch {}
+          lunarAtlasService.setFilter(filter);
+          audioService.playBlip(620, 0.04);
 
           // Update active tab class
-          this.container.querySelectorAll('.exp-filter-tab').forEach(t => t.classList.remove('is-active'));
+          this.container.querySelectorAll('.exp-filter-tab').forEach((t) => t.classList.remove('is-active'));
           e.currentTarget.classList.add('is-active');
 
           // Re-render grid with animation
@@ -223,6 +234,7 @@ export class ExpeditionsModal {
     // Deep Detail Inspector Back Button
     const detailBackBtn = this.container.querySelector('#detail-back-btn');
     detailBackBtn?.addEventListener('click', () => {
+      audioService.playClick();
       this.closeDetailModal();
     });
 
@@ -250,7 +262,7 @@ export class ExpeditionsModal {
     eventBus.on('ui:expeditions:open', (siteId) => {
       this.open();
       if (siteId) {
-        const site = LUNAR_HERITAGE_SITES.find(s => s.id === siteId);
+        const site = LUNAR_HERITAGE_SITES.find((s) => s.id === siteId);
         if (site) {
           setTimeout(() => {
             this.openDetailModal(site);
@@ -261,15 +273,12 @@ export class ExpeditionsModal {
   }
 
   bindCardActions() {
-    this.container.querySelectorAll('.card-btn-explore').forEach(btn => {
+    this.container.querySelectorAll('.card-btn-explore').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const siteId = e.currentTarget.dataset.siteId;
-        const site = LUNAR_HERITAGE_SITES.find(s => s.id === siteId);
+        const site = LUNAR_HERITAGE_SITES.find((s) => s.id === siteId);
         if (site) {
-          try {
-            if (typeof audioManager.playBlip === 'function') audioManager.playBlip(750, 0.05);
-            else if (typeof audioManager.playClick === 'function') audioManager.playClick();
-          } catch {}
+          audioService.playBlip(750, 0.05);
           this.openDetailModal(site);
         }
       });
@@ -277,16 +286,14 @@ export class ExpeditionsModal {
 
     const activeBtn = this.container.querySelector('[data-action="explore-active"]');
     activeBtn?.addEventListener('click', () => {
-      try {
-        if (typeof audioManager.playBlip === 'function') audioManager.playBlip(880, 0.06);
-        else if (typeof audioManager.playClick === 'function') audioManager.playClick();
-      } catch {}
+      audioService.playBlip(880, 0.06);
       this.close();
     });
   }
 
   openDetailModal(site) {
     this.selectedSite = site;
+    lunarAtlasService.selectSite(site.id);
     const detailModal = this.container.querySelector('#site-detail-modal');
     const content = this.container.querySelector('#detail-modal-content');
     if (!detailModal || !content) return;
@@ -327,7 +334,7 @@ export class ExpeditionsModal {
             Human Artifacts & Hardware In Situ on the Moon
           </h4>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;">
-            ${site.keyArtifacts.map(art => `
+            ${site.keyArtifacts.map((art) => `
               <div style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;">
                 <span style="color: var(--color-archival-amber);">&bull;</span>
                 <span style="font-family: var(--font-sans); font-size: 13px; color: var(--color-text-primary);">${art}</span>
@@ -341,7 +348,7 @@ export class ExpeditionsModal {
             Engineering & Telemetry Specifications
           </h4>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-            ${site.technicalSpecs.map(s => `
+            ${site.technicalSpecs.map((s) => `
               <div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--color-archival-amber);">
                 <span style="font-family: var(--font-mono); font-size: 10px; color: var(--color-text-tertiary); text-transform: uppercase;">${s.label}</span>
                 <span style="font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--color-text-primary);">${s.value}</span>
@@ -385,10 +392,8 @@ export class ExpeditionsModal {
       this.container.classList.add('is-open');
     });
 
-    try {
-      if (typeof audioManager.playBlip === 'function') audioManager.playBlip(520, 0.06);
-      else if (typeof audioManager.playClick === 'function') audioManager.playClick();
-    } catch {}
+    audioService.playBlip(520, 0.06);
+    store.dispatch(ActionTypes.SET_EXPEDITIONS_MODAL, true);
     eventBus.emit('expeditions:opened');
 
     anime({
@@ -405,10 +410,7 @@ export class ExpeditionsModal {
     this.isOpen = false;
 
     this.closeDetailModal();
-    try {
-      if (typeof audioManager.playBlip === 'function') audioManager.playBlip(440, 0.04);
-      else if (typeof audioManager.playClick === 'function') audioManager.playClick();
-    } catch {}
+    audioService.playBlip(440, 0.04);
     this.container.classList.remove('is-open');
 
     anime({
@@ -419,6 +421,7 @@ export class ExpeditionsModal {
       easing: 'easeInCubic',
       complete: () => {
         this.container.style.display = 'none';
+        store.dispatch(ActionTypes.SET_EXPEDITIONS_MODAL, false);
         eventBus.emit('expeditions:closed');
       }
     });

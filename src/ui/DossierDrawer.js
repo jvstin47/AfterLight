@@ -5,7 +5,7 @@
 
 import anime from 'animejs';
 import { eventBus } from '../core/EventBus.js';
-import { audioManager } from '../core/AudioManager.js';
+import { audioService } from '../services/AudioService.js';
 
 export class DossierDrawer {
   /**
@@ -157,7 +157,7 @@ export class DossierDrawer {
     this.isOpen = true;
     this.activeTab = 'origin';
 
-    audioManager.playQuindarIntro();
+    audioService.playQuindarIntro();
 
     this.populateData(artifact);
     this.selectTab('origin');
@@ -195,7 +195,7 @@ export class DossierDrawer {
     if (!this.isOpen) return;
     this.isOpen = false;
 
-    audioManager.playQuindarOutro();
+    audioService.playQuindarOutro();
 
     const panel = this.container.querySelector('.dossier-panel');
     const backdrop = this.container.querySelector('.dossier-backdrop');

@@ -1,16 +1,18 @@
 /**
  * AFTERLIGHT — Mission Telemetry & Geochemical Stat Card (.cir-stat)
  * Uses Anime.js for live number counters and bar animations.
+ * Refactored to pure presentation consuming reactive store updates.
  */
 
-import anime from 'animejs';
 import { eventBus } from '../core/EventBus.js';
+import { store } from '../state/Store.js';
 
 export class MissionStatsCard {
   constructor() {
     this.cardEl = null;
     this.render();
     this.bindEvents();
+    this.setupStoreSubscriptions();
   }
 
   render() {
@@ -41,7 +43,7 @@ export class MissionStatsCard {
       </header>
 
       <div class="cir-stat__value">
-        <span id="stat-dist-val">163</span><span class="cir-stat__unit">M</span>
+        <span id="stat-dist-val">${store.getState().camera.surveyorProximity}</span><span class="cir-stat__unit">M</span>
       </div>
 
       <div class="cir-stat__delta">
@@ -62,7 +64,7 @@ export class MissionStatsCard {
       <footer class="cir-stat__legend">
         <span><i style="background:var(--color-archival-amber, #dfac4e);"></i>BASALT</span>
         <span><i style="background:var(--color-citrus, #e06c3a);"></i>MELT</span>
-        <span><i style="background:var(--color-meadow, #10b981);"></i>BRECCIA</span>
+        <span><i style="background:var(--color-meadow, #10b981 military);"></i>BRECCIA</span>
       </footer>
     `;
 
@@ -83,8 +85,9 @@ export class MissionStatsCard {
         }
       }
     });
+  }
 
-    // Hide stat card when dossier or traverse modal is open
+  setupStoreSubscriptions() {
     const hideCard = () => {
       this.cardEl.style.opacity = '0';
       this.cardEl.style.pointerEvents = 'none';
@@ -97,11 +100,16 @@ export class MissionStatsCard {
       this.cardEl.style.pointerEvents = 'auto';
     };
 
-    eventBus.on('dossier:opened', hideCard);
-    eventBus.on('dossier:closed', showCard);
-    eventBus.on('traverse:opened', hideCard);
-    eventBus.on('traverse:closed', showCard);
-    eventBus.on('expeditions:opened', hideCard);
-    eventBus.on('expeditions:closed', showCard);
+    // React to modal or inspection overlays opening
+    store.subscribe(
+      (s) => s.inspection.isOpen || s.modals.isTraverseOpen || s.modals.isExpeditionsOpen,
+      (isAnyOverlayOpen) => {
+        if (isAnyOverlayOpen) {
+          hideCard();
+        } else if (store.getState().app.stage !== 'APPROACH') {
+          showCard();
+        }
+      }
+    );
   }
 }

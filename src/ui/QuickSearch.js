@@ -1,20 +1,28 @@
 /**
  * AFTERLIGHT — Archival Quick-Search Command Palette (.cir-search)
  * Triggered by ⌘ K or search buttons. Animated with Anime.js.
+ * Refactored to pure presentation consuming services and the reactive Store.
  */
 
 import anime from 'animejs';
 import { eventBus } from '../core/EventBus.js';
+import { audioService } from '../services/AudioService.js';
+import { navigationService } from '../services/NavigationService.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
 import { ARTIFACTS } from '../data/artifactsData.js';
 import { LUNAR_HERITAGE_SITES } from '../data/lunarHeritageData.js';
 
 const QUICK_TARGETS = [
-  ...Object.values(ARTIFACTS).map(a => ({
+  ...Object.values(ARTIFACTS).map((a) => ({
     id: a.id,
     title: a.name,
     category: a.category,
     type: 'artifact',
-    keywords: [a.shortDesc, a.description, a.historicalSignificance, ...(a.tags || [])].filter(Boolean).join(' ').toLowerCase()
+    keywords: [a.shortDesc, a.description, a.historicalSignificance, ...(a.tags || [])]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
   })),
   { id: 'OVERVIEW', title: 'Site Overview (Orbit Perspective)', category: 'Vantage 01', type: 'camera', keywords: 'orbit overhead wide camera view' },
   { id: 'EYE_LEVEL', title: 'Astronaut Eye-Level (A7L View)', category: 'Vantage 02', type: 'camera', keywords: 'astronaut ground helmet visor a7l' },
@@ -23,7 +31,7 @@ const QUICK_TARGETS = [
   { id: 'CELESTIAL_EARTH', title: 'Earth from Statio Cognitum (64.5° Sky View)', category: 'Vantage 05', type: 'camera', keywords: 'earth sky celestial terminator blue marble gibbous' },
   { id: 'TRAVERSE', title: 'EVA-1 & EVA-2 Traverse Route', category: 'Cartography', type: 'modal', keywords: 'traverse path eva map distance route bean conrad' },
   { id: 'EXPEDITIONS', title: 'Human Artifacts & Rovers on the Moon (Global Atlas)', category: 'Planetary Atlas', type: 'modal', keywords: 'rovers sites atlas lunar heritage all missions' },
-  ...LUNAR_HERITAGE_SITES.map(s => ({
+  ...LUNAR_HERITAGE_SITES.map((s) => ({
     id: s.id,
     title: `${s.name} (${s.designation})`,
     category: s.category,
@@ -36,7 +44,10 @@ const QUICK_TARGETS = [
       s.astronauts,
       ...(s.keyArtifacts || []),
       s.description
-    ].filter(Boolean).join(' ').toLowerCase()
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
   }))
 ];
 
@@ -107,7 +118,7 @@ export class QuickSearch {
         this.renderResults(QUICK_TARGETS);
         return;
       }
-      const filtered = QUICK_TARGETS.filter(t =>
+      const filtered = QUICK_TARGETS.filter((t) =>
         t.title.toLowerCase().includes(q) ||
         t.category.toLowerCase().includes(q) ||
         (t.keywords && t.keywords.includes(q))
@@ -149,7 +160,7 @@ export class QuickSearch {
       return;
     }
 
-    resultsContainer.innerHTML = items.map(item => `
+    resultsContainer.innerHTML = items.map((item) => `
       <div class="search-item" data-id="${item.id}" data-type="${item.type}" style="
         display: flex;
         align-items: center;
@@ -166,7 +177,7 @@ export class QuickSearch {
 
     // Bind clicks
     const rowEls = resultsContainer.querySelectorAll('.search-item');
-    rowEls.forEach(el => {
+    rowEls.forEach((el) => {
       el.addEventListener('mouseenter', () => {
         el.style.background = 'rgba(255, 255, 255, 0.08)';
       });
@@ -182,12 +193,13 @@ export class QuickSearch {
   }
 
   handleSelect(id, type) {
+    audioService.playClick();
     this.close();
     if (type === 'artifact') {
-      const art = ARTIFACTS[id] || Object.values(ARTIFACTS).find(a => a.id === id);
+      const art = ARTIFACTS[id] || Object.values(ARTIFACTS).find((a) => a.id === id);
       if (art) eventBus.emit('artifact:selected', { id: art.id, artifact: art });
     } else if (type === 'camera') {
-      eventBus.emit('camera:preset', id);
+      navigationService.setPreset(id);
     } else if (type === 'modal' && id === 'TRAVERSE') {
       eventBus.emit('ui:traverse:toggle');
     } else if (type === 'expedition') {
@@ -204,6 +216,8 @@ export class QuickSearch {
 
   open() {
     this.isOpen = true;
+    audioService.playBlip(580, 0.04);
+    store.dispatch(ActionTypes.SET_QUICK_SEARCH, true);
     this.modalEl.style.display = 'flex';
     this.modalEl.style.pointerEvents = 'auto';
 
@@ -233,6 +247,7 @@ export class QuickSearch {
 
   close() {
     this.isOpen = false;
+    store.dispatch(ActionTypes.SET_QUICK_SEARCH, false);
     anime.remove(this.modalEl);
     anime({
       targets: this.modalEl,

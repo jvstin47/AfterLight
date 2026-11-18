@@ -1,7 +1,9 @@
 import anime from 'animejs';
 import { TRAVERSE_DATA } from '../data/traverseData.js';
-import { audioManager } from '../core/AudioManager.js';
+import { audioService } from '../services/AudioService.js';
 import { eventBus } from '../core/EventBus.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
 
 export class TraverseModal {
   /**
@@ -163,7 +165,8 @@ export class TraverseModal {
   open() {
     this.isOpen = true;
     this.container.style.display = 'flex';
-    audioManager.playQuindarIntro();
+    audioService.playQuindarIntro();
+    store.dispatch(ActionTypes.SET_TRAVERSE_MODAL, true);
     eventBus.emit('traverse:opened');
     this.selectEva(this.currentEva);
 
@@ -197,7 +200,8 @@ export class TraverseModal {
   close() {
     if (!this.isOpen) return;
     this.isOpen = false;
-    audioManager.playQuindarOutro();
+    audioService.playQuindarOutro();
+    store.dispatch(ActionTypes.SET_TRAVERSE_MODAL, false);
     eventBus.emit('traverse:closed');
 
     const panel = this.container.querySelector('.traverse-modal-panel');

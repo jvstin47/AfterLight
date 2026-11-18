@@ -5,7 +5,7 @@
 
 import anime from 'animejs';
 import { eventBus } from '../core/EventBus.js';
-import { audioManager } from '../core/AudioManager.js';
+import { audioService } from '../services/AudioService.js';
 
 export class ApproachOverlay {
   /**
@@ -197,8 +197,7 @@ export class ApproachOverlay {
     window.removeEventListener('keydown', this.onKeydown);
 
     // Audio cue
-    audioManager.init();
-    audioManager.playQuindarIntro();
+    audioService.playQuindarIntro();
 
     eventBus.emit('approach:complete', { immediate });
 

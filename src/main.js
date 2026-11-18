@@ -1,7 +1,21 @@
+/**
+ * AFTERLIGHT — Monument Application Entry Point
+ * Orchestrates 3D WebGL runtime, reactive UI controllers, services, and the error boundary.
+ */
+
 import { LunarScene } from './scene/LunarScene.js';
 import { stateMachine, STATES } from './core/StateMachine.js';
 import { eventBus } from './core/EventBus.js';
-import { audioManager } from './core/AudioManager.js';
+import { errorBoundary } from './core/ErrorBoundary.js';
+import { audioService } from './services/AudioService.js';
+import { navigationService } from './services/NavigationService.js';
+import { telemetryService } from './services/TelemetryService.js';
+import { store } from './state/Store.js';
+import { ActionTypes } from './state/actions.js';
+import { logger } from './utils/logger.js';
+import { KEYBOARD_SHORTCUTS } from './config/constants.js';
+
+// UI Controllers
 import { ApproachOverlay } from './ui/ApproachOverlay.js';
 import { HUDController } from './ui/HUDController.js';
 import { VidiconOverlay } from './ui/VidiconOverlay.js';
@@ -10,6 +24,10 @@ import { NavRail } from './ui/NavRail.js';
 import { QuickSearch } from './ui/QuickSearch.js';
 import { MissionStatsCard } from './ui/MissionStatsCard.js';
 
+/**
+ * Validates hardware WebGL availability.
+ * @returns {boolean}
+ */
 function isWebGLAvailable() {
   try {
     const canvas = document.createElement('canvas');
@@ -17,11 +35,15 @@ function isWebGLAvailable() {
       window.WebGLRenderingContext &&
       (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
     );
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
+/**
+ * Dynamically loads and mounts the non-WebGL 2D archival fallback experience.
+ * @param {HTMLElement} fallbackContainer
+ */
 async function renderFallback(fallbackContainer) {
   if (fallbackContainer) {
     fallbackContainer.style.display = 'block';
@@ -30,7 +52,13 @@ async function renderFallback(fallbackContainer) {
   }
 }
 
+/**
+ * Core initialization sequence.
+ */
 async function init() {
+  // Initialize Global Runtime Error Boundary
+  errorBoundary.init();
+
   const canvas = document.getElementById('webgl-canvas');
   const markersLayer = document.getElementById('markers-layer');
   const approachContainer = document.getElementById('approach-container');
@@ -42,7 +70,8 @@ async function init() {
 
   // Verify WebGL capability
   if (!isWebGLAvailable()) {
-    console.warn('WebGL is not supported on this device. Initializing archival fallback mode.');
+    logger.warn('WebGL is not supported on this device. Initializing archival fallback mode.');
+    store.dispatch(ActionTypes.SET_WEBGL_SUPPORT, false);
     if (canvas) canvas.style.display = 'none';
     await renderFallback(fallbackContainer);
     return;
@@ -53,14 +82,18 @@ async function init() {
   try {
     scene = new LunarScene(canvas, markersLayer);
     scene.start();
+    store.dispatch(ActionTypes.SET_LOADING, false);
   } catch (err) {
-    console.error('Failed to initialize 3D scene:', err);
+    errorBoundary.handleError(err, 'SceneInitFailure');
     await renderFallback(fallbackContainer);
     return;
   }
 
+  // Start Background Telemetry Ingestion
+  telemetryService.fetchTelemetry();
+
   // Initialize Primary UI Controllers
-  const approachOverlay = new ApproachOverlay(approachContainer);
+  new ApproachOverlay(approachContainer);
   const hudController = new HUDController(hudContainer);
 
   const vidiconContainer = document.getElementById('vidicon-container');
@@ -69,15 +102,10 @@ async function init() {
   }
 
   // Initialize Astronaut UI Component Suite
-  const audioCapsule = new MissionAudioCapsule();
-  const navRail = new NavRail();
-  const quickSearch = new QuickSearch();
-  const statsCard = new MissionStatsCard();
-
-  eventBus.on('audio:toggle', () => {
-    audioManager.init();
-    audioManager.toggleMute();
-  });
+  new MissionAudioCapsule();
+  new NavRail();
+  new QuickSearch();
+  new MissionStatsCard();
 
   // Lazy-loaded Modal Singletons
   let dossierDrawerInstance = null;
@@ -107,18 +135,18 @@ async function init() {
     return expeditionsModalInstance;
   }
 
-  // Wire Events & State Machine
+  // Wire Lifecycle Events & State Machine
   eventBus.on('approach:complete', ({ immediate }) => {
     stateMachine.transitionTo(STATES.ENVIRONMENT);
 
-    // Show HUD
+    // Reveal HUD
     if (hudContainer) {
       hudContainer.style.display = 'flex';
       hudController.show();
     }
 
     // Reveal surface waypoint markers once descending to the landing site
-    if (scene && scene.waypointMarkers) {
+    if (scene?.waypointMarkers) {
       setTimeout(() => {
         scene.waypointMarkers.setVisible(true, true);
       }, immediate ? 300 : 1600);
@@ -129,9 +157,9 @@ async function init() {
     scene.cameraController.setPreset('OVERVIEW', duration);
   });
 
-  eventBus.on('artifact:selected', async ({ id, artifact }) => {
+  eventBus.on('artifact:selected', async ({ artifact }) => {
     if (stateMachine.current === STATES.ENVIRONMENT || stateMachine.current === STATES.APPROACH) {
-      stateMachine.transitionTo(STATES.INSPECTION);
+      stateMachine.transitionTo(STATES.INSPECTION, artifact);
     }
     const drawer = await getDossierDrawer();
     drawer.open(artifact);
@@ -150,44 +178,53 @@ async function init() {
   eventBus.on('dossier:closed', () => {
     if (stateMachine.current === STATES.INSPECTION) {
       stateMachine.transitionTo(STATES.ENVIRONMENT);
-      scene.waypointMarkers.setActive(null);
+      scene?.waypointMarkers?.setActive(null);
     }
   });
 
   // Global Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
-    // Ignore keystrokes when typing inside form inputs (if any)
+    // Ignore keystrokes when typing inside form inputs
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    if (e.key === '1') {
-      eventBus.emit('camera:preset', 'OVERVIEW');
-    } else if (e.key === '2') {
-      eventBus.emit('camera:preset', 'EYE_LEVEL');
-    } else if (e.key === '3') {
-      eventBus.emit('camera:preset', 'SURVEYOR_RIM');
-    } else if (e.key === '4') {
-      eventBus.emit('camera:preset', 'ALSEP_SITE');
-    } else if (e.key === '5') {
-      eventBus.emit('camera:preset', 'CELESTIAL_EARTH');
-    } else if (e.key === 't' || e.key === 'T') {
-      eventBus.emit('ui:traverse:toggle');
-    } else if (e.key === 'e' || e.key === 'E') {
-      eventBus.emit('ui:expeditions:toggle');
-    } else if (e.key === 'v' || e.key === 'V') {
-      eventBus.emit('ui:vidicon:toggle');
-    } else if (e.key === 'm' || e.key === 'M') {
-      audioManager.init();
-      const enabled = audioManager.toggleMute();
-      const audioBtn = document.querySelector('#btn-audio-toggle');
-      const audioStatus = document.querySelector('.audio-status');
-      if (audioStatus && audioBtn) {
-        audioStatus.textContent = enabled ? 'AUDIO: LIVE' : 'AUDIO: MUTED';
-        audioBtn.classList.toggle('is-active', enabled);
-      }
+    switch (e.key) {
+      case KEYBOARD_SHORTCUTS.CAMERA_1:
+        navigationService.setPreset('OVERVIEW');
+        break;
+      case KEYBOARD_SHORTCUTS.CAMERA_2:
+        navigationService.setPreset('EYE_LEVEL');
+        break;
+      case KEYBOARD_SHORTCUTS.CAMERA_3:
+        navigationService.setPreset('SURVEYOR_RIM');
+        break;
+      case KEYBOARD_SHORTCUTS.CAMERA_4:
+        navigationService.setPreset('ALSEP_SITE');
+        break;
+      case KEYBOARD_SHORTCUTS.CAMERA_5:
+        navigationService.setPreset('CELESTIAL_EARTH');
+        break;
+      case 't':
+      case 'T':
+        eventBus.emit('ui:traverse:toggle');
+        break;
+      case 'e':
+      case 'E':
+        eventBus.emit('ui:expeditions:toggle');
+        break;
+      case 'v':
+      case 'V':
+        eventBus.emit('ui:vidicon:toggle');
+        break;
+      case 'm':
+      case 'M':
+        audioService.toggleMute();
+        break;
+      default:
+        break;
     }
   });
 
-  console.log('AFTERLIGHT — Phase 02 Lunar Environment initialized.');
+  logger.info('AFTERLIGHT — Architectural refactoring active. Monument operational.');
 }
 
 window.addEventListener('DOMContentLoaded', init);

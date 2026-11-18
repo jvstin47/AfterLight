@@ -1,10 +1,15 @@
 /**
  * AFTERLIGHT — Exploration Interface Controller (HUD)
  * Field-instrument aesthetics, architectural hairlines, and precise interaction states.
+ * Refactored to pure presentation consuming services and the reactive Store.
  */
 
 import { eventBus } from '../core/EventBus.js';
-import { audioManager } from '../core/AudioManager.js';
+import { audioService } from '../services/AudioService.js';
+import { navigationService } from '../services/NavigationService.js';
+import { store } from '../state/Store.js';
+import { ActionTypes } from '../state/actions.js';
+import { ASTRONOMY } from '../config/constants.js';
 
 export class HUDController {
   /**
@@ -12,11 +17,12 @@ export class HUDController {
    */
   constructor(container) {
     this.container = container;
-    this.currentPreset = 'OVERVIEW';
-    this.audioEnabled = false;
+    this.currentPreset = store.getState().camera.activePreset;
+    this._unsubscribeStore = null;
 
     this.render();
     this.bindEvents();
+    this.setupStoreSubscriptions();
   }
 
   render() {
@@ -44,7 +50,7 @@ export class HUDController {
           </button>
           <button id="btn-audio-toggle" class="hud-action-btn audio-btn" aria-label="Toggle Mission Audio">
             <span class="action-icon" aria-hidden="true">&#9834;</span>
-            <span class="audio-status">AUDIO: MUTED</span>
+            <span class="audio-status">AUDIO: ${store.getState().audio.isMuted ? 'MUTED' : 'LIVE'}</span>
           </button>
           <button id="btn-traverse" class="hud-action-btn traverse-btn" aria-label="View EVA Traverse Map">
             <span class="action-icon" aria-hidden="true">&boxbox;</span>
@@ -74,11 +80,11 @@ export class HUDController {
         </div>
         <div class="telemetry-row">
           <span class="telemetry-label">SOLAR INCIDENCE</span>
-          <span class="telemetry-val">12.4° ESE (DAWN SUN)</span>
+          <span class="telemetry-val">${ASTRONOMY.SOLAR_INCIDENCE_DEG}° ESE (DAWN SUN)</span>
         </div>
         <div class="telemetry-row">
           <span class="telemetry-label">LUNAR VACUUM</span>
-          <span class="telemetry-val">10⁻¹² TORR &bull; +22°C REGOLITH</span>
+          <span class="telemetry-val">${ASTRONOMY.VACUUM_TORR} &bull; +${ASTRONOMY.LUNAR_DAY_TEMP_C}°C REGOLITH</span>
         </div>
       </aside>
 
@@ -130,8 +136,7 @@ export class HUDController {
     pills.forEach((pill) => {
       pill.addEventListener('click', () => {
         const preset = pill.dataset.preset;
-        this.setActivePreset(preset);
-        eventBus.emit('camera:preset', preset);
+        navigationService.setPreset(preset);
       });
     });
 
@@ -139,73 +144,97 @@ export class HUDController {
     const audioBtn = this.container.querySelector('#btn-audio-toggle');
     const audioStatus = this.container.querySelector('.audio-status');
     audioBtn?.addEventListener('click', () => {
-      audioManager.init();
-      const enabled = audioManager.toggleMute();
-      this.audioEnabled = enabled;
-      if (enabled) {
-        audioStatus.textContent = 'AUDIO: LIVE';
-        audioBtn.classList.add('is-active');
-        audioManager.playQuindarIntro();
-      } else {
-        audioStatus.textContent = 'AUDIO: MUTED';
-        audioBtn.classList.remove('is-active');
+      const isLive = audioService.toggleMute();
+      if (isLive) {
+        audioService.playQuindarIntro();
       }
     });
 
     // Expeditions / Rovers toggle
     const expeditionsBtn = this.container.querySelector('#btn-expeditions');
     expeditionsBtn?.addEventListener('click', () => {
+      audioService.playClick();
       eventBus.emit('ui:expeditions:toggle');
-    });
-
-    eventBus.on('expeditions:opened', () => {
-      expeditionsBtn?.classList.add('is-active');
-    });
-    eventBus.on('expeditions:closed', () => {
-      expeditionsBtn?.classList.remove('is-active');
     });
 
     // Traverse Map toggle
     const traverseBtn = this.container.querySelector('#btn-traverse');
     traverseBtn?.addEventListener('click', () => {
+      audioService.playClick();
       eventBus.emit('ui:traverse:toggle');
     });
 
     // Vidicon Mode toggle
     const vidiconBtn = this.container.querySelector('#btn-vidicon');
     vidiconBtn?.addEventListener('click', () => {
+      audioService.playClick();
+      store.dispatch(ActionTypes.TOGGLE_VIDICON_SCAN);
       eventBus.emit('ui:vidicon:toggle');
     });
+  }
 
-    eventBus.on('vidicon:toggled', (active) => {
-      vidiconBtn?.classList.toggle('is-active', active);
-    });
+  setupStoreSubscriptions() {
+    // Reactive Audio Subscription
+    const audioBtn = this.container.querySelector('#btn-audio-toggle');
+    const audioStatus = this.container.querySelector('.audio-status');
 
-    // Synchronize preset button states on external camera change
-    eventBus.on('camera:preset', (preset) => {
-      this.setActivePreset(preset);
-    });
+    store.subscribe(
+      (s) => s.audio.isMuted,
+      (isMuted) => {
+        if (audioStatus && audioBtn) {
+          audioStatus.textContent = isMuted ? 'AUDIO: MUTED' : 'AUDIO: LIVE';
+          audioBtn.classList.toggle('is-active', !isMuted);
+        }
+      }
+    );
 
-    // When an artifact is selected, deselect vantage pills
-    eventBus.on('artifact:selected', () => {
-      pills.forEach((p) => {
-        p.classList.remove('is-active');
-        p.setAttribute('aria-checked', 'false');
-      });
-    });
+    // Reactive Camera Preset Subscription
+    store.subscribe(
+      (s) => s.camera.activePreset,
+      (preset) => {
+        this.setActivePreset(preset);
+      }
+    );
+
+    // Reactive Modals Active Classes
+    const expeditionsBtn = this.container.querySelector('#btn-expeditions');
+    store.subscribe(
+      (s) => s.modals.isExpeditionsOpen,
+      (isOpen) => {
+        expeditionsBtn?.classList.toggle('is-active', isOpen);
+      }
+    );
+
+    const vidiconBtn = this.container.querySelector('#btn-vidicon');
+    store.subscribe(
+      (s) => s.modals.isVidiconActive,
+      (isActive) => {
+        vidiconBtn?.classList.toggle('is-active', isActive);
+      }
+    );
+
+    // When an artifact is selected, clear active pill
+    store.subscribe(
+      (s) => s.inspection.isOpen,
+      (isOpen) => {
+        if (isOpen) {
+          const pills = this.container.querySelectorAll('.vantage-pill');
+          pills.forEach((p) => {
+            p.classList.remove('is-active');
+            p.setAttribute('aria-checked', 'false');
+          });
+        }
+      }
+    );
   }
 
   setActivePreset(presetKey) {
     this.currentPreset = presetKey;
     const pills = this.container.querySelectorAll('.vantage-pill');
     pills.forEach((pill) => {
-      if (pill.dataset.preset === presetKey) {
-        pill.classList.add('is-active');
-        pill.setAttribute('aria-checked', 'true');
-      } else {
-        pill.classList.remove('is-active');
-        pill.setAttribute('aria-checked', 'false');
-      }
+      const isSelected = pill.dataset.preset === presetKey;
+      pill.classList.toggle('is-active', isSelected);
+      pill.setAttribute('aria-checked', isSelected ? 'true' : 'false');
     });
   }
 

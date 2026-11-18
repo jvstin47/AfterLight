@@ -4,39 +4,7 @@
  * vanguard robotic soft-landers, and historic impact monuments across the Moon.
  */
 
-// Apollo 12 Reference Coordinates (Statio Cognitum)
-const A12_LAT = -3.01239;
-const A12_LON = -23.42157;
-const MOON_RADIUS_KM = 1737.4;
-
-/**
- * Calculates great-circle lunar surface distance from Apollo 12 in kilometers
- */
-function calcDistance(lat, lon) {
-  const phi1 = (A12_LAT * Math.PI) / 180;
-  const phi2 = (lat * Math.PI) / 180;
-  const deltaLambda = ((lon - A12_LON) * Math.PI) / 180;
-
-  const sinHalfPhi = Math.sin((phi2 - phi1) / 2);
-  const sinHalfLam = Math.sin(deltaLambda / 2);
-  const a = sinHalfPhi * sinHalfPhi + Math.cos(phi1) * Math.cos(phi2) * sinHalfLam * sinHalfLam;
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return Math.round(MOON_RADIUS_KM * c);
-}
-
-/**
- * Calculates compass bearing from Apollo 12 to target site in degrees
- */
-function calcBearing(lat, lon) {
-  const phi1 = (A12_LAT * Math.PI) / 180;
-  const phi2 = (lat * Math.PI) / 180;
-  const deltaLambda = ((lon - A12_LON) * Math.PI) / 180;
-
-  const y = Math.sin(deltaLambda) * Math.cos(phi2);
-  const x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(deltaLambda);
-  let brng = (Math.atan2(y, x) * 180) / Math.PI;
-  return Math.round((brng + 360) % 360);
-}
+import { distanceToApollo12 as calcDistance, bearingToApollo12 as calcBearing } from '../utils/astronomy.js';
 
 export const LUNAR_HERITAGE_SITES = [
   // ==========================================
