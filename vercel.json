@@ -16,7 +16,23 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/globe",
+      "destination": "/globe.html"
+    },
+    {
+      "source": "/design-lab",
+      "destination": "/design-lab/index.html"
+    },
+    {
+      "source": "/fernhollow",
+      "destination": "/fernhollow.html"
+    },
+    {
+      "source": "/tidewell",
+      "destination": "/tidewell.html"
+    },
+    {
+      "source": "/((?!assets/|globe|design-lab|fernhollow|tidewell).*)",
       "destination": "/index.html"
     }
   ]
