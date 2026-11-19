@@ -1195,58 +1195,25 @@
       const globeGroup = new THREE.Group();
       scene.add(globeGroup);
 
-      // Procedural procedural crater canvas texture for standalone fidelity
-      const moonCanvas = document.createElement('canvas');
-      moonCanvas.width = 1024;
-      moonCanvas.height = 512;
-      const mctx = moonCanvas.getContext('2d');
-      mctx.fillStyle = '#181d24'; // Basalt dark base
-      mctx.fillRect(0, 0, 1024, 512);
+      // Authentic NASA Lunar Reconnaissance Orbiter (LROC) Color Texture & LOLA Topographic Elevation
+      const textureLoader = new THREE.TextureLoader();
+      const lrocColorMap = textureLoader.load('/assets/terrain_and_cartography/lroc_color_2k.jpg');
+      const lolaElevationMap = textureLoader.load('/assets/terrain_and_cartography/ldem_elevation_2k.jpg');
 
-      // Procedural Maria (Dark basalt seas)
-      mctx.fillStyle = '#0f1318';
-      // Oceanus Procellarum / Mare Imbrium
-      mctx.beginPath();
-      mctx.arc(320, 210, 110, 0, Math.PI * 2);
-      mctx.fill();
-      mctx.beginPath();
-      mctx.arc(410, 180, 85, 0, Math.PI * 2);
-      mctx.fill();
-      // Mare Serenitatis / Tranquillitatis
-      mctx.beginPath();
-      mctx.arc(550, 200, 65, 0, Math.PI * 2);
-      mctx.fill();
-      mctx.beginPath();
-      mctx.arc(580, 260, 75, 0, Math.PI * 2);
-      mctx.fill();
-      // Far Side South Pole-Aitken Basin
-      mctx.fillStyle = '#0a0d12';
-      mctx.beginPath();
-      mctx.arc(880, 380, 95, 0, Math.PI * 2);
-      mctx.fill();
+      lrocColorMap.anisotropy = 8;
+      lrocColorMap.minFilter = THREE.LinearMipmapLinearFilter;
 
-      // Craters and rays
-      mctx.strokeStyle = 'rgba(236, 234, 227, 0.4)';
-      mctx.lineWidth = 1;
-      for (let i = 0; i < 280; i++) {
-        const cx = Math.random() * 1024;
-        const cy = Math.random() * 512;
-        const r = 2 + Math.random() * 14;
-        mctx.fillStyle = 'rgba(10, 13, 18, 0.7)';
-        mctx.beginPath();
-        mctx.arc(cx, cy, r, 0, Math.PI * 2);
-        mctx.fill();
-        mctx.stroke();
-      }
-
-      const moonTex = new THREE.CanvasTexture(moonCanvas);
-      const moonGeo = new THREE.SphereGeometry(2.2, 64, 48);
+      const moonGeo = new THREE.SphereGeometry(2.2, 128, 96);
       const moonMat = new THREE.MeshStandardMaterial({
-        map: moonTex,
-        roughness: 0.94,
-        metalness: 0.04
+        map: lrocColorMap,
+        bumpMap: lolaElevationMap,
+        bumpScale: 0.05,
+        roughness: 0.90,
+        metalness: 0.05
       });
       const moonMesh = new THREE.Mesh(moonGeo, moonMat);
+      // Align 0° longitude with standard selenographic coordinate reference
+      moonMesh.rotation.y = -Math.PI / 2;
       globeGroup.add(moonMesh);
 
       // Atmospheric/vacuum limb rim
