@@ -622,48 +622,18 @@ export class ExpeditionsModal {
           this.close();
         }
       }
-      if ((e.key === 'e' || e.key === 'E') && !this.isOpen) {
-        if (document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
-          this.open();
-        }
-      }
     });
+  }
 
-    eventBus.on('ui:expeditions:toggle', () => {
-      this.toggle();
-    });
-
-    eventBus.on('ui:expeditions:close', () => {
-      this.close();
-    });
-
-    eventBus.on('ui:expeditions:open', (siteId) => {
-      this.open();
-      if (siteId) {
-        const site = GLOBAL_MISSIONS.find((s) => s.id === siteId);
-        if (site) {
-          this.switchToMode(ATLAS_MODES.MISSIONS);
-          setTimeout(() => {
-            this.openDetailModal(site);
-          }, 250);
-        }
-      }
-    });
-
-    eventBus.on('ui:expeditions:open-flags', () => {
-      this.open();
-      this.switchToMode(ATLAS_MODES.FLAGS);
-    });
-
-    eventBus.on('ui:expeditions:open-science', () => {
-      this.open();
-      this.switchToMode(ATLAS_MODES.SCIENCE);
-    });
-
-    eventBus.on('ui:expeditions:open-geology', () => {
-      this.open();
-      this.switchToMode(ATLAS_MODES.GEOLOGY);
-    });
+  openSite(siteId) {
+    if (!siteId) return;
+    const site = GLOBAL_MISSIONS.find((s) => s.id === siteId);
+    if (site) {
+      this.switchToMode(ATLAS_MODES.MISSIONS);
+      setTimeout(() => {
+        this.openDetailModal(site);
+      }, 150);
+    }
   }
 
   switchToMode(mode) {
@@ -703,10 +673,23 @@ export class ExpeditionsModal {
   }
 
   bindInteractiveElements() {
-    // Mission Explore button clicks
+    // Mission Explore button clicks & card clicks
     this.container.querySelectorAll('.card-btn-explore').forEach((btn) => {
       btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const siteId = e.currentTarget.dataset.siteId;
+        const site = GLOBAL_MISSIONS.find((s) => s.id === siteId);
+        if (site) {
+          audioService.playBlip(750, 0.05);
+          this.openDetailModal(site);
+        }
+      });
+    });
+
+    this.container.querySelectorAll('.exp-card:not(.is-active-site)').forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.card-btn-explore') || e.target.closest('[data-action="explore-active"]')) return;
+        const siteId = card.dataset.id;
         const site = GLOBAL_MISSIONS.find((s) => s.id === siteId);
         if (site) {
           audioService.playBlip(750, 0.05);
@@ -717,7 +700,8 @@ export class ExpeditionsModal {
 
     // Active Apollo 12 site button click
     const activeBtn = this.container.querySelector('[data-action="explore-active"]');
-    activeBtn?.addEventListener('click', () => {
+    activeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
       audioService.playBlip(880, 0.06);
       this.close();
     });

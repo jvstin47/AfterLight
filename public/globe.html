@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AFTERLIGHT — Visual Design Laboratory (Design System 02: Lunar Field Observatory)</title>
+  <meta name="description" content="Visual design laboratory exploring the Lunar Field Observatory interface language for AFTERLIGHT.">
+
+  <!-- Google Fonts: Instrument Serif, Inter, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM 02 — THE LUNAR FIELD OBSERVATORY TOKENS
+       ========================================================================== */
+    :root {
+      /* Environment */
+      --color-obsidian: #07090C;
+      --color-basalt: #14191E;
+      --color-regolith: #252C32;
+      --color-panel-translucent: rgba(12, 16, 21, 0.88);
+      --color-panel-solid: rgba(7, 9, 12, 0.98);
+
+      /* Editorial */
+      --color-archive-ivory: #ECEAE3;
+      --color-dust-grey: #B0B4B4;
+      --color-titanium: #777F85;
+      --color-hairline: rgba(255, 255, 255, 0.08);
+      --color-hairline-bright: rgba(255, 255, 255, 0.18);
+
+      /* Signal System */
+      --color-signal-orange: #E4774F;
+      --color-orbital-blue: #8EADBF;
+      --color-mineral-green: #9EAF96;
+      --color-impact-red: #C36C62;
+      --color-uncertain: #858B91;
+
+      /* Typography */
+      --font-display: "Instrument Serif", "Georgia", "Times New Roman", serif;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "IBM Plex Mono", "SF Mono", "Consolas", monospace;
+
+      /* Layout & Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-5: 24px;
+      --space-6: 32px;
+      --space-7: 48px;
+
+      /* Motion */
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-panel: 380ms;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--color-obsidian);
+      color: var(--color-archive-ivory);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    /* 3D Background Canvas */
+    #webgl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: block;
+    }
+
+    /* Optical Reseau Framing Reticles */
+    .reseau-frame {
+      position: absolute;
+      inset: 20px;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .reseau-cross {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1;
+      color: var(--color-titanium);
+      opacity: 0.65;
+    }
+    .reseau-cross.top-left { top: 0; left: 0; }
+    .reseau-cross.top-right { top: 0; right: 0; }
+    .reseau-cross.bottom-left { bottom: 0; left: 0; }
+    .reseau-cross.bottom-right { bottom: 0; right: 0; }
+
+    /* Top Observatory Control Bar */
+    header.lab-topbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--color-hairline);
+      background: linear-gradient(180deg, rgba(7, 9, 12, 0.95) 0%, rgba(7, 9, 12, 0.4) 100%);
+      backdrop-filter: blur(8px);
+      z-index: 30;
+    }
+
+    .lab-brand-lockup {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .lab-brand-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.04em;
+      color: var(--color-archive-ivory);
+      text-transform: uppercase;
+    }
+
+    .lab-brand-sub {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--color-orbital-blue);
+      text-transform: uppercase;
+    }
+
+    /* Experiment Switcher Tabs */
+    .lab-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .lab-nav-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--color-hairline);
+      color: var(--color-dust-grey);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .lab-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--color-archive-ivory);
+      border-color: var(--color-hairline-bright);
+    }
+
+    .lab-nav-btn.is-active {
+      background: rgba(228, 119, 79, 0.12);
+      border-color: var(--color-signal-orange);
+      color: var(--color-signal-orange);
+    }
+
+    .lab-nav-num {
+      opacity: 0.6;
+    }
+
+    /* Bottom Perimeter Telemetry Rail */
+    footer.lab-telemetry-rail {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 38px;
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--color-hairline);
+      background: rgba(7, 9, 12, 0.90);
+      backdrop-filter: blur(8px);
+      z-index: 30;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-titanium);
+      letter-spacing: 0.08em;
+    }
+
+    .rail-left, .rail-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .telemetry-highlight {
+      color: var(--color-orbital-blue);
+    }
+
+    /* Stage Container for the 5 Experiments */
+    #lab-stage {
+      position: absolute;
+      inset: 52px 0 38px 0;
+      z-index: 25;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .lab-experiment-panel {
+      position: absolute;
+      inset: 0;
+      display: none;
+      opacity: 0;
+      transition: opacity var(--duration-panel) var(--ease-cinematic);
+      pointer-events: auto;
+    }
+
+    .lab-experiment-panel.is-active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       EXPERIMENT 01 — THE GLOBAL OBSERVATORY
+       ========================================================================== */
+    .exp01-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .exp01-header {
+      position: absolute;
+      top: 36px;
+      left: 36px;
+      max-width: 480px;
+      pointer-events: auto;
+    }
+
+    .exp-kicker {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--color-signal-orange);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .exp-title {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 4.5vw, 62px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--color-archive-ivory);
+      margin-bottom: 14px;
+    }
+
+    .exp-desc {
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--color-dust-grey);
+    }
+
+    /* Scale bar */
+    .exp01-scale-bar {
+      position: absolute;
+      bottom: 24px;
+      left: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--color-titanium);
+      letter-spacing: 0.1em;
+      pointer-events: auto;
+    }
+
+    .scale-line {
+      display: flex;
+      align-items: center;
+      width: 140px;
+      height: 4px;
+      border-left: 1px solid var(--color-orbital-blue);
+      border-right: 1px solid var(--color-orbital-blue);
+      border-bottom: 1px solid var(--color-orbital-blue);
+    }
+
+    /* Hemisphere Toggle */
+    .exp01-controls {
+      position: absolute;
+      bottom: 24px;
+      right: 36px;
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .ctrl-pill {
+      background: var(--color-basalt);
+      border: 1px solid var(--color-hairline-bright);
+      color: var(--color-dust-grey);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      transition: all 0.2s;
+    }
+
+    .ctrl-pill:hover, .ctrl-pill.is-active {
+      border-color: var(--color-orbital-blue);
+      color: var(--color-archive-ivory);
+      background: var(--color-regolith);
+    }
+
+    /* ==========================================================================
+       EXPERIMENT 02 — MISSION DISCOVERY
+       ========================================================================== */
+    .exp02-mission-selector {
+      position: absolute;
+      top: 36px;
+      left: 36px;
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+      z-index: 10;
+    }
+
+    .mission-select-btn {
+      background: var(--color-basalt);
+      border: 1px solid var(--color-hairline);
+      color: var(--color-dust-grey);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3px;
+      transition: all 0.2s;
+    }
+
+    .mission-select-btn .m-code {
+      font-size: 8.5px;
+      color: var(--color-titanium);
+      letter-spacing: 0.12em;
+    }
+
+    .mission-select-btn.is-active {
+      border-color: var(--color-signal-orange);
+      background: rgba(228, 119, 79, 0.1);
+      color: var(--color-archive-ivory);
+    }
+
+    .exp02-discovery-card {
+      position: absolute;
+      top: 100px;
+      right: 36px;
+      width: min(440px, 90vw);
+      background: var(--color-panel-translucent);
+      border: 1px solid var(--color-hairline-bright);
+      border-radius: 8px;
+      padding: 28px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.85);
+      pointer-events: auto;
+    }
+
+    .card-meta-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--color-titanium);
+      letter-spacing: 0.12em;
+    }
+
+    .status-badge {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .status-badge.verified {
+      background: rgba(158, 175, 150, 0.15);
+      border: 1px solid var(--color-mineral-green);
+      color: var(--color-mineral-green);
+    }
+    .status-badge.monument {
+      background: rgba(228, 119, 79, 0.15);
+      border: 1px solid var(--color-signal-orange);
+      color: var(--color-signal-orange);
+    }
+
+    .card-mission-title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      line-height: 1.05;
+      color: var(--color-archive-ivory);
+      margin-bottom: 8px;
+    }
+
+    .card-coords-readout {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-orbital-blue);
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-narrative {
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--color-dust-grey);
+      margin-bottom: 20px;
+    }
+
+    .card-photo-preview {
+      width: 100%;
+      height: 160px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 1px solid var(--color-hairline);
+      position: relative;
+    }
+
+    .card-photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-photo-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 6px 10px;
+      background: rgba(7, 9, 12, 0.85);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--color-dust-grey);
+      letter-spacing: 0.06em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn-action-regional {
+      width: 100%;
+      background: var(--color-regolith);
+      border: 1px solid var(--color-hairline-bright);
+      color: var(--color-archive-ivory);
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-action-regional:hover {
+      background: var(--color-signal-orange);
+      color: var(--color-obsidian);
+      border-color: var(--color-signal-orange);
+    }
+
+    /* ==========================================================================
+       EXPERIMENT 03 — THE ARTIFACT INVESTIGATION
+       ========================================================================== */
+    .exp03-schematic-sidebar {
+      position: absolute;
+      top: 36px;
+      left: 36px;
+      width: min(360px, 85vw);
+      background: var(--color-panel-translucent);
+      border: 1px solid var(--color-hairline);
+      border-radius: 8px;
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      pointer-events: auto;
+    }
+
+    .schematic-callout-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .callout-item {
+      padding: 10px 12px;
+      border-left: 2px solid var(--color-hairline-bright);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .callout-item:hover, .callout-item.is-active {
+      border-left-color: var(--color-signal-orange);
+      background: rgba(228, 119, 79, 0.08);
+    }
+
+    .callout-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-archive-ivory);
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .callout-spec {
+      font-family: var(--font-body);
+      font-size: 11.5px;
+      color: var(--color-dust-grey);
+      line-height: 1.45;
+    }
+
+    .exp03-controls-bar {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--color-basalt);
+      border: 1px solid var(--color-hairline-bright);
+      padding: 6px 16px;
+      border-radius: 999px;
+      pointer-events: auto;
+    }
+
+    /* ==========================================================================
+       EXPERIMENT 04 — THE ARCHIVAL EDITORIAL
+       ========================================================================== */
+    .exp04-editorial-container {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 48px 48px 80px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      pointer-events: auto;
+    }
+
+    .editorial-col-left {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .editorial-headline {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 5.5vw, 76px);
+      line-height: 0.94;
+      letter-spacing: -0.025em;
+      color: var(--color-archive-ivory);
+    }
+
+    .editorial-lead {
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--color-dust-grey);
+    }
+
+    .editorial-quote {
+      border-left: 2px solid var(--color-signal-orange);
+      padding-left: 18px;
+      margin: 16px 0;
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-style: italic;
+      color: var(--color-archive-ivory);
+      line-height: 1.4;
+    }
+
+    .editorial-col-right {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .archival-photo-block {
+      background: var(--color-basalt);
+      border: 1px solid var(--color-hairline);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .archival-photo-block img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .photo-accession-meta {
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-top: 1px solid var(--color-hairline);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--color-titanium);
+    }
+
+    .meta-id-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--color-archive-ivory);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       EXPERIMENT 05 — THE SCIENTIFIC OBSERVATORY
+       ========================================================================== */
+    .exp05-research-grid {
+      position: absolute;
+      inset: 28px 36px 36px 36px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 20px;
+      pointer-events: auto;
+    }
+
+    .scientific-module {
+      background: var(--color-panel-translucent);
+      border: 1px solid var(--color-hairline);
+      border-radius: 6px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--color-hairline);
+      padding-bottom: 8px;
+    }
+
+    .module-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--color-archive-ivory);
+      text-transform: uppercase;
+    }
+
+    .module-tag {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--color-orbital-blue);
+      letter-spacing: 0.08em;
+    }
+
+    /* Seismogram canvas */
+    .seismo-canvas-holder {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 100px;
+      position: relative;
+    }
+
+    .seismo-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Mineralogy Bar Chart */
+    .mineral-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mineral-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+    }
+
+    .mineral-name {
+      width: 90px;
+      color: var(--color-dust-grey);
+    }
+
+    .mineral-bar-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .mineral-bar-fill {
+      height: 100%;
+      background: var(--color-orbital-blue);
+      border-radius: 2px;
+    }
+
+    .mineral-pct {
+      width: 38px;
+      text-align: right;
+      color: var(--color-archive-ivory);
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) {
+      .exp04-editorial-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 24px 20px;
+      }
+      .exp05-research-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        overflow-y: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- WebGL 3D Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Optical Reseau Corner Framing -->
+  <div class="reseau-frame" aria-hidden="true">
+    <span class="reseau-cross top-left">+</span>
+    <span class="reseau-cross top-right">+</span>
+    <span class="reseau-cross bottom-left">+</span>
+    <span class="reseau-cross bottom-right">+</span>
+  </div>
+
+  <!-- Top Observatory Control Header -->
+  <header class="lab-topbar">
+    <div class="lab-brand-lockup">
+      <span class="lab-brand-title">AFTERLIGHT</span>
+      <span class="lab-brand-sub">DESIGN LAB 02 &bull; LUNAR FIELD OBSERVATORY</span>
+    </div>
+
+    <!-- 5 Experiment Navigation Buttons -->
+    <nav class="lab-nav" role="tablist" aria-label="Visual Design Laboratory Experiments">
+      <button class="lab-nav-btn is-active" data-exp="1" role="tab" aria-selected="true">
+        <span class="lab-nav-num">01</span>
+        <span>GLOBAL OBSERVATORY</span>
+      </button>
+      <button class="lab-nav-btn" data-exp="2" role="tab" aria-selected="false">
+        <span class="lab-nav-num">02</span>
+        <span>MISSION DISCOVERY</span>
+      </button>
+      <button class="lab-nav-btn" data-exp="3" role="tab" aria-selected="false">
+        <span class="lab-nav-num">03</span>
+        <span>ARTIFACT INVESTIGATION</span>
+      </button>
+      <button class="lab-nav-btn" data-exp="4" role="tab" aria-selected="false">
+        <span class="lab-nav-num">04</span>
+        <span>ARCHIVAL EDITORIAL</span>
+      </button>
+      <button class="lab-nav-btn" data-exp="5" role="tab" aria-selected="false">
+        <span class="lab-nav-num">05</span>
+        <span>SCIENTIFIC OBSERVATORY</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Central Interactive Stage -->
+  <main id="lab-stage">
+
+    <!-- ====================================================================
+         EXPERIMENT 01 — THE GLOBAL OBSERVATORY
+         ==================================================================== -->
+    <section class="lab-experiment-panel is-active" id="exp-panel-1">
+      <div class="exp01-overlay">
+        <div class="exp01-header">
+          <div class="exp-kicker">EXPERIMENT 01 &bull; PLANETARY ARCHIVE</div>
+          <h1 class="exp-title">The Lunar Sphere</h1>
+          <p class="exp-desc">
+            A continuous 3D planetary observatory. Examine the near and far hemispheres across 60 years of human lunar expeditions. Drag to orbit, wheel to resolve regional topography.
+          </p>
+        </div>
+
+        <!-- Scale Bar -->
+        <div class="exp01-scale-bar">
+          <div class="scale-label">SCALE &bull; 1:5,000,000</div>
+          <div class="scale-line"></div>
+          <div>1,000 KM &bull; 573 NMI</div>
+        </div>
+
+        <!-- Hemisphere Controls -->
+        <div class="exp01-controls">
+          <button class="ctrl-pill is-active" id="btn-hemi-near">NEAR SIDE (EARTH-FACING)</button>
+          <button class="ctrl-pill" id="btn-hemi-far">FAR SIDE (AITKEN BASIN)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         EXPERIMENT 02 — MISSION DISCOVERY
+         ==================================================================== -->
+    <section class="lab-experiment-panel" id="exp-panel-2">
+      <div class="exp02-mission-selector">
+        <button class="mission-select-btn is-active" data-mission="apollo-12">
+          <span class="m-code">NASA &bull; 1969</span>
+          <span class="m-name">Apollo 12</span>
+        </button>
+        <button class="mission-select-btn" data-mission="apollo-11">
+          <span class="m-code">NASA &bull; 1969</span>
+          <span class="m-name">Apollo 11</span>
+        </button>
+        <button class="mission-select-btn" data-mission="chandrayaan-3">
+          <span class="m-code">ISRO &bull; 2023</span>
+          <span class="m-name">Chandrayaan-3</span>
+        </button>
+        <button class="mission-select-btn" data-mission="change-4">
+          <span class="m-code">CNSA &bull; 2019</span>
+          <span class="m-name">Chang'e 4 (Far Side)</span>
+        </button>
+      </div>
+
+      <!-- Asymmetric Editorial Discovery Drawer -->
+      <article class="exp02-discovery-card" id="exp02-card">
+        <div class="card-meta-line">
+          <span>EXPEDITION 02 &bull; PINPOINT TOUCHDOWN</span>
+          <span class="status-badge verified">VERIFIED IN SITU</span>
+        </div>
+        <h2 class="card-mission-title" id="exp02-title">Statio Cognitum</h2>
+        <div class="card-coords-readout" id="exp02-coords">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>
+          <span>3.01239° S, 23.42157° W &bull; OCEANUS PROCELLARUM</span>
+        </div>
+        <p class="card-narrative" id="exp02-narrative">
+          Humanity's first precision lunar touchdown. Commander Pete Conrad and LMP Alan Bean set Intrepid down within 163 meters of the robotic Surveyor 3 lander, retrieving its TV camera after 31 months in the lunar vacuum.
+        </p>
+        <div class="card-photo-preview">
+          <img id="exp02-img" src="/assets/photography/surveyor_3_rendezvous/AS12-48-7134_Conrad_Surveyor_3_Intrepid_Background.jpg" alt="Apollo 12 Mission Photograph">
+          <div class="card-photo-caption">
+            <span id="exp02-caption-id">AS12-48-7134</span>
+            <span>70MM HASSELBLAD 500EL</span>
+          </div>
+        </div>
+        <button class="btn-action-regional" id="btn-regional-zoom">
+          <span>INVESTIGATE REGIONAL TERRAIN</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
+        </button>
+      </article>
+    </section>
+
+    <!-- ====================================================================
+         EXPERIMENT 03 — THE ARTIFACT INVESTIGATION
+         ==================================================================== -->
+    <section class="lab-experiment-panel" id="exp-panel-3">
+      <aside class="exp03-schematic-sidebar">
+        <div class="exp-kicker">EXPERIMENT 03 &bull; 1:1 SCALE RECONSTRUCTION</div>
+        <h2 class="card-mission-title" style="font-size: 28px;">Intrepid (LM-6)</h2>
+        <div class="card-coords-readout" style="margin-bottom: 12px;">
+          <span>DESCENT STAGE &bull; 3.2M HEIGHT &bull; 9.4M SPAN</span>
+        </div>
+        <p class="card-narrative" style="font-size: 12px; margin-bottom: 12px;">
+          Physical dimensions reconstructed from Grumman aerospace engineering blue-lines and NASA Apollo 12 stowage inventories.
+        </p>
+
+        <div class="schematic-callout-list">
+          <div class="callout-item is-active" data-focus="descent-engine">
+            <div class="callout-title">01 &bull; DESCENT PROPULSION SYSTEM</div>
+            <div class="callout-spec">44 kN throttleable hypergolic engine bell (aerozine-50 / N2O4). Columbium skirt.</div>
+          </div>
+          <div class="callout-item" data-focus="mesa">
+            <div class="callout-title">02 &bull; MESA (QUADRANT IV)</div>
+            <div class="callout-spec">Modular Equipment Stowage Assembly. Stowed Westinghouse color TV camera and rock sample boxes.</div>
+          </div>
+          <div class="callout-item" data-focus="ladder">
+            <div class="callout-title">03 &bull; EGRESS LADDER & PLAQUE</div>
+            <div class="callout-spec">Strut-mounted ladder. Stainless steel commemorative plaque signed by crew and President Nixon.</div>
+          </div>
+          <div class="callout-item" data-focus="footpad">
+            <div class="callout-title">04 &bull; HONEYCOMB STRUT FOOTPADS</div>
+            <div class="callout-spec">Crushable aluminum honeycomb shock absorber with 5.6 ft lunar soil contact probes.</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="exp03-controls-bar">
+        <span style="font-family: var(--font-mono); font-size: 9.5px; color: var(--color-titanium);">VIEW MODE:</span>
+        <button class="ctrl-pill is-active" id="btn-art-pbr">PBR MATS</button>
+        <button class="ctrl-pill" id="btn-art-wire">WIREFRAME</button>
+        <button class="ctrl-pill" id="btn-art-reset">RESET VIEW</button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         EXPERIMENT 04 — THE ARCHIVAL EDITORIAL
+         ==================================================================== -->
+    <section class="lab-experiment-panel" id="exp-panel-4">
+      <div class="exp04-editorial-container">
+        <div class="editorial-col-left">
+          <div class="exp-kicker">EXPERIMENT 04 &bull; ARCHIVAL EDITORIAL</div>
+          <h1 class="editorial-headline">Twice to the Surface of the Ocean of Storms</h1>
+          <p class="editorial-lead">
+            On November 19, 1969, at 06:54:35 UTC, Pete Conrad and Alan Bean touched down on the basalt plains of Oceanus Procellarum. Their coordinates were not chosen at random: 163 meters away, resting on the sloping rim of a 200-meter crater, sat Surveyor 3—a robotic vanguard that had preceded human arrival by two and a half years.
+          </p>
+
+          <blockquote class="editorial-quote">
+            "Look at that Surveyor, sitting right on the contour... It’s bright, but it’s sitting right there where it belongs."
+            <footer style="font-size: 11px; font-family: var(--font-mono); color: var(--color-titanium); margin-top: 6px;">— Pete Conrad, CDR (Nov 19, 1969, 115:22:18 GET)</footer>
+          </blockquote>
+
+          <p class="exp-desc">
+            The mission demonstrated that Apollo could land with pinpoint precision. Conrad and Bean conducted two EVAs totaling 7 hours and 45 minutes, traversing 1.3 kilometers of cratered regolith. They dismantled Surveyor 3's television camera, cutting its aluminum cables with hand shears to investigate how materials endure decades in solar radiation and micro-meteoroid flux.
+          </p>
+
+          <div style="margin-top: 16px; border: 1px solid var(--color-hairline); padding: 16px; border-radius: 4px; background: rgba(255,255,255,0.02);">
+            <div style="font-family: var(--font-mono); font-size: 10px; color: var(--color-orbital-blue); margin-bottom: 6px;">MISSION DOCUMENTATION MATRIX</div>
+            <div style="font-family: var(--font-mono); font-size: 9.5px; color: var(--color-titanium); line-height: 1.8;">
+              NASA MISSION ARCHIVE ID: 1969-099A<br>
+              SURVEYOR RENDEZVOUS ACCESSION: AS12-48-7134 THROUGH AS12-48-7136<br>
+              RETRIEVED HARDWARE: TV CAMERA (NSSDC ID 1967-035A-01) &bull; RETURNED TO EARTH<br>
+              SAMPLE MASS RECOVERED: 34.35 KG LUNAR REGOLITH & BASALT CORES
+            </div>
+          </div>
+        </div>
+
+        <div class="editorial-col-right">
+          <div class="archival-photo-block">
+            <img src="/assets/photography/surveyor_3_rendezvous/AS12-48-7136_Surveyor_3_and_Intrepid_Panorama.jpg" alt="Surveyor 3 and Intrepid in background">
+            <div class="photo-accession-meta">
+              <div class="meta-id-row">
+                <span>AS12-48-7136</span>
+                <span>MAGAZINE 48/X</span>
+              </div>
+              <div>Surveyor 3 on the 11.8° crater slope with Lunar Module Intrepid on the northwest rim horizon.</div>
+              <div style="color: var(--color-orbital-blue);">OPTICS: 60MM BIOGON &bull; HASSELBLAD 500EL &bull; KODAK EKTACHROME SO-368</div>
+            </div>
+          </div>
+
+          <div class="archival-photo-block">
+            <img src="/assets/photography/intrepid_lm/AS12-46-6749_Intrepid_Ladder_and_Plaque.jpg" alt="Intrepid Ladder and Plaque">
+            <div class="photo-accession-meta">
+              <div class="meta-id-row">
+                <span>AS12-46-6749</span>
+                <span>MAGAZINE 46/Y</span>
+              </div>
+              <div>Forward landing strut, egress ladder, and commemorative stainless steel plaque.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         EXPERIMENT 05 — THE SCIENTIFIC OBSERVATORY
+         ==================================================================== -->
+    <section class="lab-experiment-panel" id="exp-panel-5">
+      <div class="exp05-research-grid">
+        <!-- Module 1: Lunar Seismology -->
+        <div class="scientific-module">
+          <div class="module-header">
+            <span class="module-title">01 &bull; LUNAR SEISMOLOGY (ALSEP PSE)</span>
+            <span class="module-tag">STATION 1 &bull; NOVEMBER 20, 1969</span>
+          </div>
+          <div style="font-family: var(--font-body); font-size: 11.5px; color: var(--color-dust-grey); margin-bottom: 8px;">
+            Passive Seismic Experiment recording Intrepid ascent stage controlled impact (72 km ESE, 1,680 m/s). 
+            <span style="color: var(--color-signal-orange);">Reverberation duration: 55 minutes.</span>
+          </div>
+          <div class="seismo-canvas-holder">
+            <canvas class="seismo-canvas" id="seismo-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Module 2: Regolith Mineralogy -->
+        <div class="scientific-module">
+          <div class="module-header">
+            <span class="module-title">02 &bull; REGOLITH MINERALOGY (CORE 12025)</span>
+            <span class="module-tag">DEPTH: 0.0 &ndash; 41.5 CM</span>
+          </div>
+          <div class="mineral-bars">
+            <div class="mineral-row">
+              <span class="mineral-name">Pyroxene</span>
+              <div class="mineral-bar-track"><div class="mineral-bar-fill" style="width: 46%;"></div></div>
+              <span class="mineral-pct">46%</span>
+            </div>
+            <div class="mineral-row">
+              <span class="mineral-name">Plagioclase</span>
+              <div class="mineral-bar-track"><div class="mineral-bar-fill" style="width: 32%;"></div></div>
+              <span class="mineral-pct">32%</span>
+            </div>
+            <div class="mineral-row">
+              <span class="mineral-name">Ilmenite (FeTiO3)</span>
+              <div class="mineral-bar-track"><div class="mineral-bar-fill" style="width: 14%; background: var(--color-signal-orange);"></div></div>
+              <span class="mineral-pct" style="color: var(--color-signal-orange);">14%</span>
+            </div>
+            <div class="mineral-row">
+              <span class="mineral-name">Olivine</span>
+              <div class="mineral-bar-track"><div class="mineral-bar-fill" style="width: 8%;"></div></div>
+              <span class="mineral-pct">8%</span>
+            </div>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 9px; color: var(--color-titanium); margin-top: 14px;">
+            ANALYSIS: Low-titanium olivine-pigeonite mare basalt. High solar wind helium-3 retention in ilmenite grains.
+          </div>
+        </div>
+
+        <!-- Module 3: Laser Ranging Retroreflector (LRRR) -->
+        <div class="scientific-module">
+          <div class="module-header">
+            <span class="module-title">03 &bull; LASER RANGING RETROREFLECTOR</span>
+            <span class="module-tag">CORNER-CUBES: 100 SILICA</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-dust-grey);">PHOTON BOUNCE TIME:</span>
+            <span style="font-family: var(--font-mono); font-size: 18px; color: var(--color-mineral-green); font-weight: 600;" id="lrrr-time">2.564491 s</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px;">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--color-dust-grey);">EARTH-MOON VECTOR:</span>
+            <span style="font-family: var(--font-mono); font-size: 14px; color: var(--color-archive-ivory);">384,402.148 KM</span>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 9px; color: var(--color-titanium); line-height: 1.6;">
+            MEASURED ORBITAL RECESSION: +3.82 CM / YEAR (TIDAL ENERGY DISSIPATION). ACTIVE RESEARCH TARGET (APOLLO 11, 14, 15).
+          </div>
+        </div>
+
+        <!-- Module 4: Surveyor Crater Cross-Section Profile -->
+        <div class="scientific-module">
+          <div class="module-header">
+            <span class="module-title">04 &bull; SURVEYOR CRATER TOPOGRAPHY PROFILE</span>
+            <span class="module-tag">RADIAL TRANSECT (NASA/USGS)</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <svg viewBox="0 0 300 90" style="width: 100%; height: 75px; overflow: visible;">
+              <!-- Horizontal datum 0.0m -->
+              <line x1="0" y1="25" x2="300" y2="25" stroke="rgba(255,255,255,0.15)" stroke-dasharray="3,3" />
+              <!-- Crater Profile Curve -->
+              <path d="M 0,25 Q 40,25 70,22 C 90,20 110,65 150,80 C 190,65 210,20 230,22 Q 260,25 300,25" fill="none" stroke="#8EADBF" stroke-width="2" />
+              <!-- Surveyor 3 resting point on inner slope -->
+              <circle cx="120" cy="52" r="3.5" fill="#E4774F" />
+              <text x="125" y="48" font-family="monospace" font-size="8" fill="#E4774F">SURVEYOR 3 (-11.5m, 11.8° SLOPE)</text>
+              <!-- Intrepid on rim horizon -->
+              <circle cx="45" cy="23" r="3" fill="#ECEAE3" />
+              <text x="10" y="16" font-family="monospace" font-size="8" fill="#ECEAE3">LM INTREPID (+1.8m RIM)</text>
+            </svg>
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 9px; color: var(--color-titanium);">
+            CRATER DIAMETER: 200M &bull; DEPTH: 21.4M &bull; RIM ELEVATION: +1.8M
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Perimeter Telemetry Rail -->
+  <footer class="lab-telemetry-rail">
+    <div class="rail-left">
+      <span>OBSERVATORY: <strong class="telemetry-highlight" id="rail-site">GLOBAL LUNAR RECONNAISSANCE</strong></span>
+      <span>COORDINATES: <strong class="telemetry-highlight" id="rail-coords">0.0000° N, 0.0000° E</strong></span>
+    </div>
+    <div class="rail-right">
+      <span>AZIMUTH: <strong class="telemetry-highlight" id="rail-azimuth">105.2° ESE</strong></span>
+      <span>SUN ELEVATION: <strong class="telemetry-highlight" id="rail-sun">12.4°</strong></span>
+      <span>SYSTEM: <strong>DS-02 ACTIVE</strong></span>
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * AFTERLIGHT Visual Design Laboratory Engine
+     * Interactive 3D Lunar Globe, Camera Choreography, and Experiment Transitions
+     */
+    (function () {
+      // 1. Audio Quindar Feedback Synthesizer
+      let audioCtx = null;
+      function playTone(freq = 2525, duration = 0.04) {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!audioCtx) audioCtx = new AudioContext();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (e) {}
+      }
+
+      // 2. Three.js Scene Setup
+      const canvas = document.getElementById('webgl-canvas');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07090C);
+
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 7.5);
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.0;
+
+      const controls = new THREE.OrbitControls(camera, canvas);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.minDistance = 2.4;
+      controls.maxDistance = 20.0;
+
+      // Lighting
+      const ambLight = new THREE.AmbientLight(0xffffff, 0.08); // Deep lunar shadow contrast
+      scene.add(ambLight);
+
+      const sunLight = new THREE.DirectionalLight(0xf5f4ef, 2.2);
+      sunLight.position.set(12, 3, 10);
+      scene.add(sunLight);
+
+      // Starfield background
+      const starGeo = new THREE.BufferGeometry();
+      const starCount = 1800;
+      const starPos = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount * 3; i += 3) {
+        starPos[i] = (Math.random() - 0.5) * 600;
+        starPos[i + 1] = (Math.random() - 0.5) * 600;
+        starPos[i + 2] = (Math.random() - 0.5) * 600;
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      const starMat = new THREE.PointsMaterial({ size: 1.2, color: 0xb0b4b4, transparent: true, opacity: 0.65 });
+      const stars = new THREE.Points(starGeo, starMat);
+      scene.add(stars);
+
+      // 3. Central 3D Interactive Lunar Globe (for Exp 01 & 02)
+      const globeGroup = new THREE.Group();
+      scene.add(globeGroup);
+
+      // Procedural procedural crater canvas texture for standalone fidelity
+      const moonCanvas = document.createElement('canvas');
+      moonCanvas.width = 1024;
+      moonCanvas.height = 512;
+      const mctx = moonCanvas.getContext('2d');
+      mctx.fillStyle = '#181d24'; // Basalt dark base
+      mctx.fillRect(0, 0, 1024, 512);
+
+      // Procedural Maria (Dark basalt seas)
+      mctx.fillStyle = '#0f1318';
+      // Oceanus Procellarum / Mare Imbrium
+      mctx.beginPath();
+      mctx.arc(320, 210, 110, 0, Math.PI * 2);
+      mctx.fill();
+      mctx.beginPath();
+      mctx.arc(410, 180, 85, 0, Math.PI * 2);
+      mctx.fill();
+      // Mare Serenitatis / Tranquillitatis
+      mctx.beginPath();
+      mctx.arc(550, 200, 65, 0, Math.PI * 2);
+      mctx.fill();
+      mctx.beginPath();
+      mctx.arc(580, 260, 75, 0, Math.PI * 2);
+      mctx.fill();
+      // Far Side South Pole-Aitken Basin
+      mctx.fillStyle = '#0a0d12';
+      mctx.beginPath();
+      mctx.arc(880, 380, 95, 0, Math.PI * 2);
+      mctx.fill();
+
+      // Craters and rays
+      mctx.strokeStyle = 'rgba(236, 234, 227, 0.4)';
+      mctx.lineWidth = 1;
+      for (let i = 0; i < 280; i++) {
+        const cx = Math.random() * 1024;
+        const cy = Math.random() * 512;
+        const r = 2 + Math.random() * 14;
+        mctx.fillStyle = 'rgba(10, 13, 18, 0.7)';
+        mctx.beginPath();
+        mctx.arc(cx, cy, r, 0, Math.PI * 2);
+        mctx.fill();
+        mctx.stroke();
+      }
+
+      const moonTex = new THREE.CanvasTexture(moonCanvas);
+      const moonGeo = new THREE.SphereGeometry(2.2, 64, 48);
+      const moonMat = new THREE.MeshStandardMaterial({
+        map: moonTex,
+        roughness: 0.94,
+        metalness: 0.04
+      });
+      const moonMesh = new THREE.Mesh(moonGeo, moonMat);
+      globeGroup.add(moonMesh);
+
+      // Atmospheric/vacuum limb rim
+      const limbGeo = new THREE.SphereGeometry(2.22, 64, 48);
+      const limbMat = new THREE.ShaderMaterial({
+        vertexShader: `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec3 vNormal;
+          void main() {
+            float intensity = pow(0.75 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.5);
+            gl_FragColor = vec4(0.55, 0.68, 0.75, 1.0) * intensity * 0.45;
+          }
+        `,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        transparent: true
+      });
+      const limbMesh = new THREE.Mesh(limbGeo, limbMat);
+      globeGroup.add(limbMesh);
+
+      // Coordinate Grid Lines (Equator and Meridian)
+      const eqGeo = new THREE.TorusGeometry(2.205, 0.004, 8, 80);
+      const eqMat = new THREE.MeshBasicMaterial({ color: 0x8EADBF, transparent: true, opacity: 0.35 });
+      const equator = new THREE.Mesh(eqGeo, eqMat);
+      equator.rotateX(Math.PI / 2);
+      globeGroup.add(equator);
+
+      // Mission Markers on the Globe
+      const missionsData = [
+        { id: 'apollo-12', name: 'Apollo 12', lat: -3.01, lon: -23.42, color: 0xE4774F },
+        { id: 'apollo-11', name: 'Apollo 11', lat: 0.67, lon: 23.47, color: 0xE4774F },
+        { id: 'apollo-15', name: 'Apollo 15', lat: 26.13, lon: 3.63, color: 0xE4774F },
+        { id: 'luna-17', name: 'Luna 17', lat: 38.28, lon: -35.00, color: 0x8EADBF },
+        { id: 'chandrayaan-3', name: 'Chandrayaan-3', lat: -69.37, lon: 32.32, color: 0xE4774F },
+        { id: 'change-4', name: "Chang'e 4 (Far Side)", lat: -45.46, lon: 177.59, color: 0x9EAF96 }
+      ];
+
+      function latLonToVector3(lat, lon, radius) {
+        const phi = (90 - lat) * (Math.PI / 180);
+        const theta = (lon + 180) * (Math.PI / 180);
+        const x = -(radius * Math.sin(phi) * Math.cos(theta));
+        const z = radius * Math.sin(phi) * Math.sin(theta);
+        const y = radius * Math.cos(phi);
+        return new THREE.Vector3(x, y, z);
+      }
+
+      missionsData.forEach(m => {
+        const pos = latLonToVector3(m.lat, m.lon, 2.21);
+        const dotGeo = new THREE.SphereGeometry(0.04, 12, 10);
+        const dotMat = new THREE.MeshBasicMaterial({ color: m.color });
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        dot.position.copy(pos);
+        globeGroup.add(dot);
+
+        // Ring
+        const ringGeo = new THREE.RingGeometry(0.055, 0.075, 16);
+        const ringMat = new THREE.MeshBasicMaterial({ color: m.color, side: THREE.DoubleSide });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.copy(pos);
+        ring.lookAt(0, 0, 0);
+        globeGroup.add(ring);
+      });
+
+      // 4. Artifact 3D Model Setup (for Exp 03)
+      const artifactGroup = new THREE.Group();
+      artifactGroup.visible = false;
+      scene.add(artifactGroup);
+
+      // LM Descent Stage 1:1 Scale Model
+      const lmGoldMat = new THREE.MeshStandardMaterial({ color: 0xD4A044, roughness: 0.28, metalness: 0.92 });
+      const lmAluminumMat = new THREE.MeshStandardMaterial({ color: 0x9BA2AD, roughness: 0.35, metalness: 0.88 });
+      const lmDarkMat = new THREE.MeshStandardMaterial({ color: 0x1A1E24, roughness: 0.7, metalness: 0.75 });
+
+      // Octagonal Main Body (4.2m width, 1.7m height)
+      const lmBodyGeo = new THREE.CylinderGeometry(2.1, 2.1, 1.7, 8);
+      const lmBody = new THREE.Mesh(lmBodyGeo, lmGoldMat);
+      lmBody.position.y = 1.35;
+      artifactGroup.add(lmBody);
+
+      // Descent Engine Bell
+      const bellGeo = new THREE.ConeGeometry(0.85, 1.4, 16, 1, true);
+      const bell = new THREE.Mesh(bellGeo, lmDarkMat);
+      bell.position.y = 0.45;
+      artifactGroup.add(bell);
+
+      // 4 Landing Gear Legs & Footpads (9.4m total span)
+      for (let leg = 0; leg < 4; leg++) {
+        const angle = (leg * Math.PI) / 2 + Math.PI / 4;
+        const strutGeo = new THREE.CylinderGeometry(0.06, 0.06, 3.2, 8);
+        strutGeo.rotateZ(Math.PI / 4);
+        const strut = new THREE.Mesh(strutGeo, lmAluminumMat);
+        strut.position.set(Math.cos(angle) * 2.8, 0.95, Math.sin(angle) * 2.8);
+        strut.rotation.y = angle;
+        artifactGroup.add(strut);
+
+        // Footpad
+        const padGeo = new THREE.CylinderGeometry(0.48, 0.48, 0.08, 12);
+        const pad = new THREE.Mesh(padGeo, lmGoldMat);
+        pad.position.set(Math.cos(angle) * 4.4, 0.04, Math.sin(angle) * 4.4);
+        artifactGroup.add(pad);
+      }
+
+      // Egress Ladder on Forward Leg
+      const ladderGeo = new THREE.BoxGeometry(0.35, 2.2, 0.08);
+      const ladder = new THREE.Mesh(ladderGeo, lmAluminumMat);
+      ladder.position.set(2.4, 1.3, 2.4);
+      ladder.rotation.y = Math.PI / 4;
+      artifactGroup.add(ladder);
+
+      // Ground plane grid for scale
+      const groundGrid = new THREE.PolarGridHelper(8, 8, 4, 32, 0x777F85, 0x252C32);
+      groundGrid.position.y = 0;
+      artifactGroup.add(groundGrid);
+
+      // 5. Experiment Navigation & Camera Choreography
+      let activeExp = 1;
+      const navButtons = document.querySelectorAll('.lab-nav-btn');
+      const panels = document.querySelectorAll('.lab-experiment-panel');
+      const railSite = document.getElementById('rail-site');
+      const railCoords = document.getElementById('rail-coords');
+
+      function switchExperiment(expId) {
+        if (activeExp === expId) return;
+        activeExp = expId;
+        playTone(2525, 0.04);
+
+        navButtons.forEach(b => {
+          const isActive = parseInt(b.dataset.exp) === expId;
+          b.classList.toggle('is-active', isActive);
+          b.setAttribute('aria-selected', String(isActive));
+        });
+
+        panels.forEach((p, idx) => {
+          p.classList.toggle('is-active', idx + 1 === expId);
+        });
+
+        // 3D Scene Modes & Camera Splines
+        if (expId === 1) {
+          // Global Observatory: Majestic wide orbital view
+          globeGroup.visible = true;
+          artifactGroup.visible = false;
+          flyCamera(new THREE.Vector3(0, 0.8, 7.5), new THREE.Vector3(0, 0, 0), 1800);
+          railSite.textContent = 'GLOBAL LUNAR RECONNAISSANCE';
+          railCoords.textContent = '0.0000° N, 0.0000° E';
+        } else if (expId === 2) {
+          // Mission Discovery: Regional tilt focused on Apollo 12 (Ocean of Storms)
+          globeGroup.visible = true;
+          artifactGroup.visible = false;
+          flyCamera(new THREE.Vector3(-1.8, -0.4, 4.4), new THREE.Vector3(-0.4, -0.1, 0), 1800);
+          railSite.textContent = 'OCEANUS PROCELLARUM &bull; APOLLO 12';
+          railCoords.textContent = '3.01239° S, 23.42157° W';
+        } else if (expId === 3) {
+          // Artifact Investigation: 1:1 Scale Hardware Plinth
+          globeGroup.visible = false;
+          artifactGroup.visible = true;
+          flyCamera(new THREE.Vector3(5.2, 3.2, 6.5), new THREE.Vector3(0, 1.2, 0), 1800);
+          railSite.textContent = 'INTREPID (LM-6) HARDWARE PLINTH';
+          railCoords.textContent = '1:1 SCALE RECONSTRUCTION';
+        } else if (expId === 4) {
+          // Archival Editorial: Asymmetric documentary horizon
+          globeGroup.visible = true;
+          artifactGroup.visible = false;
+          flyCamera(new THREE.Vector3(1.2, -1.8, 5.0), new THREE.Vector3(0, 0, 0), 1800);
+          railSite.textContent = 'APOLLO 12 ARCHIVAL MONOGRAPH';
+          railCoords.textContent = 'HASSELBLAD ACCESSIONS';
+        } else if (expId === 5) {
+          // Scientific Observatory: Analytical instrument vantage
+          globeGroup.visible = true;
+          artifactGroup.visible = false;
+          flyCamera(new THREE.Vector3(-2.2, 2.0, 5.5), new THREE.Vector3(0, 0, 0), 1800);
+          railSite.textContent = 'LUNAR FIELD RESEARCH OBSERVATORY';
+          railCoords.textContent = 'ALSEP STATION 1 TELEMETRY';
+          drawSeismogram();
+        }
+      }
+
+      navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          switchExperiment(parseInt(btn.dataset.exp));
+        });
+      });
+
+      // Smooth Camera Animation
+      let cameraAnim = null;
+      function flyCamera(toPos, toTarget, duration = 1800) {
+        const startPos = camera.position.clone();
+        const startTarget = controls.target.clone();
+        const startTime = performance.now();
+
+        if (cameraAnim) cancelAnimationFrame(cameraAnim);
+
+        function step(now) {
+          const elapsed = now - startTime;
+          const p = Math.min(1, elapsed / duration);
+          // Quintic ease out
+          const ease = 1 - Math.pow(1 - p, 5);
+
+          camera.position.lerpVectors(startPos, toPos, ease);
+          controls.target.lerpVectors(startTarget, toTarget, ease);
+          controls.update();
+
+          if (p < 1) {
+            cameraAnim = requestAnimationFrame(step);
+          } else {
+            cameraAnim = null;
+          }
+        }
+        cameraAnim = requestAnimationFrame(step);
+      }
+
+      // Experiment 01 Hemisphere Controls
+      const btnNear = document.getElementById('btn-hemi-near');
+      const btnFar = document.getElementById('btn-hemi-far');
+      btnNear?.addEventListener('click', () => {
+        playTone(2475, 0.04);
+        btnNear.classList.add('is-active');
+        btnFar.classList.remove('is-active');
+        flyCamera(new THREE.Vector3(0, 0.5, 7.5), new THREE.Vector3(0, 0, 0), 1600);
+      });
+      btnFar?.addEventListener('click', () => {
+        playTone(2475, 0.04);
+        btnFar.classList.add('is-active');
+        btnNear.classList.remove('is-active');
+        flyCamera(new THREE.Vector3(0, 0.5, -7.5), new THREE.Vector3(0, 0, 0), 1600);
+      });
+
+      // Experiment 02 Mission Selection
+      const missionButtons = document.querySelectorAll('.mission-select-btn');
+      const missionsRegistry = {
+        'apollo-12': {
+          title: 'Statio Cognitum',
+          coords: '3.01239° S, 23.42157° W &bull; OCEANUS PROCELLARUM',
+          narrative: 'Humanity’s first precision touchdown. Pete Conrad and Alan Bean landed Intrepid 163m from the Surveyor 3 robot, recovering its TV camera after 31 months in vacuum.',
+          img: '/assets/photography/surveyor_3_rendezvous/AS12-48-7134_Conrad_Surveyor_3_Intrepid_Background.jpg',
+          captionId: 'AS12-48-7134',
+          camPos: new THREE.Vector3(-1.8, -0.4, 4.4)
+        },
+        'apollo-11': {
+          title: 'Tranquility Base',
+          coords: '0.67408° N, 23.47297° E &bull; MARE TRANQUILLITATIS',
+          narrative: 'First crewed lunar landing on July 20, 1969. Neil Armstrong and Buzz Aldrin deployed the Early Apollo Scientific Experiments Package (EASEP) and LRRR retroreflector.',
+          img: '/assets/photography/intrepid_lm/AS12-47-6988_Flag_LM_Shadow_Footprints.jpg',
+          captionId: 'AS11-40-5875',
+          camPos: new THREE.Vector3(1.5, 0.2, 4.8)
+        },
+        'chandrayaan-3': {
+          title: 'Statio Shiv Shakti',
+          coords: '69.373° S, 32.319° E &bull; SOUTHERN POLAR HIGHLANDS',
+          narrative: 'Historic high-latitude southern landing by ISRO on August 23, 2023. Pragyan rover embossed the Ashoka Lion Capital and ISRO insignia into polar regolith.',
+          img: '/assets/photography/intrepid_lm/AS12-51-7507_Intrepid_Descent_Stage_Landing_Config.jpg',
+          captionId: 'ISRO-CH3-PRAGYAN-01',
+          camPos: new THREE.Vector3(1.2, -3.8, 3.8)
+        },
+        'change-4': {
+          title: 'Von Kármán Basin',
+          coords: '45.4561° S, 177.5885° E &bull; SOUTH POLE-AITKEN (FAR SIDE)',
+          narrative: 'First touchdown on the lunar far side on January 3, 2019. Communicating via the Queqiao relay satellite, Yutu-2 became the longest-operating rover in history.',
+          img: '/assets/photography/alsep_deployment/AS12-47-6918_Deployed_ALSEP_Array.jpg',
+          captionId: 'CNSA-CE4-YUTU2-04',
+          camPos: new THREE.Vector3(-0.8, -2.5, -4.8)
+        }
+      };
+
+      missionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          playTone(2525, 0.03);
+          missionButtons.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          const mKey = btn.dataset.mission;
+          const data = missionsRegistry[mKey];
+          if (data) {
+            document.getElementById('exp02-title').textContent = data.title;
+            document.getElementById('exp02-coords').innerHTML = data.coords;
+            document.getElementById('exp02-narrative').textContent = data.narrative;
+            document.getElementById('exp02-img').src = data.img;
+            document.getElementById('exp02-caption-id').textContent = data.captionId;
+            flyCamera(data.camPos, new THREE.Vector3(0, 0, 0), 1600);
+          }
+        });
+      });
+
+      // Regional zoom button
+      document.getElementById('btn-regional-zoom')?.addEventListener('click', () => {
+        playTone(2475, 0.05);
+        flyCamera(new THREE.Vector3(-0.9, -0.2, 2.7), new THREE.Vector3(-0.4, -0.1, 0), 1400);
+      });
+
+      // Experiment 03 Controls
+      const btnArtPbr = document.getElementById('btn-art-pbr');
+      const btnArtWire = document.getElementById('btn-art-wire');
+      const btnArtReset = document.getElementById('btn-art-reset');
+      btnArtPbr?.addEventListener('click', () => {
+        btnArtPbr.classList.add('is-active');
+        btnArtWire.classList.remove('is-active');
+        artifactGroup.traverse(c => { if (c.isMesh) c.material.wireframe = false; });
+      });
+      btnArtWire?.addEventListener('click', () => {
+        btnArtWire.classList.add('is-active');
+        btnArtPbr.classList.remove('is-active');
+        artifactGroup.traverse(c => { if (c.isMesh) c.material.wireframe = true; });
+      });
+      btnArtReset?.addEventListener('click', () => {
+        flyCamera(new THREE.Vector3(5.2, 3.2, 6.5), new THREE.Vector3(0, 1.2, 0), 1200);
+      });
+
+      // Callout focus
+      document.querySelectorAll('.callout-item').forEach(item => {
+        item.addEventListener('click', () => {
+          playTone(2525, 0.03);
+          document.querySelectorAll('.callout-item').forEach(i => i.classList.remove('is-active'));
+          item.classList.add('is-active');
+          const focus = item.dataset.focus;
+          if (focus === 'descent-engine') flyCamera(new THREE.Vector3(0, 0.8, 3.5), new THREE.Vector3(0, 0.5, 0), 1200);
+          if (focus === 'mesa') flyCamera(new THREE.Vector3(-2.8, 2.2, 2.5), new THREE.Vector3(-1.2, 1.4, 0.8), 1200);
+          if (focus === 'ladder') flyCamera(new THREE.Vector3(3.2, 1.8, 3.2), new THREE.Vector3(2.4, 1.3, 2.4), 1200);
+          if (focus === 'footpad') flyCamera(new THREE.Vector3(4.2, 0.6, 4.2), new THREE.Vector3(4.4, 0.04, 4.4), 1200);
+        });
+      });
+
+      // Experiment 05 Seismogram Drawing
+      function drawSeismogram() {
+        const c = document.getElementById('seismo-canvas');
+        if (!c) return;
+        c.width = c.clientWidth * window.devicePixelRatio || 400;
+        c.height = c.clientHeight * window.devicePixelRatio || 120;
+        const ctx = c.getContext('2d');
+        const w = c.width;
+        const h = c.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Seismograph grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 1;
+        for (let y = 0; y < h; y += 24) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+
+        // Baseline
+        const midY = h / 2;
+        ctx.strokeStyle = '#8EADBF';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, midY);
+
+        for (let x = 0; x < w; x++) {
+          let amp = 0;
+          if (x > w * 0.25) {
+            const decay = Math.exp(-(x - w * 0.25) / (w * 0.45));
+            amp = Math.sin((x - w * 0.25) * 0.18) * 38 * decay;
+            amp += (Math.random() - 0.5) * 6 * decay;
+          } else {
+            amp = (Math.random() - 0.5) * 2;
+          }
+          ctx.lineTo(x, midY + amp);
+        }
+        ctx.stroke();
+
+        // Impact marker
+        ctx.fillStyle = '#E4774F';
+        ctx.fillRect(w * 0.25, 10, 2, h - 20);
+        ctx.font = '10px monospace';
+        ctx.fillText('LM ASCENT STAGE IMPACT', w * 0.25 + 6, 20);
+      }
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        if (activeExp === 5) drawSeismogram();
+      });
+
+      // Main Render Loop
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+
+        // Gentle globe rotation when in Global Observatory and idle
+        if (activeExp === 1 && !controls.state == -1) {
+          globeGroup.rotation.y += 0.0008;
+        }
+
+        renderer.render(scene, camera);
+      }
+
+      animate();
+    })();
+  </script>
+</body>
+</html>

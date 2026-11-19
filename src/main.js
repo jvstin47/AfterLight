@@ -175,6 +175,38 @@ async function init() {
     modal.toggle();
   });
 
+  eventBus.on('ui:expeditions:open', async (siteId) => {
+    const modal = await getExpeditionsModal();
+    modal.open();
+    if (siteId) {
+      modal.openSite(siteId);
+    }
+  });
+
+  eventBus.on('ui:expeditions:open-flags', async () => {
+    const modal = await getExpeditionsModal();
+    modal.open();
+    modal.switchToMode('flags');
+  });
+
+  eventBus.on('ui:expeditions:open-science', async () => {
+    const modal = await getExpeditionsModal();
+    modal.open();
+    modal.switchToMode('science');
+  });
+
+  eventBus.on('ui:expeditions:open-geology', async () => {
+    const modal = await getExpeditionsModal();
+    modal.open();
+    modal.switchToMode('geology');
+  });
+
+  eventBus.on('ui:expeditions:close', () => {
+    if (expeditionsModalInstance) {
+      expeditionsModalInstance.close();
+    }
+  });
+
   eventBus.on('dossier:closed', () => {
     if (stateMachine.current === STATES.INSPECTION) {
       stateMachine.transitionTo(STATES.ENVIRONMENT);
