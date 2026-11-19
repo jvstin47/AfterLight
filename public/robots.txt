@@ -1,0 +1,7 @@
+# AFTERLIGHT Lunar Archive Robots File
+User-agent: *
+Allow: /
+Disallow: /fernhollow
+Disallow: /tidewell
+
+Sitemap: https://afterlight.vercel.app/sitemap.xml

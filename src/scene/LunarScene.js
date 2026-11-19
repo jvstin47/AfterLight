@@ -154,6 +154,38 @@ export class LunarScene {
     this.onWindowResize = this.onWindowResize.bind(this);
     window.addEventListener('resize', this.onWindowResize);
 
+    // WebGL Context Loss & Restoration
+    this.onContextLost = (e) => {
+      e.preventDefault();
+      logger.warn('[LunarScene] WebGL context lost by GPU! Pausing render loop.');
+      this.stop();
+      if (typeof errorBoundary !== 'undefined' && errorBoundary.handleError) {
+        errorBoundary.handleError(new Error('WebGL context lost. Device GPU reset.'), 'WebGLContextLost');
+      }
+    };
+    this.onContextRestored = () => {
+      logger.info('[LunarScene] WebGL context restored. Re-initializing render loop.');
+      this.start();
+    };
+    this.canvas.addEventListener('webglcontextlost', this.onContextLost, false);
+    this.canvas.addEventListener('webglcontextrestored', this.onContextRestored, false);
+
+    // Page Visibility API: Throttle animation when tab is inactive
+    this.onVisibilityChange = () => {
+      if (document.hidden) {
+        if (this.isRunning) {
+          logger.debug('[LunarScene] Tab backgrounded. Halting animation loop to conserve GPU/battery.');
+          this.stop();
+        }
+      } else {
+        if (!this.isRunning) {
+          logger.debug('[LunarScene] Tab active. Resuming render loop.');
+          this.start();
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
+
     // Listen for preset change events
     this.unbindPresetChange = eventBus.on('camera:preset', (presetKey) => {
       this.cameraController.setPreset(presetKey);
@@ -352,6 +384,9 @@ export class LunarScene {
   dispose() {
     this.stop();
     window.removeEventListener('resize', this.onWindowResize);
+    this.canvas.removeEventListener('webglcontextlost', this.onContextLost);
+    this.canvas.removeEventListener('webglcontextrestored', this.onContextRestored);
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
     this.canvas.removeEventListener('pointerdown', this.onPointerDown);
     this.canvas.removeEventListener('pointerup', this.onPointerUp);
     this.canvas.removeEventListener('pointermove', this.onPointerMove);

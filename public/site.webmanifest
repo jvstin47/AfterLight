@@ -1,0 +1,21 @@
+{
+  "name": "AFTERLIGHT — The Machines That Stayed Behind",
+  "short_name": "AFTERLIGHT",
+  "description": "An immersive digital archive documenting humanity's exploration of the Moon.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07090C",
+  "theme_color": "#07090C",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
