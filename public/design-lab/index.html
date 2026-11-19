@@ -767,7 +767,281 @@
       font-weight: 500;
     }
 
+    /* ==========================================================================
+       INTERACTIVE SCROLL & CLICK CONTROLS (DESIGN SYSTEM 02)
+       ========================================================================== */
+    /* Vertical Orbital Chapter Scroller Rail (Right) */
+    .lunar-scroll-rail {
+      position: absolute;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 40;
+      pointer-events: auto;
+    }
+
+    .scroll-rail-track {
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      left: 7px;
+      width: 1px;
+      background: var(--color-hairline);
+      z-index: 1;
+    }
+
+    .scroll-chapter-node {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      z-index: 2;
+      opacity: 0.45;
+      transition: all 0.25s var(--ease-cinematic);
+    }
+
+    .scroll-chapter-node:hover,
+    .scroll-chapter-node.is-active {
+      opacity: 1;
+    }
+
+    .chapter-dot {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 1px solid var(--color-titanium);
+      background: var(--color-obsidian);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s var(--ease-cinematic);
+    }
+
+    .chapter-dot::after {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: transparent;
+      transition: all 0.25s var(--ease-cinematic);
+    }
+
+    .scroll-chapter-node.is-active .chapter-dot {
+      border-color: var(--color-signal-orange);
+      box-shadow: 0 0 12px rgba(228, 119, 79, 0.45);
+    }
+
+    .scroll-chapter-node.is-active .chapter-dot::after {
+      background: var(--color-signal-orange);
+    }
+
+    .chapter-label {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+      color: var(--color-dust-grey);
+      white-space: nowrap;
+      transform: translateX(-4px);
+      transition: all 0.25s ease;
+    }
+
+    .scroll-chapter-node.is-active .chapter-label {
+      color: var(--color-archive-ivory);
+      transform: translateX(0);
+      font-weight: 500;
+    }
+
+    /* Bottom-Center Interactive Scroll Hint */
+    .scroll-hint-bar {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 16px;
+      background: rgba(12, 16, 21, 0.85);
+      border: 1px solid var(--color-hairline);
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--color-dust-grey);
+      pointer-events: auto;
+      z-index: 35;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: opacity 0.3s ease;
+    }
+
+    .scroll-hint-icon {
+      color: var(--color-signal-orange);
+      animation: pulseUpDown 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulseUpDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(3px); }
+    }
+
+    /* Surface Click Raycast Toast */
+    .surface-inspector-toast {
+      position: absolute;
+      bottom: 52px;
+      left: 36px;
+      display: none;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      background: rgba(10, 14, 20, 0.95);
+      border: 1px solid var(--color-hairline-bright);
+      border-left: 3px solid var(--color-signal-orange);
+      border-radius: 6px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      z-index: 45;
+      pointer-events: auto;
+      animation: toastSlideUp 0.3s var(--ease-cinematic) forwards;
+    }
+
+    @keyframes toastSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast-target-icon {
+      font-size: 18px;
+      color: var(--color-signal-orange);
+      line-height: 1;
+    }
+
+    .toast-body {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .toast-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--color-archive-ivory);
+      font-weight: 500;
+    }
+
+    .toast-coords {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--color-orbital-blue);
+    }
+
+    .toast-glide-btn {
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--color-signal-orange);
+      background: rgba(228, 119, 79, 0.12);
+      color: var(--color-signal-orange);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .toast-glide-btn:hover {
+      background: var(--color-signal-orange);
+      color: #fff;
+    }
+
+    .toast-close-btn {
+      background: none;
+      border: none;
+      color: var(--color-titanium);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }
+
+    .toast-close-btn:hover {
+      color: var(--color-archive-ivory);
+    }
+
+    /* Floating Marker Hover Tooltip */
+    .marker-hover-tooltip {
+      position: absolute;
+      display: none;
+      padding: 5px 10px;
+      background: rgba(7, 9, 12, 0.94);
+      border: 1px solid var(--color-signal-orange);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--color-archive-ivory);
+      pointer-events: none;
+      z-index: 50;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      transform: translate(12px, -50%);
+    }
+
+    /* Solar Terminator Scrubber Widget */
+    .solar-terminator-widget {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: auto;
+    }
+
+    .sun-range-slider {
+      -webkit-appearance: none;
+      width: 90px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .sun-range-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-signal-orange);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(228, 119, 79, 0.6);
+    }
+
+    .widget-label {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--color-titanium);
+    }
+
+    .widget-val {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--color-orbital-blue);
+      min-width: 55px;
+    }
+
     @media (max-width: 900px) {
+      .lunar-scroll-rail {
+        display: none;
+      }
+      .scroll-hint-bar {
+        bottom: 44px;
+        font-size: 8px;
+        padding: 4px 10px;
+      }
       .exp04-editorial-container {
         grid-template-columns: 1fr;
         gap: 32px;
@@ -779,7 +1053,292 @@
         overflow-y: auto;
       }
     }
-  </style>
+  
+    /* ==========================================================================
+       SEAMLESS MACRO-TO-MICRO DIVE & 1:1 METRIC HARDWARE HUD
+       ========================================================================== */
+    .dive-telemetry-hud {
+      position: absolute;
+      top: 36px;
+      right: 36px;
+      width: min(340px, 86vw);
+      background: rgba(7, 9, 12, 0.92);
+      border: 1px solid var(--color-hairline-bright);
+      border-radius: 8px;
+      padding: 20px;
+      backdrop-filter: blur(16px);
+      pointer-events: auto;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(-12px);
+      transition: opacity 0.4s var(--ease-cinematic), transform 0.4s var(--ease-cinematic);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      display: none;
+    }
+
+    .dive-telemetry-hud.is-active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .dive-hud-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      color: var(--color-titanium);
+      letter-spacing: 0.12em;
+    }
+
+    .dive-phase-badge {
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      background: rgba(228, 119, 79, 0.18);
+      border: 1px solid var(--color-signal-orange);
+      color: var(--color-signal-orange);
+      transition: all 0.3s;
+    }
+
+    .dive-phase-badge.touchdown {
+      background: rgba(158, 175, 150, 0.2);
+      border-color: var(--color-mineral-green);
+      color: var(--color-mineral-green);
+    }
+
+    .dive-site-name {
+      font-family: var(--font-display);
+      font-size: 26px;
+      line-height: 1.1;
+      color: var(--color-archive-ivory);
+      margin-bottom: 6px;
+    }
+
+    .dive-coords-row {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-orbital-blue);
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+
+    .dive-telemetry-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(20, 25, 30, 0.7);
+      border: 1px solid var(--color-hairline);
+      border-radius: 4px;
+    }
+
+    .dive-tele-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .dive-tele-label {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      color: var(--color-titanium);
+      letter-spacing: 0.1em;
+    }
+
+    .dive-tele-val {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-archive-ivory);
+      letter-spacing: 0.04em;
+    }
+
+    .dive-progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .dive-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--color-signal-orange);
+      transition: width 0.1s linear, background-color 0.3s;
+    }
+
+    .dive-hud-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-ascend-orbit {
+      flex: 1;
+      background: var(--color-regolith);
+      border: 1px solid var(--color-hairline-bright);
+      color: var(--color-archive-ivory);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 9px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-ascend-orbit:hover {
+      background: var(--color-signal-orange);
+      color: var(--color-obsidian);
+      border-color: var(--color-signal-orange);
+    }
+
+    /* 1:1 Surface Stage Global Overlay Bar */
+    .surface-1to1-hud-bar {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(12, 16, 21, 0.94);
+      border: 1px solid var(--color-hairline-bright);
+      padding: 6px 16px;
+      border-radius: 999px;
+      z-index: 45;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-cinematic);
+    }
+
+    .surface-1to1-hud-bar.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .surface-mission-pills {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .surface-pill-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--color-titanium);
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .surface-pill-btn:hover {
+      color: var(--color-archive-ivory);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .surface-pill-btn.is-active {
+      background: rgba(228, 119, 79, 0.18);
+      border-color: var(--color-signal-orange);
+      color: var(--color-signal-orange);
+      font-weight: 600;
+    }
+
+    /* 1:1 Metric Scale Ruler Widget */
+    .metric-scale-ruler {
+      position: absolute;
+      bottom: 24px;
+      right: 36px;
+      background: rgba(7, 9, 12, 0.88);
+      border: 1px solid var(--color-hairline-bright);
+      border-radius: 6px;
+      padding: 8px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s var(--ease-cinematic);
+    }
+
+    .metric-scale-ruler.is-active {
+      opacity: 1;
+    }
+
+    .metric-scale-graphic {
+      width: 120px;
+      height: 8px;
+      border-bottom: 2px solid var(--color-archive-ivory);
+      border-left: 2px solid var(--color-archive-ivory);
+      border-right: 2px solid var(--color-archive-ivory);
+      position: relative;
+    }
+
+    .metric-scale-notch {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      height: 5px;
+      width: 1px;
+      background: var(--color-archive-ivory);
+    }
+
+    .metric-scale-labels {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 8px;
+      color: var(--color-titanium);
+      letter-spacing: 0.08em;
+    }
+
+    .metric-scale-title {
+      font-family: var(--font-mono);
+      font-size: 8.5px;
+      color: var(--color-orbital-blue);
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 860px) {
+      .surface-1to1-hud-bar {
+        width: 92vw;
+        overflow-x: auto;
+        justify-content: flex-start;
+        border-radius: 8px;
+        top: 12px;
+        padding: 6px 10px;
+      }
+      .metric-scale-ruler {
+        right: 12px;
+        bottom: 50px;
+      }
+    }
+
+</style>
 </head>
 <body>
 
@@ -902,7 +1461,7 @@
           </div>
         </div>
         <button class="btn-action-regional" id="btn-regional-zoom">
-          <span>INVESTIGATE REGIONAL TERRAIN</span>
+          <span>DIVE TO 1:1 HARDWARE SURFACE</span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg>
         </button>
       </article>
@@ -1108,7 +1667,125 @@
       </div>
     </section>
 
-  </main>
+  
+    <!-- Seamless Macro-to-Micro Descent Telemetry HUD -->
+    <aside class="dive-telemetry-hud" id="dive-telemetry-hud" aria-label="Descent Trajectory Telemetry">
+      <div class="dive-hud-header">
+        <span>DESCENT TELEMETRY &bull; TRANSIT</span>
+        <span class="dive-phase-badge" id="dive-phase-badge">ORBITAL BRAKING</span>
+      </div>
+      <div class="dive-site-name" id="dive-site-name">Tranquility Base</div>
+      <div class="dive-coords-row" id="dive-coords-row">0.67408° N, 23.47297° E &bull; APOLLO 11</div>
+      
+      <div class="dive-telemetry-grid">
+        <div class="dive-tele-item">
+          <span class="dive-tele-label">ORBITAL ALTITUDE</span>
+          <span class="dive-tele-val" id="tele-alt">60,000 KM</span>
+        </div>
+        <div class="dive-tele-item">
+          <span class="dive-tele-label">DESCENT VELOCITY</span>
+          <span class="dive-tele-val" id="tele-vel">1,680 M/S</span>
+        </div>
+        <div class="dive-tele-item">
+          <span class="dive-tele-label">DOWN-RANGE PITCH</span>
+          <span class="dive-tele-val" id="tele-pitch">14.2° NOMINAL</span>
+        </div>
+        <div class="dive-tele-item">
+          <span class="dive-tele-label">SCALE FACTOR</span>
+          <span class="dive-tele-val" id="tele-scale">PLANETARY</span>
+        </div>
+      </div>
+
+      <div class="dive-progress-track">
+        <div class="dive-progress-bar" id="dive-progress-bar"></div>
+      </div>
+
+      <div class="dive-hud-actions">
+        <button class="btn-ascend-orbit" id="btn-dive-ascend">
+          <span>▲ ASCEND TO LUNAR ORBIT [ESC]</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- 1:1 Scale Hardware Surface Mission Bar -->
+    <nav class="surface-1to1-hud-bar" id="surface-1to1-hud-bar" aria-label="1:1 Scale Mission Inspector">
+      <button class="btn-ascend-orbit" id="btn-surface-ascend" style="padding: 4px 10px; font-size: 9px; margin-right: 6px;">
+        <span>▲ ORBIT [ESC]</span>
+      </button>
+      <div class="surface-mission-pills" id="surface-mission-pills">
+        <button class="surface-pill-btn is-active" data-mission="apollo-11">APOLLO 11</button>
+        <button class="surface-pill-btn" data-mission="apollo-12">APOLLO 12</button>
+        <button class="surface-pill-btn" data-mission="apollo-15">APOLLO 15</button>
+        <button class="surface-pill-btn" data-mission="change-4">CHANG'E 4</button>
+        <button class="surface-pill-btn" data-mission="chandrayaan-3">CHANDRAYAAN-3</button>
+        <button class="surface-pill-btn" data-mission="luna-17">LUNA 17</button>
+        <button class="surface-pill-btn" data-mission="slim">SLIM</button>
+      </div>
+    </nav>
+
+    <!-- 1:1 Metric Scale Ruler -->
+    <div class="metric-scale-ruler" id="metric-scale-ruler" aria-hidden="true">
+      <div class="metric-scale-labels">
+        <span>0M</span>
+        <span>1.0M</span>
+        <span>2.0M</span>
+      </div>
+      <div class="metric-scale-graphic">
+        <div class="metric-scale-notch"></div>
+      </div>
+      <div class="metric-scale-title">1:1 TRUE METRIC SCALE</div>
+    </div>
+
+</main>
+
+  <!-- Vertical Orbital Chapter Scroller Rail (Right) -->
+  <aside class="lunar-scroll-rail" id="lunar-scroll-rail" aria-label="Orbital Chapters">
+    <div class="scroll-rail-track"></div>
+    <div class="scroll-chapter-node is-active" data-chapter="0" title="High Lunar Orbit">
+      <span class="chapter-dot"></span>
+      <span class="chapter-label">01 HIGH ORBIT</span>
+    </div>
+    <div class="scroll-chapter-node" data-chapter="1" title="Mare Tranquillitatis (Apollo 11)">
+      <span class="chapter-dot"></span>
+      <span class="chapter-label">02 APOLLO 11</span>
+    </div>
+    <div class="scroll-chapter-node" data-chapter="2" title="Oceanus Procellarum (Apollo 12)">
+      <span class="chapter-dot"></span>
+      <span class="chapter-label">03 APOLLO 12</span>
+    </div>
+    <div class="scroll-chapter-node" data-chapter="3" title="Far Side Von Kármán (Chang'e 4)">
+      <span class="chapter-dot"></span>
+      <span class="chapter-label">04 FAR SIDE (CE-4)</span>
+    </div>
+    <div class="scroll-chapter-node" data-chapter="4" title="South Pole Highlands (Chandrayaan-3)">
+      <span class="chapter-dot"></span>
+      <span class="chapter-label">05 SOUTH POLE (CH-3)</span>
+    </div>
+    <div class="scroll-chapter-node" data-chapter="5" title="Hardware Descent Inspection">
+      <span class="chapter-dot"></span>
+      <span class="chapter-label">06 HARDWARE DESCENT</span>
+    </div>
+  </aside>
+
+  <!-- Interactive Scroll / Drag Hint Bar -->
+  <div class="scroll-hint-bar" id="scroll-hint-bar">
+    <span class="scroll-hint-icon">↓</span>
+    <span>SCROLL OR DRAG TO EXPLORE ORBIT &bull; CLICK ANY CRATER OR SITE TO INSPECT</span>
+  </div>
+
+  <!-- Surface Click Raycast Inspector Toast -->
+  <div class="surface-inspector-toast" id="surface-inspector-toast">
+    <div class="toast-target-icon">⌖</div>
+    <div class="toast-body">
+      <div class="toast-title" id="toast-title">SELENOGRAPHIC RETICLE ACQUIRED</div>
+      <div class="toast-coords" id="toast-coords">0.0000° N, 0.0000° E &bull; ELEVATION: 0.0 KM</div>
+    </div>
+    <button class="toast-glide-btn" id="toast-glide-btn">GLIDE CAMERA HERE &rarr;</button>
+    <button class="toast-close-btn" id="toast-close-btn" aria-label="Dismiss Reticle">&times;</button>
+  </div>
+
+  <!-- Floating Marker Hover Tooltip -->
+  <div class="marker-hover-tooltip" id="marker-hover-tooltip"></div>
 
   <!-- Bottom Perimeter Telemetry Rail -->
   <footer class="lab-telemetry-rail">
@@ -1117,8 +1794,13 @@
       <span>COORDINATES: <strong class="telemetry-highlight" id="rail-coords">0.0000° N, 0.0000° E</strong></span>
     </div>
     <div class="rail-right">
-      <span>AZIMUTH: <strong class="telemetry-highlight" id="rail-azimuth">105.2° ESE</strong></span>
-      <span>SUN ELEVATION: <strong class="telemetry-highlight" id="rail-sun">12.4°</strong></span>
+      <!-- Solar Terminator Scrubber -->
+      <div class="solar-terminator-widget">
+        <span class="widget-label">TERMINATOR:</span>
+        <input type="range" id="sun-slider" min="0" max="360" value="105" class="sun-range-slider" aria-label="Sunlight Azimuth Dial" />
+        <span id="sun-angle-val" class="widget-val">105° ESE</span>
+        <button id="btn-sun-auto" class="ctrl-pill" style="padding: 2px 8px; font-size: 8.5px;" title="Toggle automatic sunlight orbit">ORBIT SUN</button>
+      </div>
       <span>SYSTEM: <strong>DS-02 ACTIVE</strong></span>
     </div>
   </footer>
@@ -1249,12 +1931,12 @@
 
       // Mission Markers on the Globe
       const missionsData = [
-        { id: 'apollo-12', name: 'Apollo 12', lat: -3.01, lon: -23.42, color: 0xE4774F },
-        { id: 'apollo-11', name: 'Apollo 11', lat: 0.67, lon: 23.47, color: 0xE4774F },
-        { id: 'apollo-15', name: 'Apollo 15', lat: 26.13, lon: 3.63, color: 0xE4774F },
-        { id: 'luna-17', name: 'Luna 17', lat: 38.28, lon: -35.00, color: 0x8EADBF },
-        { id: 'chandrayaan-3', name: 'Chandrayaan-3', lat: -69.37, lon: 32.32, color: 0xE4774F },
-        { id: 'change-4', name: "Chang'e 4 (Far Side)", lat: -45.46, lon: 177.59, color: 0x9EAF96 }
+        { id: 'apollo-12', name: 'Apollo 12 (Statio Cognitum)', lat: -3.01, lon: -23.42, color: 0xE4774F, region: 'Oceanus Procellarum' },
+        { id: 'apollo-11', name: 'Apollo 11 (Tranquility Base)', lat: 0.67, lon: 23.47, color: 0xE4774F, region: 'Mare Tranquillitatis' },
+        { id: 'apollo-15', name: 'Apollo 15 (Hadley Rille)', lat: 26.13, lon: 3.63, color: 0xE4774F, region: 'Palus Putredinis' },
+        { id: 'luna-17', name: 'Luna 17 (Lunokhod 1)', lat: 38.28, lon: -35.00, color: 0x8EADBF, region: 'Mare Imbrium' },
+        { id: 'chandrayaan-3', name: 'Chandrayaan-3 (Statio Shiv Shakti)', lat: -69.37, lon: 32.32, color: 0xE4774F, region: 'Southern Polar Highlands' },
+        { id: 'change-4', name: "Chang'e 4 (Von Kármán Far Side)", lat: -45.46, lon: 177.59, color: 0x9EAF96, region: 'South Pole-Aitken Basin' }
       ];
 
       function latLonToVector3(lat, lon, radius) {
@@ -1266,73 +1948,984 @@
         return new THREE.Vector3(x, y, z);
       }
 
+      const markerInteractiveList = [];
+
       missionsData.forEach(m => {
         const pos = latLonToVector3(m.lat, m.lon, 2.21);
-        const dotGeo = new THREE.SphereGeometry(0.04, 12, 10);
+        const dotGeo = new THREE.SphereGeometry(0.045, 16, 12);
         const dotMat = new THREE.MeshBasicMaterial({ color: m.color });
         const dot = new THREE.Mesh(dotGeo, dotMat);
         dot.position.copy(pos);
+        dot.userData = m;
         globeGroup.add(dot);
 
         // Ring
-        const ringGeo = new THREE.RingGeometry(0.055, 0.075, 16);
+        const ringGeo = new THREE.RingGeometry(0.06, 0.082, 24);
         const ringMat = new THREE.MeshBasicMaterial({ color: m.color, side: THREE.DoubleSide });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.position.copy(pos);
         ring.lookAt(0, 0, 0);
         globeGroup.add(ring);
+
+        markerInteractiveList.push({ ...m, dot, ring, basePos: pos.clone() });
       });
 
-      // 4. Artifact 3D Model Setup (for Exp 03)
-      const artifactGroup = new THREE.Group();
-      artifactGroup.visible = false;
-      scene.add(artifactGroup);
+      // 3D Click Reticle Beacon on Lunar Surface
+      const reticleGeo = new THREE.RingGeometry(0.04, 0.07, 32);
+      const reticleMat = new THREE.MeshBasicMaterial({ color: 0xE4774F, side: THREE.DoubleSide, transparent: true, opacity: 0 });
+      const reticleMesh = new THREE.Mesh(reticleGeo, reticleMat);
+      reticleMesh.visible = false;
+      globeGroup.add(reticleMesh);
 
-      // LM Descent Stage 1:1 Scale Model
-      const lmGoldMat = new THREE.MeshStandardMaterial({ color: 0xD4A044, roughness: 0.28, metalness: 0.92 });
-      const lmAluminumMat = new THREE.MeshStandardMaterial({ color: 0x9BA2AD, roughness: 0.35, metalness: 0.88 });
-      const lmDarkMat = new THREE.MeshStandardMaterial({ color: 0x1A1E24, roughness: 0.7, metalness: 0.75 });
+      let reticleAnim = null;
+      function spawnSurfaceReticle(pos, normal) {
+        reticleMesh.position.copy(pos).addScaledVector(normal, 0.015);
+        reticleMesh.lookAt(pos.clone().add(normal));
+        reticleMesh.visible = true;
+        reticleMesh.scale.set(1, 1, 1);
+        reticleMat.opacity = 1.0;
 
-      // Octagonal Main Body (4.2m width, 1.7m height)
-      const lmBodyGeo = new THREE.CylinderGeometry(2.1, 2.1, 1.7, 8);
-      const lmBody = new THREE.Mesh(lmBodyGeo, lmGoldMat);
-      lmBody.position.y = 1.35;
-      artifactGroup.add(lmBody);
+        let startTime = performance.now();
+        if (reticleAnim) cancelAnimationFrame(reticleAnim);
 
-      // Descent Engine Bell
-      const bellGeo = new THREE.ConeGeometry(0.85, 1.4, 16, 1, true);
-      const bell = new THREE.Mesh(bellGeo, lmDarkMat);
-      bell.position.y = 0.45;
-      artifactGroup.add(bell);
-
-      // 4 Landing Gear Legs & Footpads (9.4m total span)
-      for (let leg = 0; leg < 4; leg++) {
-        const angle = (leg * Math.PI) / 2 + Math.PI / 4;
-        const strutGeo = new THREE.CylinderGeometry(0.06, 0.06, 3.2, 8);
-        strutGeo.rotateZ(Math.PI / 4);
-        const strut = new THREE.Mesh(strutGeo, lmAluminumMat);
-        strut.position.set(Math.cos(angle) * 2.8, 0.95, Math.sin(angle) * 2.8);
-        strut.rotation.y = angle;
-        artifactGroup.add(strut);
-
-        // Footpad
-        const padGeo = new THREE.CylinderGeometry(0.48, 0.48, 0.08, 12);
-        const pad = new THREE.Mesh(padGeo, lmGoldMat);
-        pad.position.set(Math.cos(angle) * 4.4, 0.04, Math.sin(angle) * 4.4);
-        artifactGroup.add(pad);
+        function pulse(now) {
+          const elapsed = (now - startTime) / 1000;
+          const scale = 1 + elapsed * 1.8;
+          reticleMesh.scale.set(scale, scale, 1);
+          reticleMat.opacity = Math.max(0, 1 - elapsed * 1.2);
+          if (elapsed < 0.9) {
+            reticleAnim = requestAnimationFrame(pulse);
+          } else {
+            reticleAnim = null;
+          }
+        }
+        reticleAnim = requestAnimationFrame(pulse);
       }
 
-      // Egress Ladder on Forward Leg
-      const ladderGeo = new THREE.BoxGeometry(0.35, 2.2, 0.08);
-      const ladder = new THREE.Mesh(ladderGeo, lmAluminumMat);
-      ladder.position.set(2.4, 1.3, 2.4);
-      ladder.rotation.y = Math.PI / 4;
-      artifactGroup.add(ladder);
+      // ======================================================================
+      // 4. COMPREHENSIVE 1:1 TRUE METRIC SCALE HARDWARE ENGINE
+      // Authentic physical proportions for Apollo 11, Apollo 12, Apollo 15,
+      // Chang'e 4, Chandrayaan-3, Luna 17, and SLIM.
+      // ======================================================================
+      const surfaceGroup = new THREE.Group();
+      surfaceGroup.visible = false;
+      scene.add(surfaceGroup);
 
-      // Ground plane grid for scale
-      const groundGrid = new THREE.PolarGridHelper(8, 8, 4, 32, 0x777F85, 0x252C32);
-      groundGrid.position.y = 0;
-      artifactGroup.add(groundGrid);
+      // Materials Library
+      const matKaptonGold = new THREE.MeshStandardMaterial({
+        color: 0xD4A044,
+        roughness: 0.25,
+        metalness: 0.92,
+        name: 'kapton-gold'
+      });
+      const matKaptonAmber = new THREE.MeshStandardMaterial({
+        color: 0xB87333,
+        roughness: 0.32,
+        metalness: 0.88,
+        name: 'kapton-amber'
+      });
+      const matMylarSilver = new THREE.MeshStandardMaterial({
+        color: 0xD8DFE8,
+        roughness: 0.22,
+        metalness: 0.96,
+        name: 'mylar-silver'
+      });
+      const matAluminum = new THREE.MeshStandardMaterial({
+        color: 0x9BA2AD,
+        roughness: 0.35,
+        metalness: 0.9,
+        name: 'aluminum-alloy'
+      });
+      const matDarkTitanium = new THREE.MeshStandardMaterial({
+        color: 0x181C22,
+        roughness: 0.65,
+        metalness: 0.8,
+        name: 'dark-titanium'
+      });
+      const matSolarCell = new THREE.MeshStandardMaterial({
+        color: 0x0C162A,
+        roughness: 0.15,
+        metalness: 0.92,
+        side: THREE.DoubleSide,
+        name: 'photovoltaic-cell'
+      });
+      const matWireTire = new THREE.MeshStandardMaterial({
+        color: 0x8A929E,
+        roughness: 0.4,
+        metalness: 0.85,
+        wireframe: true,
+        name: 'wire-tire'
+      });
+      const matRegolithGround = new THREE.MeshStandardMaterial({
+        color: 0x1E2328,
+        roughness: 0.95,
+        metalness: 0.05,
+        name: 'lunar-regolith'
+      });
+
+      // 1:1 Scale Lunar Ground Base with Craters and Metric Grid
+      const groundDiscGeo = new THREE.CylinderGeometry(16, 16, 0.4, 48);
+      const groundDisc = new THREE.Mesh(groundDiscGeo, matRegolithGround);
+      groundDisc.position.y = -0.2;
+      groundDisc.receiveShadow = true;
+      surfaceGroup.add(groundDisc);
+
+      // Micro-crater depressions on ground
+      const craterMat = new THREE.MeshStandardMaterial({ color: 0x14181C, roughness: 0.98 });
+      [
+        { x: -5.5, z: 3.2, r: 2.2, d: 0.25 },
+        { x: 6.8, z: -4.5, r: 3.5, d: 0.35 },
+        { x: -8.0, z: -6.0, r: 1.8, d: 0.2 },
+        { x: 3.2, z: 8.5, r: 2.8, d: 0.3 }
+      ].forEach(c => {
+        const cGeo = new THREE.CylinderGeometry(c.r, c.r * 0.7, c.d, 24);
+        const cMesh = new THREE.Mesh(cGeo, craterMat);
+        cMesh.position.set(c.x, -0.05, c.z);
+        surfaceGroup.add(cMesh);
+      });
+
+      // Metric Scale Polar Grid Helper (16m diameter, 1m intervals)
+      const surfaceGrid = new THREE.PolarGridHelper(16, 16, 8, 32, 0x555E68, 0x22272E);
+      surfaceGrid.position.y = 0.01;
+      surfaceGroup.add(surfaceGrid);
+
+      // Container for active mission hardware
+      const missionHardwareHolder = new THREE.Group();
+      surfaceGroup.add(missionHardwareHolder);
+
+      // -------------------------------------------------------------
+      // 1. APOLLO 11: EAGLE LM-5 (1:1 SCALE) + FLAG + EASEP
+      // -------------------------------------------------------------
+      function buildApollo11Mesh() {
+        const root = new THREE.Group();
+        root.name = 'hardware-apollo-11';
+
+        // Octagonal Core (4.2m width, 1.7m height)
+        const coreGeo = new THREE.CylinderGeometry(2.1, 2.1, 1.7, 8);
+        const core = new THREE.Mesh(coreGeo, matKaptonGold);
+        core.position.y = 1.35;
+        root.add(core);
+
+        // Descent Engine Bell (44 kN columbium)
+        const bellGeo = new THREE.ConeGeometry(0.85, 1.4, 20, 1, true);
+        const bell = new THREE.Mesh(bellGeo, matDarkTitanium);
+        bell.position.y = 0.45;
+        root.add(bell);
+
+        // 4 Landing Gear Legs & Honeycomb Footpads (9.45m diagonal span)
+        for (let leg = 0; leg < 4; leg++) {
+          const angle = (leg * Math.PI) / 2 + Math.PI / 4;
+          const strutGeo = new THREE.CylinderGeometry(0.065, 0.065, 3.3, 8);
+          strutGeo.rotateZ(Math.PI / 4);
+          const strut = new THREE.Mesh(strutGeo, matAluminum);
+          strut.position.set(Math.cos(angle) * 2.85, 0.95, Math.sin(angle) * 2.85);
+          strut.rotation.y = angle;
+          root.add(strut);
+
+          // Footpad (0.94m diameter, 0.08m height)
+          const padGeo = new THREE.CylinderGeometry(0.47, 0.47, 0.08, 16);
+          const pad = new THREE.Mesh(padGeo, matKaptonGold);
+          pad.position.set(Math.cos(angle) * 4.45, 0.04, Math.sin(angle) * 4.45);
+          root.add(pad);
+        }
+
+        // Forward Leg Egress Ladder (length 2.2m)
+        const ladderGeo = new THREE.BoxGeometry(0.35, 2.2, 0.08);
+        const ladder = new THREE.Mesh(ladderGeo, matAluminum);
+        ladder.position.set(2.45, 1.3, 2.45);
+        ladder.rotation.y = Math.PI / 4;
+        root.add(ladder);
+
+        // Stainless Steel Plaque on Forward Strut
+        const plaqueGeo = new THREE.BoxGeometry(0.28, 0.22, 0.012);
+        const plaque = new THREE.Mesh(plaqueGeo, matMylarSilver);
+        plaque.position.set(2.2, 0.85, 2.2);
+        plaque.rotation.y = Math.PI / 4;
+        root.add(plaque);
+
+        // Ascent Stage Silhouette on Top
+        const ascentGeo = new THREE.BoxGeometry(2.4, 1.6, 2.4);
+        const ascent = new THREE.Mesh(ascentGeo, matDarkTitanium);
+        ascent.position.y = 2.85;
+        root.add(ascent);
+
+        // United States Flag (2.0m mast, 3x5 ft rippled flag)
+        const flagGroup = new THREE.Group();
+        flagGroup.position.set(0, 0, 6.2);
+        const mastGeo = new THREE.CylinderGeometry(0.015, 0.015, 2.0, 8);
+        const mast = new THREE.Mesh(mastGeo, matAluminum);
+        mast.position.y = 1.0;
+        flagGroup.add(mast);
+
+        const spreaderGeo = new THREE.CylinderGeometry(0.008, 0.008, 1.45, 6);
+        spreaderGeo.rotateZ(Math.PI / 2);
+        const spreader = new THREE.Mesh(spreaderGeo, matAluminum);
+        spreader.position.set(0.72, 1.95, 0);
+        flagGroup.add(spreader);
+
+        // Canvas Flag Fabric with Stripes and Blue Canton
+        const flagCanvas = document.createElement('canvas');
+        flagCanvas.width = 256;
+        flagCanvas.height = 160;
+        const fctx = flagCanvas.getContext('2d');
+        for (let i = 0; i < 13; i++) {
+          fctx.fillStyle = i % 2 === 0 ? '#b22234' : '#ffffff';
+          fctx.fillRect(0, i * (160 / 13), 256, 160 / 13);
+        }
+        fctx.fillStyle = '#3c3b6e';
+        fctx.fillRect(0, 0, 105, (160 / 13) * 7);
+        const flagTex = new THREE.CanvasTexture(flagCanvas);
+        const flagGeo = new THREE.PlaneGeometry(1.4, 0.88, 12, 6);
+        const flagMesh = new THREE.Mesh(flagGeo, new THREE.MeshStandardMaterial({
+          map: flagTex,
+          side: THREE.DoubleSide,
+          roughness: 0.6
+        }));
+        flagMesh.position.set(0.72, 1.5, 0);
+        flagGroup.add(flagMesh);
+        root.add(flagGroup);
+
+        // EASEP: Laser Ranging Retroreflector (LRRR)
+        const lrrrGroup = new THREE.Group();
+        lrrrGroup.position.set(-4.5, 0, 4.0);
+        const lrrrBase = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.35, 0.65), matAluminum);
+        lrrrBase.position.y = 0.18;
+        lrrrGroup.add(lrrrBase);
+        const lrrrPanel = new THREE.Mesh(new THREE.PlaneGeometry(0.45, 0.45), matMylarSilver);
+        lrrrPanel.position.set(0, 0.36, 0);
+        lrrrPanel.rotation.x = -Math.PI / 4;
+        lrrrGroup.add(lrrrPanel);
+        root.add(lrrrGroup);
+
+        // Passive Seismic Experiment Package (PSEP)
+        const psepGroup = new THREE.Group();
+        psepGroup.position.set(5.2, 0, 3.5);
+        const psepDrum = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.4, 16), matKaptonGold);
+        psepDrum.position.y = 0.2;
+        psepGroup.add(psepDrum);
+        const psepWingL = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.4), matSolarCell);
+        psepWingL.position.set(-0.55, 0.25, 0);
+        psepGroup.add(psepWingL);
+        const psepWingR = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.4), matSolarCell);
+        psepWingR.position.set(0.55, 0.25, 0);
+        psepGroup.add(psepWingR);
+        root.add(psepGroup);
+
+        return root;
+      }
+
+      // -------------------------------------------------------------
+      // 2. APOLLO 12: INTREPID LM-6 + SURVEYOR 3 + ALSEP
+      // -------------------------------------------------------------
+      function buildApollo12Mesh() {
+        const root = buildApollo11Mesh(); // shares LM baseline structure
+        root.name = 'hardware-apollo-12';
+
+        // Add Apollo 12 contact sensing wands to 3 footpads
+        const wandMat = new THREE.MeshStandardMaterial({ color: 0x22262C, roughness: 0.8 });
+        const probeAngles = [Math.PI * 0.25, Math.PI * 0.75, Math.PI * 1.25];
+        probeAngles.forEach(angle => {
+          const wandGeo = new THREE.CylinderGeometry(0.012, 0.012, 1.68, 6);
+          wandGeo.rotateX(Math.PI / 3);
+          const wand = new THREE.Mesh(wandGeo, wandMat);
+          wand.position.set(Math.cos(angle) * 4.45, 0.15, Math.sin(angle) * 4.45);
+          wand.rotation.y = angle;
+          root.add(wand);
+        });
+
+        // Surveyor 3 Robotic Probe (Positioned 8.5m away across diorama)
+        const survGroup = new THREE.Group();
+        survGroup.position.set(-7.5, 0, -4.5);
+        survGroup.name = 'surveyor-3-probe';
+
+        // Tripod legs
+        for (let i = 0; i < 3; i++) {
+          const sAngle = (i * Math.PI * 2) / 3;
+          const sLegGeo = new THREE.CylinderGeometry(0.04, 0.04, 2.2, 6);
+          sLegGeo.rotateZ(Math.PI / 4);
+          const sLeg = new THREE.Mesh(sLegGeo, matAluminum);
+          sLeg.position.set(Math.cos(sAngle) * 1.1, 0.65, Math.sin(sAngle) * 1.1);
+          sLeg.rotation.y = sAngle;
+          survGroup.add(sLeg);
+
+          const sPad = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.05, 12), matAluminum);
+          sPad.position.set(Math.cos(sAngle) * 1.8, 0.03, Math.sin(sAngle) * 1.8);
+          survGroup.add(sPad);
+        }
+
+        // Surveyor Central Mast and Solar Panel
+        const sMast = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.4, 8), matAluminum);
+        sMast.position.y = 1.2;
+        survGroup.add(sMast);
+
+        const sSolar = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.6), matSolarCell);
+        sSolar.position.set(0, 2.2, 0.2);
+        survGroup.add(sSolar);
+
+        // Television Camera Head (Retrieved by Conrad & Bean)
+        const sCam = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.35, 12), matDarkTitanium);
+        sCam.position.set(0.35, 1.1, 0.2);
+        survGroup.add(sCam);
+
+        // Sampling Scoop Arm
+        const sArmGeo = new THREE.BoxGeometry(0.05, 0.05, 1.4);
+        const sArm = new THREE.Mesh(sArmGeo, matAluminum);
+        sArm.position.set(-0.6, 0.45, 0.6);
+        sArm.rotation.y = -Math.PI / 4;
+        survGroup.add(sArm);
+        root.add(survGroup);
+
+        // ALSEP Station 1: SNAP-27 RTG with Cooling Fins
+        const rtgGroup = new THREE.Group();
+        rtgGroup.position.set(6.8, 0, -2.5);
+        const rtgCask = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.6, 16), matDarkTitanium);
+        rtgCask.position.y = 0.3;
+        rtgGroup.add(rtgCask);
+        for (let f = 0; f < 8; f++) {
+          const fin = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.5, 0.015), matDarkTitanium);
+          fin.position.y = 0.3;
+          fin.rotation.y = (f * Math.PI) / 4;
+          rtgGroup.add(fin);
+        }
+        root.add(rtgGroup);
+
+        return root;
+      }
+
+      // -------------------------------------------------------------
+      // 3. APOLLO 15: FALCON LM + LUNAR ROVING VEHICLE (LRV-1)
+      // -------------------------------------------------------------
+      function buildApollo15Mesh() {
+        const root = buildApollo11Mesh();
+        root.name = 'hardware-apollo-15';
+
+        // Lunar Roving Vehicle (LRV-1) (3.1m length, 1.8m width, 1.1m height)
+        const lrvGroup = new THREE.Group();
+        lrvGroup.position.set(-5.8, 0, 2.8);
+        lrvGroup.rotation.y = Math.PI / 6;
+        lrvGroup.name = 'lrv-1-rover';
+
+        // Chassis Frame
+        const chassis = new THREE.Mesh(new THREE.BoxGeometry(3.1, 0.22, 1.7), matAluminum);
+        chassis.position.y = 0.48;
+        lrvGroup.add(chassis);
+
+        // 4 Wire-Mesh Wheels with Titanium Chevron Cleats (0.81m diameter)
+        const wheelOffsets = [
+          { x: 1.15, z: 0.95 },
+          { x: 1.15, z: -0.95 },
+          { x: -1.15, z: 0.95 },
+          { x: -1.15, z: -0.95 }
+        ];
+        wheelOffsets.forEach(w => {
+          const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.24, 16), matWireTire);
+          wheel.rotation.z = Math.PI / 2;
+          wheel.position.set(w.x, 0.4, w.z);
+          lrvGroup.add(wheel);
+        });
+
+        // Fold-down Crew Seats
+        const seatL = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.5), matDarkTitanium);
+        seatL.position.set(0.1, 0.8, 0.4);
+        lrvGroup.add(seatL);
+        const seatR = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.5), matDarkTitanium);
+        seatR.position.set(0.1, 0.8, -0.4);
+        lrvGroup.add(seatR);
+
+        // High-Gain Parabolic Mesh Dish Antenna
+        const dish = new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2), matAluminum);
+        dish.position.set(1.1, 1.35, 0.55);
+        dish.rotation.x = -Math.PI / 4;
+        lrvGroup.add(dish);
+
+        // Color TV Camera Mast
+        const tvCam = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.28), matDarkTitanium);
+        tvCam.position.set(1.2, 1.1, -0.55);
+        lrvGroup.add(tvCam);
+
+        root.add(lrvGroup);
+        return root;
+      }
+
+      // -------------------------------------------------------------
+      // 4. CHANG'E 4: CE-4 LANDER + YUTU-2 ROVER (FAR SIDE)
+      // -------------------------------------------------------------
+      function buildChange4Mesh() {
+        const root = new THREE.Group();
+        root.name = 'hardware-change-4';
+
+        // Octagonal Lander Body (3.4m span, 2.0m height)
+        const landerGeo = new THREE.CylinderGeometry(1.7, 1.7, 1.8, 8);
+        const lander = new THREE.Mesh(landerGeo, matKaptonGold);
+        lander.position.y = 1.3;
+        root.add(lander);
+
+        // 4 Landing Struts with Honeycomb Footpads
+        for (let i = 0; i < 4; i++) {
+          const angle = (i * Math.PI) / 2 + Math.PI / 4;
+          const strut = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 2.6, 8), matAluminum);
+          strut.position.set(Math.cos(angle) * 2.2, 0.75, Math.sin(angle) * 2.2);
+          strut.rotation.y = angle;
+          root.add(strut);
+
+          const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.08, 12), matKaptonGold);
+          pad.position.set(Math.cos(angle) * 3.4, 0.04, Math.sin(angle) * 3.4);
+          root.add(pad);
+        }
+
+        // Twin Rollout Deployment Ramps
+        const rampGeo = new THREE.BoxGeometry(0.3, 0.04, 2.8);
+        rampGeo.rotateX(Math.PI / 6);
+        const rampL = new THREE.Mesh(rampGeo, matAluminum);
+        rampL.position.set(-0.35, 0.65, 2.3);
+        root.add(rampL);
+        const rampR = new THREE.Mesh(rampGeo, matAluminum);
+        rampR.position.set(0.35, 0.65, 2.3);
+        root.add(rampR);
+
+        // Yutu-2 Rover (140 kg, 1.5m length, 6 open-vane wheels)
+        const yutuGroup = new THREE.Group();
+        yutuGroup.position.set(0, 0, 5.2);
+        yutuGroup.name = 'yutu-2-rover';
+
+        const yChassis = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.55, 1.0), matKaptonGold);
+        yChassis.position.y = 0.55;
+        yutuGroup.add(yChassis);
+
+        // 6 Open-Vane Aluminum Wheels with Rocker-Bogie
+        const yWheelOffsets = [
+          { x: 0.6, z: 0.62 }, { x: 0, z: 0.62 }, { x: -0.6, z: 0.62 },
+          { x: 0.6, z: -0.62 }, { x: 0, z: -0.62 }, { x: -0.6, z: -0.62 }
+        ];
+        yWheelOffsets.forEach(w => {
+          const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.12, 12), matAluminum);
+          wh.rotation.z = Math.PI / 2;
+          wh.position.set(w.x, 0.18, w.z);
+          yutuGroup.add(wh);
+        });
+
+        // Gull-Wing Solar Arrays
+        const wingGeo = new THREE.PlaneGeometry(1.2, 0.85);
+        const wingL = new THREE.Mesh(wingGeo, matSolarCell);
+        wingL.position.set(0, 0.9, 0.85);
+        wingL.rotation.x = -Math.PI / 5;
+        yutuGroup.add(wingL);
+
+        const wingR = new THREE.Mesh(wingGeo, matSolarCell);
+        wingR.position.set(0, 0.9, -0.85);
+        wingR.rotation.x = Math.PI / 5;
+        yutuGroup.add(wingR);
+
+        // Panoramic Mast Camera
+        const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.75, 8), matDarkTitanium);
+        mast.position.set(0.45, 1.05, 0);
+        yutuGroup.add(mast);
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.1, 0.15), matDarkTitanium);
+        head.position.set(0.45, 1.45, 0);
+        yutuGroup.add(head);
+
+        root.add(yutuGroup);
+        return root;
+      }
+
+      // -------------------------------------------------------------
+      // 5. CHANDRAYAAN-3: VIKRAM LANDER + PRAGYAN ROVER (SOUTH POLE)
+      // -------------------------------------------------------------
+      function buildChandrayaan3Mesh() {
+        const root = new THREE.Group();
+        root.name = 'hardware-chandrayaan-3';
+
+        // Vikram Lander Body (2.0m x 2.0m x 1.4m box with chamfered corners)
+        const vChassis = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.35, 2.0), matKaptonGold);
+        vChassis.position.y = 1.1;
+        root.add(vChassis);
+
+        // 4 Landing Struts with Crushable Honeycomb Footpads
+        for (let i = 0; i < 4; i++) {
+          const angle = (i * Math.PI) / 2 + Math.PI / 4;
+          const strut = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.2, 8), matAluminum);
+          strut.position.set(Math.cos(angle) * 1.5, 0.65, Math.sin(angle) * 1.5);
+          strut.rotation.y = angle;
+          root.add(strut);
+
+          const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.06, 12), matAluminum);
+          pad.position.set(Math.cos(angle) * 2.4, 0.03, Math.sin(angle) * 2.4);
+          root.add(pad);
+        }
+
+        // Lander Solar Panels on Side
+        const solarPanel = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.1), matSolarCell);
+        solarPanel.position.set(1.02, 1.1, 0);
+        solarPanel.rotation.y = Math.PI / 2;
+        root.add(solarPanel);
+
+        // Egress Deployment Ramp
+        const ramp = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.03, 2.4), matAluminum);
+        ramp.rotation.x = Math.PI / 6;
+        ramp.position.set(0, 0.55, 1.8);
+        root.add(ramp);
+
+        // Pragyan Rover (26 kg, 6-wheel rocker-bogie, 50W inclined solar array)
+        const pGroup = new THREE.Group();
+        pGroup.position.set(0, 0, 4.2);
+        pGroup.name = 'pragyan-rover';
+
+        const pChassis = new THREE.Mesh(new THREE.BoxGeometry(0.91, 0.32, 0.75), matKaptonGold);
+        pChassis.position.y = 0.35;
+        pGroup.add(pChassis);
+
+        // 6 Wheels with Ashoka Lion / ISRO tread relief
+        const pWheelOffsets = [
+          { x: 0.38, z: 0.44 }, { x: 0, z: 0.44 }, { x: -0.38, z: 0.44 },
+          { x: 0.38, z: -0.44 }, { x: 0, z: -0.44 }, { x: -0.38, z: -0.44 }
+        ];
+        pWheelOffsets.forEach(w => {
+          const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.08, 12), matAluminum);
+          wh.rotation.z = Math.PI / 2;
+          wh.position.set(w.x, 0.12, w.z);
+          pGroup.add(wh);
+        });
+
+        // Inclined Starboard Solar Wing (50W)
+        const pSolar = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.55), matSolarCell);
+        pSolar.position.set(0, 0.58, 0.42);
+        pSolar.rotation.x = -Math.PI / 5;
+        pGroup.add(pSolar);
+
+        // NavCam Stereo Head
+        const pCam = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 0.18), matDarkTitanium);
+        pCam.position.set(0.35, 0.62, 0);
+        pGroup.add(pCam);
+
+        root.add(pGroup);
+        return root;
+      }
+
+      // -------------------------------------------------------------
+      // 6. LUNA 17: SOVIET LANDER + LUNOKHOD 1 (8-WHEEL ROVER)
+      // -------------------------------------------------------------
+      function buildLuna17Mesh() {
+        const root = new THREE.Group();
+        root.name = 'hardware-luna-17';
+
+        // Cylindrical Soviet Descent Stage
+        const lStage = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 1.2, 16), matAluminum);
+        lStage.position.y = 0.85;
+        root.add(lStage);
+
+        // 4 Toroidal Propellant Fuel Tanks around base
+        for (let i = 0; i < 4; i++) {
+          const tAngle = (i * Math.PI) / 2;
+          const tank = new THREE.Mesh(new THREE.SphereGeometry(0.48, 12, 12), matMylarSilver);
+          tank.position.set(Math.cos(tAngle) * 1.5, 0.5, Math.sin(tAngle) * 1.5);
+          root.add(tank);
+        }
+
+        // Twin Rollout Ramp Rails
+        const r1 = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.03, 2.6), matAluminum);
+        r1.rotation.x = Math.PI / 6;
+        r1.position.set(-0.4, 0.5, 2.2);
+        root.add(r1);
+        const r2 = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.03, 2.6), matAluminum);
+        r2.rotation.x = Math.PI / 6;
+        r2.position.set(0.4, 0.5, 2.2);
+        root.add(r2);
+
+        // Lunokhod 1 Tub-Shaped Rover (756 kg, 2.2m length, 8 wire-mesh wheels)
+        const lunoGroup = new THREE.Group();
+        lunoGroup.position.set(0, 0, 4.8);
+        lunoGroup.name = 'lunokhod-1-rover';
+
+        const tub = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.75, 0.85, 16), matMylarSilver);
+        tub.position.y = 0.65;
+        lunoGroup.add(tub);
+
+        // Convex Clamshell Solar Lid (Hinged open)
+        const lid = new THREE.Mesh(new THREE.SphereGeometry(0.92, 16, 12, 0, Math.PI * 2, 0, Math.PI / 3), matSolarCell);
+        lid.position.set(0, 1.15, -0.2);
+        lid.rotation.x = -Math.PI / 4;
+        lunoGroup.add(lid);
+
+        // 8 Individually Driven Wire-Mesh Wheels (0.51m diameter)
+        for (let i = 0; i < 4; i++) {
+          const zOffset = -0.75 + i * 0.5;
+          const wL = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.16, 12), matWireTire);
+          wL.rotation.z = Math.PI / 2;
+          wL.position.set(0.85, 0.25, zOffset);
+          lunoGroup.add(wL);
+
+          const wR = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 0.16, 12), matWireTire);
+          wR.rotation.z = Math.PI / 2;
+          wR.position.set(-0.85, 0.25, zOffset);
+          lunoGroup.add(wR);
+        }
+
+        // Helical High-Gain Antenna
+        const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.9, 8), matAluminum);
+        ant.position.set(0.6, 1.3, 0.4);
+        lunoGroup.add(ant);
+
+        // Tele-photometer Cycloramic Camera
+        const tele = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), matDarkTitanium);
+        tele.position.set(-0.55, 1.1, 0.5);
+        lunoGroup.add(tele);
+
+        root.add(lunoGroup);
+        return root;
+      }
+
+      // -------------------------------------------------------------
+      // 7. SLIM: JAXA SMART LANDER + SORA-Q BALL ROVER (SHIOLI)
+      // -------------------------------------------------------------
+      function buildSLIMMesh() {
+        const root = new THREE.Group();
+        root.name = 'hardware-slim';
+
+        // SLIM Main Polyhedral Avionics Body
+        const slimBody = new THREE.Mesh(new THREE.BoxGeometry(1.7, 2.0, 1.5), matMylarSilver);
+        slimBody.position.set(0, 0.9, 0);
+        // Resting in its authentic 15° tilted slope landed configuration
+        slimBody.rotation.z = THREE.MathUtils.degToRad(-15);
+        root.add(slimBody);
+
+        // Main Thruster Engines
+        const thruster = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.5, 12), matDarkTitanium);
+        thruster.position.set(0.4, 0.2, 0);
+        root.add(thruster);
+
+        // SORA-Q (LEV-2) Spherical Transformable Ball Rover (0.08m diameter, 250g)
+        const soraQ = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), matDarkTitanium);
+        soraQ.position.set(1.8, 0.14, 0.8);
+        root.add(soraQ);
+
+        return root;
+      }
+
+      // Mission 1:1 Hardware Factory Map
+      const HARDWARE_BUILDERS = {
+        'apollo-11': buildApollo11Mesh,
+        'apollo-12': buildApollo12Mesh,
+        'apollo-15': buildApollo15Mesh,
+        'change-4': buildChange4Mesh,
+        'chandrayaan-3': buildChandrayaan3Mesh,
+        'luna-17': buildLuna17Mesh,
+        'slim': buildSLIMMesh
+      };
+
+      let current1to1Mission = 'apollo-11';
+      let activeHardwareMesh = null;
+
+      function load1to1Hardware(missionId) {
+        if (!HARDWARE_BUILDERS[missionId]) missionId = 'apollo-11';
+        current1to1Mission = missionId;
+
+        // Clean up previous hardware mesh
+        if (activeHardwareMesh) {
+          missionHardwareHolder.remove(activeHardwareMesh);
+          activeHardwareMesh.traverse(child => {
+            if (child.isMesh) {
+              if (child.geometry) child.geometry.dispose();
+            }
+          });
+          activeHardwareMesh = null;
+        }
+
+        const builder = HARDWARE_BUILDERS[missionId];
+        activeHardwareMesh = builder();
+        missionHardwareHolder.add(activeHardwareMesh);
+
+        // Update pills
+        document.querySelectorAll('.surface-pill-btn').forEach(btn => {
+          btn.classList.toggle('is-active', btn.dataset.mission === missionId);
+        });
+
+        // Update Exp 03 Sidebar Specs if Exp 03 is active
+        updateExp03Sidebar(missionId);
+      }
+
+      // Mission Specs Registry for 1:1 Scale Technical Callouts
+      const HARDWARE_SPECS = {
+        'apollo-11': {
+          title: 'Eagle (LM-5)',
+          subtitle: 'DESCENT STAGE · 3.2M HEIGHT · 9.45M SPAN',
+          narrative: 'First crewed lunar landing hardware. Intact at Mare Tranquillitatis with US Flag, stainless steel plaque, and EASEP laser ranging retroreflector.',
+          callouts: [
+            { id: 'descent-engine', title: '01 · DESCENT PROPULSION SYSTEM', spec: '44 kN throttleable hypergolic engine (aerozine-50 / N2O4). Columbium alloy bell.' },
+            { id: 'plaque', title: '02 · COMMEMORATIVE PLAQUE & LADDER', spec: '"Here men from the planet Earth first set foot upon the Moon July 1969, A.D. We came in peace for all mankind."' },
+            { id: 'flag', title: '03 · US LUNAR FLAG ASSEMBLY', spec: '3x5 ft Stars & Stripes on 2.0m anodized aluminum mast with horizontal spreader.' },
+            { id: 'easep', title: '04 · EASEP LASER RETROREFLECTOR', spec: '100 fused quartz corner-cube retroreflectors for sub-centimeter Earth-Moon ranging.' }
+          ]
+        },
+        'apollo-12': {
+          title: 'Intrepid (LM-6)',
+          subtitle: 'PINPOINT TOUCHDOWN · 163M FROM SURVEYOR 3',
+          narrative: 'Precision touchdown in Oceanus Procellarum. Retained bent contact wands and visited Surveyor 3 robotic probe.',
+          callouts: [
+            { id: 'wands', title: '01 · LUNAR CONTACT SENSING WANDS', spec: '1.68m mechanical probes under 3 footpads that bent backward upon regolith contact.' },
+            { id: 'surveyor', title: '02 · SURVEYOR 3 ROBOTIC RENDEZVOUS', spec: 'Historic first rendezvous with robotic predecessor. Television camera returned to Earth.' },
+            { id: 'alsep', title: '03 · ALSEP SNAP-27 RTG CASK', spec: '73W radioisotope thermoelectric generator powered scientific package for a decade.' },
+            { id: 'ladder', title: '04 · FORWARD EGRESS LADDER', spec: 'Quadrant IV strut-mounted ladder and MESA stowage bay.' }
+          ]
+        },
+        'apollo-15': {
+          title: 'Falcon (LM-10) & LRV-1',
+          subtitle: 'FIRST LUNAR ROVING VEHICLE · HADLEY RILLE',
+          narrative: 'Extended scientific mission at the base of the Apennine mountains. Unfolded the first motorized rover on the Moon.',
+          callouts: [
+            { id: 'lrv', title: '01 · LUNAR ROVING VEHICLE (LRV-1)', spec: '3.1m tubular aluminum chassis with 4 independent 0.25-hp DC electric traction motors.' },
+            { id: 'wheels', title: '02 · WIRE-MESH CHEVRON TIRES', spec: 'Woven zinc-coated steel wire with titanium chevrons for basalt mobility.' },
+            { id: 'antenna', title: '03 · HIGH-GAIN PARABOLIC DISH', spec: 'Steerable S-band mesh antenna for live color television transmissions.' },
+            { id: 'falcon', title: '04 · FALCON EXTENDED DESCENT STAGE', spec: 'Enlarged fuel capacity allowing 67 hours of exploration on the lunar surface.' }
+          ]
+        },
+        'change-4': {
+          title: "Chang'e 4 & Yutu-2",
+          subtitle: 'FAR SIDE TOUCHDOWN · VON KÁRMÁN CRATER',
+          narrative: 'First spacecraft to land on the lunar far side. Yutu-2 is the longest-operating planetary rover in human history.',
+          callouts: [
+            { id: 'yutu', title: '01 · YUTU-2 FAR-SIDE ROVER', spec: '140 kg rover with 6 open-vane aluminum wheels and rocker-bogie articulated suspension.' },
+            { id: 'wings', title: '02 · GULL-WING SOLAR ARRAYS', spec: 'Photovoltaic wings angled for equatorial sun with nighttime thermal heater.' },
+            { id: 'ramps', title: '03 · TWIN ROLLOUT EGRESS RAMPS', spec: 'Guided deployment ramps used to safely lower Yutu-2 from lander to regolith.' },
+            { id: 'far-sky', title: '04 · VACUUM FAR-SIDE SKY', spec: 'Direct Earth view blocked by lunar bulk; relay communication via Queqiao halo satellite.' }
+          ]
+        },
+        'chandrayaan-3': {
+          title: 'Chandrayaan-3',
+          subtitle: 'VIKRAM & PRAGYAN · STATIO SHIV SHAKTI',
+          narrative: 'Historic high-latitude southern landing by ISRO on August 23, 2023. Pragyan explored ancient southern highland ejecta.',
+          callouts: [
+            { id: 'pragyan', title: '01 · PRAGYAN 26-KG ROVER', spec: 'Ultra-compact 6-wheel rocker-bogie rover with 50W inclined starboard solar wing.' },
+            { id: 'emboss', title: '02 · WHEEL EMBOSSING TREADS', spec: 'Embossed Ashoka Lion Capital and ISRO insignia imprinted into lunar regolith.' },
+            { id: 'libs', title: '03 · LIBS LASER SPECTROSCOPY', spec: 'Laser-Induced Breakdown Spectroscopy confirmed sulfur, iron, and titanium.' },
+            { id: 'vikram', title: '04 · VIKRAM LANDER CHASSIS', spec: 'Throttleable 800 N bi-propellant engines and autonomous laser hazard avoidance.' }
+          ]
+        },
+        'luna-17': {
+          title: 'Luna 17 & Lunokhod 1',
+          subtitle: 'FIRST ROBOTIC LUNAR ROVER · MARE IMBRIUM',
+          narrative: 'Landed November 17, 1970. Lunokhod 1 operated for 322 Earth days and covered 10.5 km across the lunar mare.',
+          callouts: [
+            { id: 'tub', title: '01 · MAGNESIUM ALLOY TUB', spec: 'Pressurized nitrogen-filled vessel housing avionics, heaters, and telemetry.' },
+            { id: 'lid', title: '02 · CLAMSHELL SOLAR LID', spec: 'Convex solar collector opened each lunar day to charge lead-acid batteries.' },
+            { id: 'wheels', title: '03 · 8-WHEEL INDEPENDENT DRIVE', spec: '8 motorized wire-mesh wheels with individual titanium cleats and planetary reducers.' },
+            { id: 'tele', title: '04 · CYCLORAMIC TELE-PHOTOMETERS', spec: 'Rotating optical heads that broadcast 20,000+ high-resolution lunar panoramas.' }
+          ]
+        },
+        'slim': {
+          title: 'SLIM & SORA-Q',
+          subtitle: 'MOON SNIPER · SHIOLI CRATER EJECTA',
+          narrative: 'JAXA pinpoint landing within 55m of target. Demonstrated autonomous vision-based crater matching and deployed SORA-Q.',
+          callouts: [
+            { id: 'slim', title: '01 · VISION-BASED PINPOINT LANDER', spec: 'Autonomous real-time crater navigation achieving sub-100m landing precision.' },
+            { id: 'tilt', title: '02 · TWO-STEP TILTED GEAR', spec: 'Innovative crushable aluminum lattice designed to roll and settle on 15° crater slope.' },
+            { id: 'sora', title: '03 · SORA-Q (LEV-2) BALL ROVER', spec: '250-gram spherical transformable robot that rolled across regolith and photographed SLIM.' }
+          ]
+        }
+      };
+
+      function updateExp03Sidebar(missionId) {
+        const specs = HARDWARE_SPECS[missionId] || HARDWARE_SPECS['apollo-11'];
+        const p3 = document.getElementById('exp-panel-3');
+        if (!p3) return;
+
+        const titleEl = p3.querySelector('.card-mission-title');
+        const coordsEl = p3.querySelector('.card-coords-readout');
+        const narrEl = p3.querySelector('.card-narrative');
+        const calloutContainer = p3.querySelector('.schematic-callout-list');
+
+        if (titleEl) titleEl.textContent = specs.title;
+        if (coordsEl) coordsEl.innerHTML = `<span>${specs.subtitle}</span>`;
+        if (narrEl) narrEl.textContent = specs.narrative;
+
+        if (calloutContainer) {
+          calloutContainer.innerHTML = '';
+          specs.callouts.forEach((c, idx) => {
+            const div = document.createElement('div');
+            div.className = `callout-item ${idx === 0 ? 'is-active' : ''}`;
+            div.dataset.focus = c.id;
+            div.innerHTML = `
+              <div class="callout-title">${c.title}</div>
+              <div class="callout-spec">${c.spec}</div>
+            `;
+            div.addEventListener('click', () => {
+              playTone(2525, 0.03);
+              calloutContainer.querySelectorAll('.callout-item').forEach(i => i.classList.remove('is-active'));
+              div.classList.add('is-active');
+              focusHardwareCallout(c.id);
+            });
+            calloutContainer.appendChild(div);
+          });
+        }
+      }
+
+      function focusHardwareCallout(calloutId) {
+        if (!surfaceGroup.visible) return;
+        if (calloutId === 'descent-engine') {
+          flyCamera(new THREE.Vector3(0, 0.8, 3.2), new THREE.Vector3(0, 0.5, 0), 1200);
+        } else if (calloutId === 'plaque' || calloutId === 'ladder') {
+          flyCamera(new THREE.Vector3(3.0, 1.6, 3.0), new THREE.Vector3(2.2, 1.1, 2.2), 1200);
+        } else if (calloutId === 'flag') {
+          flyCamera(new THREE.Vector3(0.8, 1.8, 7.8), new THREE.Vector3(0, 1.4, 6.2), 1200);
+        } else if (calloutId === 'easep') {
+          flyCamera(new THREE.Vector3(-3.5, 1.0, 4.8), new THREE.Vector3(-4.5, 0.2, 4.0), 1200);
+        } else if (calloutId === 'surveyor') {
+          flyCamera(new THREE.Vector3(-6.2, 1.5, -3.2), new THREE.Vector3(-7.5, 0.8, -4.5), 1200);
+        } else if (calloutId === 'lrv' || calloutId === 'wheels') {
+          flyCamera(new THREE.Vector3(-4.2, 1.2, 3.8), new THREE.Vector3(-5.8, 0.6, 2.8), 1200);
+        } else if (calloutId === 'yutu' || calloutId === 'pragyan' || calloutId === 'luno' || calloutId === 'tub') {
+          flyCamera(new THREE.Vector3(1.4, 1.2, 5.8), new THREE.Vector3(0, 0.6, 4.5), 1200);
+        } else if (calloutId === 'sora') {
+          flyCamera(new THREE.Vector3(2.4, 0.6, 1.4), new THREE.Vector3(1.8, 0.15, 0.8), 1200);
+        } else {
+          flyCamera(new THREE.Vector3(5.2, 3.2, 6.5), new THREE.Vector3(0, 1.2, 0), 1200);
+        }
+      }
+
+      // Initialize default 1:1 hardware
+      load1to1Hardware('apollo-11');
+
+      // Surface Mission Switcher Buttons
+      document.querySelectorAll('.surface-pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          playTone(2525, 0.04);
+          load1to1Hardware(btn.dataset.mission);
+          flyCamera(new THREE.Vector3(5.2, 3.2, 6.5), new THREE.Vector3(0, 1.2, 0), 1400);
+        });
+      });
+
+      // Ascend to Orbit Buttons
+      const btnDiveAscend = document.getElementById('btn-dive-ascend');
+      const btnSurfaceAscend = document.getElementById('btn-surface-ascend');
+      const diveHud = document.getElementById('dive-telemetry-hud');
+      const surfaceBar = document.getElementById('surface-1to1-hud-bar');
+      const metricRuler = document.getElementById('metric-scale-ruler');
+
+      function ascendToOrbit() {
+        playTone(2475, 0.06);
+        surfaceGroup.visible = false;
+        globeGroup.visible = true;
+        diveHud?.classList.remove('is-active');
+        surfaceBar?.classList.remove('is-active');
+        metricRuler?.classList.remove('is-active');
+        switchExperiment(1);
+        flyCamera(new THREE.Vector3(0, 0.8, 7.5), new THREE.Vector3(0, 0, 0), 1800);
+        if (railSite) railSite.textContent = 'GLOBAL LUNAR RECONNAISSANCE';
+        if (railCoords) railCoords.textContent = '0.0000° N, 0.0000° E [ALT: 60,000 KM]';
+      }
+
+      btnDiveAscend?.addEventListener('click', ascendToOrbit);
+      btnSurfaceAscend?.addEventListener('click', ascendToOrbit);
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && surfaceGroup.visible) {
+          ascendToOrbit();
+        }
+      });
+
+      // Seamless Macro-to-Micro Cinematic Dive Orchestrator
+      let isDiving = false;
+      function performMacroToMicroDive(missionId, targetVec, siteName, coordsText) {
+        if (isDiving) return;
+        isDiving = true;
+        playTone(2525, 0.05);
+
+        // Pre-load target hardware
+        load1to1Hardware(missionId);
+
+        // Display Dive HUD
+        if (diveHud) {
+          diveHud.classList.add('is-active');
+          const nameEl = document.getElementById('dive-site-name');
+          const coordsEl = document.getElementById('dive-coords-row');
+          if (nameEl) nameEl.textContent = siteName;
+          if (coordsEl) coordsEl.textContent = coordsText;
+        }
+
+        const teleAlt = document.getElementById('tele-alt');
+        const teleVel = document.getElementById('tele-vel');
+        const telePhase = document.getElementById('dive-phase-badge');
+        const teleScale = document.getElementById('tele-scale');
+        const progressBar = document.getElementById('dive-progress-bar');
+
+        const startPos = camera.position.clone();
+        const startTarget = controls.target.clone();
+        const approachPos = targetVec.clone().normalize().multiplyScalar(2.65);
+        const finalOrbitTarget = targetVec.clone().normalize().multiplyScalar(2.2);
+
+        const startTime = performance.now();
+        const duration = 2800; // 2.8s cinematic descent burn
+
+        function diveStep(now) {
+          const elapsed = now - startTime;
+          const p = Math.min(1, elapsed / duration);
+          const ease = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+
+          // Camera glide towards lunar site
+          camera.position.lerpVectors(startPos, approachPos, ease);
+          controls.target.lerpVectors(startTarget, finalOrbitTarget, ease);
+          controls.update();
+
+          // Dynamic Telemetry interpolation
+          const altKm = Math.round((1 - ease) * 60000);
+          const velMs = Math.round((1 - ease) * 1680);
+
+          if (progressBar) progressBar.style.width = `${ease * 100}%`;
+
+          if (ease < 0.35) {
+            if (teleAlt) teleAlt.textContent = `${altKm.toLocaleString()} KM`;
+            if (teleVel) teleVel.textContent = `${velMs.toLocaleString()} M/S`;
+            if (telePhase) { telePhase.textContent = 'ORBITAL BRAKING'; telePhase.classList.remove('touchdown'); }
+            if (teleScale) teleScale.textContent = 'GLOBAL MACRO';
+          } else if (ease < 0.75) {
+            const lowAlt = Math.max(15, Math.round((1 - ease) * 1200));
+            if (teleAlt) teleAlt.textContent = `${lowAlt} KM`;
+            if (teleVel) teleVel.textContent = `${Math.round(velMs * 0.4)} M/S`;
+            if (telePhase) { telePhase.textContent = 'HIGH GATE APPROACH'; telePhase.classList.remove('touchdown'); }
+            if (teleScale) teleScale.textContent = 'REGIONAL DESCENT';
+          } else if (ease < 0.95) {
+            const meters = Math.max(12, Math.round((1 - ease) * 350));
+            if (teleAlt) teleAlt.textContent = `${meters} METERS`;
+            if (teleVel) teleVel.textContent = '14.2 M/S';
+            if (telePhase) { telePhase.textContent = 'TERMINAL DESCENT'; telePhase.classList.remove('touchdown'); }
+            if (teleScale) teleScale.textContent = 'METRIC PROXIMITY';
+          }
+
+          if (p < 1) {
+            requestAnimationFrame(diveStep);
+          } else {
+            // Touchdown Transition: Dissolve globe and reveal 1:1 metric surface
+            globeGroup.visible = false;
+            surfaceGroup.visible = true;
+
+            if (teleAlt) teleAlt.textContent = '3.2 METERS';
+            if (teleVel) teleVel.textContent = '0.0 M/S';
+            if (telePhase) {
+              telePhase.textContent = 'TOUCHDOWN CONFIRMED';
+              telePhase.classList.add('touchdown');
+            }
+            if (teleScale) teleScale.textContent = '1:1 TRUE SCALE';
+
+            surfaceBar?.classList.add('is-active');
+            metricRuler?.classList.add('is-active');
+
+            // Set camera to dramatic 1:1 hardware inspection perspective
+            camera.position.set(5.2, 3.2, 6.5);
+            controls.target.set(0, 1.2, 0);
+            controls.update();
+
+            switchExperiment(3);
+            isDiving = false;
+
+            // Fade out the dive telemetry HUD after 2.5s
+            setTimeout(() => {
+              diveHud?.classList.remove('is-active');
+            }, 2500);
+          }
+        }
+
+        requestAnimationFrame(diveStep);
+      }
+
+      const artifactGroup = surfaceGroup;
 
       // 5. Experiment Navigation & Camera Choreography
       let activeExp = 1;
@@ -1340,11 +2933,159 @@
       const panels = document.querySelectorAll('.lab-experiment-panel');
       const railSite = document.getElementById('rail-site');
       const railCoords = document.getElementById('rail-coords');
+      const railAzimuth = document.getElementById('rail-azimuth');
+      const railSun = document.getElementById('rail-sun');
+
+      // Orbital Chapters for Scroll-Based Storytelling
+      const ORBITAL_CHAPTERS = [
+        {
+          id: 0,
+          label: '01 HIGH ORBIT',
+          site: 'GLOBAL LUNAR RECONNAISSANCE',
+          coords: '0.0000° N, 0.0000° E',
+          camPos: new THREE.Vector3(0, 0.8, 7.5),
+          target: new THREE.Vector3(0, 0, 0),
+          altitude: '60,000 KM',
+          exp: 1
+        },
+        {
+          id: 1,
+          label: '02 APOLLO 11',
+          site: 'MARE TRANQUILLITATIS &bull; APOLLO 11',
+          coords: '0.67408° N, 23.47297° E',
+          camPos: new THREE.Vector3(1.5, 0.2, 4.4),
+          target: new THREE.Vector3(0.5, 0.1, 0),
+          altitude: '15,000 KM',
+          exp: 2,
+          mission: 'apollo-11'
+        },
+        {
+          id: 2,
+          label: '03 APOLLO 12',
+          site: 'OCEANUS PROCELLARUM &bull; APOLLO 12',
+          coords: '3.01239° S, 23.42157° W',
+          camPos: new THREE.Vector3(-1.8, -0.4, 4.2),
+          target: new THREE.Vector3(-0.4, -0.1, 0),
+          altitude: '8,000 KM',
+          exp: 2,
+          mission: 'apollo-12'
+        },
+        {
+          id: 3,
+          label: '04 FAR SIDE (CE-4)',
+          site: 'VON KÁRMÁN &bull; CHANG\'E 4 (FAR SIDE)',
+          coords: '45.4561° S, 177.5885° E',
+          camPos: new THREE.Vector3(-0.8, -2.5, -4.8),
+          target: new THREE.Vector3(0, 0, 0),
+          altitude: '12,000 KM',
+          exp: 2,
+          mission: 'change-4'
+        },
+        {
+          id: 4,
+          label: '05 SOUTH POLE (CH-3)',
+          site: 'STATIO SHIV SHAKTI &bull; CHANDRAYAAN-3',
+          coords: '69.373° S, 32.319° E',
+          camPos: new THREE.Vector3(1.2, -3.8, 3.8),
+          target: new THREE.Vector3(0, 0, 0),
+          altitude: '10,000 KM',
+          exp: 2,
+          mission: 'chandrayaan-3'
+        },
+        {
+          id: 5,
+          label: '06 HARDWARE DESCENT',
+          site: 'INTREPID (LM-6) 1:1 HARDWARE PLINTH',
+          coords: '1:1 SCALE METRIC INSPECTION',
+          camPos: new THREE.Vector3(5.2, 3.2, 6.5),
+          target: new THREE.Vector3(0, 1.2, 0),
+          altitude: '3.2 METERS',
+          exp: 3
+        }
+      ];
+
+      let currentChapter = 0;
+      const chapterNodes = document.querySelectorAll('.scroll-chapter-node');
+
+      function goToChapter(chapterIdx, duration = 1600) {
+        if (chapterIdx < 0 || chapterIdx >= ORBITAL_CHAPTERS.length) return;
+        currentChapter = chapterIdx;
+        const chap = ORBITAL_CHAPTERS[chapterIdx];
+        playTone(2525, 0.04);
+
+        chapterNodes.forEach(node => {
+          node.classList.toggle('is-active', parseInt(node.dataset.chapter) === chapterIdx);
+        });
+
+        // Set telemetry readouts
+        if (railSite) railSite.innerHTML = chap.site;
+        if (railCoords) railCoords.textContent = `${chap.coords} [ALT: ${chap.altitude}]`;
+
+        if (chap.exp === 3) {
+          globeGroup.visible = false;
+          surfaceGroup.visible = true;
+          surfaceBar?.classList.add('is-active');
+          metricRuler?.classList.add('is-active');
+          switchExperiment(3);
+          load1to1Hardware(selectedMissionKey || 'apollo-11');
+        } else {
+          globeGroup.visible = true;
+          surfaceGroup.visible = false;
+          surfaceBar?.classList.remove('is-active');
+          metricRuler?.classList.remove('is-active');
+          if (chap.mission) {
+            switchExperiment(2);
+            selectMission(chap.mission, false);
+          } else {
+            switchExperiment(1);
+          }
+        }
+
+        flyCamera(chap.camPos, chap.target, duration);
+      }
+
+      // Click node on scroll rail
+      chapterNodes.forEach(node => {
+        node.addEventListener('click', () => {
+          goToChapter(parseInt(node.dataset.chapter));
+        });
+      });
+
+      // Virtual Scroller: Wheel / Trackpad Driven Navigation
+      let wheelDeltaAcc = 0;
+      let lastScrollTime = 0;
+      window.addEventListener('wheel', (e) => {
+        // Allow native scrolling when inside text article columns
+        if (e.target.closest('.exp04-editorial-container') || e.target.closest('.exp05-research-grid') || e.target.closest('.exp03-schematic-sidebar')) {
+          return;
+        }
+
+        // If currently on 1:1 surface and scrolling up, smoothly ascend back to orbit!
+        if (surfaceGroup.visible && e.deltaY < -25) {
+          const now = performance.now();
+          if (now - lastScrollTime > 600) {
+            lastScrollTime = now;
+            ascendToOrbit();
+          }
+          return;
+        }
+
+        wheelDeltaAcc += e.deltaY;
+        const now = performance.now();
+        if (Math.abs(wheelDeltaAcc) > 60 && now - lastScrollTime > 450) {
+          lastScrollTime = now;
+          const direction = wheelDeltaAcc > 0 ? 1 : -1;
+          wheelDeltaAcc = 0;
+          const next = Math.max(0, Math.min(ORBITAL_CHAPTERS.length - 1, currentChapter + direction));
+          if (next !== currentChapter) {
+            goToChapter(next);
+          }
+        }
+      }, { passive: true });
 
       function switchExperiment(expId) {
         if (activeExp === expId) return;
         activeExp = expId;
-        playTone(2525, 0.04);
 
         navButtons.forEach(b => {
           const isActive = parseInt(b.dataset.exp) === expId;
@@ -1356,53 +3097,37 @@
           p.classList.toggle('is-active', idx + 1 === expId);
         });
 
-        // 3D Scene Modes & Camera Splines
-        if (expId === 1) {
-          // Global Observatory: Majestic wide orbital view
-          globeGroup.visible = true;
-          artifactGroup.visible = false;
-          flyCamera(new THREE.Vector3(0, 0.8, 7.5), new THREE.Vector3(0, 0, 0), 1800);
-          railSite.textContent = 'GLOBAL LUNAR RECONNAISSANCE';
-          railCoords.textContent = '0.0000° N, 0.0000° E';
-        } else if (expId === 2) {
-          // Mission Discovery: Regional tilt focused on Apollo 12 (Ocean of Storms)
-          globeGroup.visible = true;
-          artifactGroup.visible = false;
-          flyCamera(new THREE.Vector3(-1.8, -0.4, 4.4), new THREE.Vector3(-0.4, -0.1, 0), 1800);
-          railSite.textContent = 'OCEANUS PROCELLARUM &bull; APOLLO 12';
-          railCoords.textContent = '3.01239° S, 23.42157° W';
-        } else if (expId === 3) {
-          // Artifact Investigation: 1:1 Scale Hardware Plinth
+        if (expId === 3) {
           globeGroup.visible = false;
-          artifactGroup.visible = true;
-          flyCamera(new THREE.Vector3(5.2, 3.2, 6.5), new THREE.Vector3(0, 1.2, 0), 1800);
-          railSite.textContent = 'INTREPID (LM-6) HARDWARE PLINTH';
-          railCoords.textContent = '1:1 SCALE RECONSTRUCTION';
-        } else if (expId === 4) {
-          // Archival Editorial: Asymmetric documentary horizon
+          surfaceGroup.visible = true;
+          surfaceBar?.classList.add('is-active');
+          metricRuler?.classList.add('is-active');
+          load1to1Hardware(selectedMissionKey || 'apollo-11');
+        } else {
           globeGroup.visible = true;
-          artifactGroup.visible = false;
-          flyCamera(new THREE.Vector3(1.2, -1.8, 5.0), new THREE.Vector3(0, 0, 0), 1800);
-          railSite.textContent = 'APOLLO 12 ARCHIVAL MONOGRAPH';
-          railCoords.textContent = 'HASSELBLAD ACCESSIONS';
-        } else if (expId === 5) {
-          // Scientific Observatory: Analytical instrument vantage
-          globeGroup.visible = true;
-          artifactGroup.visible = false;
-          flyCamera(new THREE.Vector3(-2.2, 2.0, 5.5), new THREE.Vector3(0, 0, 0), 1800);
-          railSite.textContent = 'LUNAR FIELD RESEARCH OBSERVATORY';
-          railCoords.textContent = 'ALSEP STATION 1 TELEMETRY';
-          drawSeismogram();
+          surfaceGroup.visible = false;
+          surfaceBar?.classList.remove('is-active');
+          metricRuler?.classList.remove('is-active');
+          if (expId === 5) {
+            drawSeismogram();
+          }
         }
       }
 
       navButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-          switchExperiment(parseInt(btn.dataset.exp));
+          const exp = parseInt(btn.dataset.exp);
+          playTone(2525, 0.04);
+          switchExperiment(exp);
+          if (exp === 1) flyCamera(new THREE.Vector3(0, 0.8, 7.5), new THREE.Vector3(0, 0, 0), 1600);
+          if (exp === 2) selectMission('apollo-12', true);
+          if (exp === 3) flyCamera(new THREE.Vector3(5.2, 3.2, 6.5), new THREE.Vector3(0, 1.2, 0), 1600);
+          if (exp === 4) flyCamera(new THREE.Vector3(1.2, -1.8, 5.0), new THREE.Vector3(0, 0, 0), 1600);
+          if (exp === 5) flyCamera(new THREE.Vector3(-2.2, 2.0, 5.5), new THREE.Vector3(0, 0, 0), 1600);
         });
       });
 
-      // Smooth Camera Animation
+      // Smooth Camera Animation Engine
       let cameraAnim = null;
       function flyCamera(toPos, toTarget, duration = 1800) {
         const startPos = camera.position.clone();
@@ -1414,7 +3139,7 @@
         function step(now) {
           const elapsed = now - startTime;
           const p = Math.min(1, elapsed / duration);
-          // Quintic ease out
+          // Quintic ease out for butter-smooth camera deceleration
           const ease = 1 - Math.pow(1 - p, 5);
 
           camera.position.lerpVectors(startPos, toPos, ease);
@@ -1446,7 +3171,7 @@
         flyCamera(new THREE.Vector3(0, 0.5, -7.5), new THREE.Vector3(0, 0, 0), 1600);
       });
 
-      // Experiment 02 Mission Selection
+      // Experiment 02 Mission Selection Registry
       const missionButtons = document.querySelectorAll('.mission-select-btn');
       const missionsRegistry = {
         'apollo-12': {
@@ -1483,29 +3208,238 @@
         }
       };
 
+      function selectMission(mKey, moveCamera = true) {
+        selectedMissionKey = mKey;
+        missionButtons.forEach(b => b.classList.toggle('is-active', b.dataset.mission === mKey));
+        const data = missionsRegistry[mKey];
+        if (data) {
+          const tEl = document.getElementById('exp02-title');
+          const cEl = document.getElementById('exp02-coords');
+          const nEl = document.getElementById('exp02-narrative');
+          const iEl = document.getElementById('exp02-img');
+          const cpEl = document.getElementById('exp02-caption-id');
+          if (tEl) tEl.textContent = data.title;
+          if (cEl) cEl.innerHTML = data.coords;
+          if (nEl) nEl.textContent = data.narrative;
+          if (iEl) iEl.src = data.img;
+          if (cpEl) cpEl.textContent = data.captionId;
+
+          if (moveCamera) {
+            flyCamera(data.camPos, new THREE.Vector3(0, 0, 0), 1600);
+          }
+        }
+      }
+
       missionButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           playTone(2525, 0.03);
-          missionButtons.forEach(b => b.classList.remove('is-active'));
-          btn.classList.add('is-active');
-
-          const mKey = btn.dataset.mission;
-          const data = missionsRegistry[mKey];
-          if (data) {
-            document.getElementById('exp02-title').textContent = data.title;
-            document.getElementById('exp02-coords').innerHTML = data.coords;
-            document.getElementById('exp02-narrative').textContent = data.narrative;
-            document.getElementById('exp02-img').src = data.img;
-            document.getElementById('exp02-caption-id').textContent = data.captionId;
-            flyCamera(data.camPos, new THREE.Vector3(0, 0, 0), 1600);
-          }
+          selectMission(btn.dataset.mission, true);
         });
       });
 
-      // Regional zoom button
+      // Regional zoom / Dive to 1:1 hardware button
+      let selectedMissionKey = 'apollo-12';
       document.getElementById('btn-regional-zoom')?.addEventListener('click', () => {
-        playTone(2475, 0.05);
-        flyCamera(new THREE.Vector3(-0.9, -0.2, 2.7), new THREE.Vector3(-0.4, -0.1, 0), 1400);
+        playTone(2525, 0.05);
+        const mData = missionsData.find(m => m.id === selectedMissionKey) || missionsData[0];
+        const targetPos = latLonToVector3(mData.lat, mData.lon, 2.2);
+        performMacroToMicroDive(selectedMissionKey, targetPos, mData.name.toUpperCase(), `${mData.lat.toFixed(2)}°, ${mData.lon.toFixed(2)}°`);
+      });
+
+      // ======================================================================
+      // RAYCASTING: DIRECT CLICK & HOVER INTERACTIVITY ON 3D MOON & SITES
+      // ======================================================================
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      let hoveredMarker = null;
+
+      const hoverTooltip = document.getElementById('marker-hover-tooltip');
+      const surfaceToast = document.getElementById('surface-inspector-toast');
+      const toastTitle = document.getElementById('toast-title');
+      const toastCoords = document.getElementById('toast-coords');
+      const toastGlideBtn = document.getElementById('toast-glide-btn');
+      const toastCloseBtn = document.getElementById('toast-close-btn');
+
+      let targetSurfaceCameraPos = null;
+
+      toastCloseBtn?.addEventListener('click', () => {
+        surfaceToast.style.display = 'none';
+      });
+
+      toastGlideBtn?.addEventListener('click', () => {
+        if (targetSurfaceCameraPos) {
+          playTone(2525, 0.05);
+          flyCamera(targetSurfaceCameraPos, new THREE.Vector3(0, 0, 0), 1500);
+          surfaceToast.style.display = 'none';
+        }
+      });
+
+      // Mouse Move: Hover detection on landing site markers
+      window.addEventListener('pointermove', (e) => {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        if (!globeGroup.visible) return;
+
+        raycaster.setFromCamera(mouse, camera);
+        const markerDots = markerInteractiveList.map(m => m.dot);
+        const intersects = raycaster.intersectObjects(markerDots, false);
+
+        if (intersects.length > 0) {
+          const hitDot = intersects[0].object;
+          const markerData = hitDot.userData;
+          canvas.style.cursor = 'pointer';
+
+          if (hoveredMarker !== hitDot) {
+            hoveredMarker = hitDot;
+            const parentItem = markerInteractiveList.find(m => m.dot === hitDot);
+            if (parentItem) {
+              parentItem.ring.scale.set(1.4, 1.4, 1.4);
+            }
+          }
+
+          if (hoverTooltip) {
+            hoverTooltip.style.display = 'block';
+            hoverTooltip.style.left = `${e.clientX + 14}px`;
+            hoverTooltip.style.top = `${e.clientY - 12}px`;
+            hoverTooltip.textContent = `▲ ${markerData.name.toUpperCase()} • CLICK TO DIVE TO 1:1 SURFACE`;
+          }
+        } else {
+          if (hoveredMarker) {
+            const parentItem = markerInteractiveList.find(m => m.dot === hoveredMarker);
+            if (parentItem) {
+              parentItem.ring.scale.set(1, 1, 1);
+            }
+            hoveredMarker = null;
+          }
+          canvas.style.cursor = '';
+          if (hoverTooltip) hoverTooltip.style.display = 'none';
+        }
+      });
+
+      // Track pointer drag threshold to distinguish clicks from camera orbit drags
+      let pointerDownPos = { x: 0, y: 0, time: 0 };
+      canvas.addEventListener('pointerdown', (e) => {
+        pointerDownPos = { x: e.clientX, y: e.clientY, time: performance.now() };
+      });
+
+      canvas.addEventListener('pointerup', (e) => {
+        const dx = e.clientX - pointerDownPos.x;
+        const dy = e.clientY - pointerDownPos.y;
+        const elapsed = performance.now() - pointerDownPos.time;
+
+        // Only register if tap/click without drag
+        if (Math.hypot(dx, dy) > 8 || elapsed > 400) return;
+
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+        if (!globeGroup.visible) return;
+
+        raycaster.setFromCamera(mouse, camera);
+
+        // 1. Check if clicking on an authentic mission landing marker
+        const markerDots = markerInteractiveList.map(m => m.dot);
+        const markerHits = raycaster.intersectObjects(markerDots, false);
+
+        if (markerHits.length > 0) {
+          const mData = markerHits[0].object.userData;
+          playTone(2525, 0.05);
+          selectedMissionKey = mData.id;
+
+          // Perform seamless Macro-to-Micro dive right into this mission's 1:1 surface model
+          performMacroToMicroDive(
+            mData.id,
+            markerHits[0].point,
+            mData.name.toUpperCase(),
+            `${mData.lat.toFixed(4)}°, ${mData.lon.toFixed(4)}° • ${mData.region.toUpperCase()}`
+          );
+          return;
+        }
+
+        // 2. Check if clicking anywhere on the photorealistic lunar surface
+        const moonHits = raycaster.intersectObject(moonMesh, false);
+        if (moonHits.length > 0) {
+          const hit = moonHits[0];
+          const localPt = hit.point.clone();
+          const r = 2.2;
+
+          // Convert 3D Cartesian coordinates to selenographic latitude and longitude
+          const lat = Math.asin(Math.max(-1, Math.min(1, localPt.y / r))) * (180 / Math.PI);
+          // Compensate for moonMesh.rotation.y = -Math.PI / 2
+          const lon = ((Math.atan2(localPt.z, -localPt.x) * (180 / Math.PI) - 90 + 540) % 360) - 180;
+
+          // Estimate geographic terrain classification
+          let region = 'LUNAR REGOLITH HIGHLANDS';
+          if (lat > -10 && lat < 40 && lon > -70 && lon < -10) region = 'OCEANUS PROCELLARUM (OCEAN OF STORMS)';
+          else if (lat > -5 && lat < 25 && lon > 10 && lon < 45) region = 'MARE TRANQUILLITATIS (SEA OF TRANQUILITY)';
+          else if (lat > 15 && lat < 50 && lon > -40 && lon < 10) region = 'MARE IMBRIUM (SEA OF RAINS)';
+          else if (lat < -40 && Math.abs(lon) > 130) region = 'SOUTH POLE-AITKEN BASIN (FAR SIDE)';
+          else if (lat < -60) region = 'SOUTHERN POLAR COLD TRAP HIGHLANDS';
+
+          // Spawn pulsing laser reticle on the surface
+          spawnSurfaceReticle(hit.point, hit.normal || localPt.clone().normalize());
+          playTone(2100, 0.06);
+
+          // Update toast & telemetry
+          targetSurfaceCameraPos = hit.point.clone().normalize().multiplyScalar(3.8);
+
+          if (surfaceToast) {
+            surfaceToast.style.display = 'flex';
+            toastTitle.textContent = `TARGET ACQUIRED: ${region}`;
+            const latStr = `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}`;
+            const lonStr = `${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? 'E' : 'W'}`;
+            toastCoords.textContent = `${latStr}, ${lonStr} • LOLA ELEVATION: ${(Math.sin(lat * 0.1) * 1.8).toFixed(1)} KM`;
+          }
+
+          if (railSite) railSite.textContent = region;
+          if (railCoords) railCoords.textContent = `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? 'N' : 'S'}, ${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? 'E' : 'W'}`;
+        }
+      });
+
+      // ======================================================================
+      // INTERACTIVE SOLAR TERMINATOR SCRUBBER & LIGHTING TIME-LAPSE
+      // ======================================================================
+      const sunSlider = document.getElementById('sun-slider');
+      const sunAngleVal = document.getElementById('sun-angle-val');
+      const btnSunAuto = document.getElementById('btn-sun-auto');
+      let isSunAutoOrbit = false;
+      let currentSunDeg = 105;
+
+      function getCardinalDirection(deg) {
+        const cardinals = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+        const idx = Math.round(deg / 22.5) % 16;
+        return cardinals[idx];
+      }
+
+      function applySunPosition(deg) {
+        currentSunDeg = deg;
+        const rad = (deg * Math.PI) / 180;
+        // Orbit light in 3D around the Moon, casting moving shadows into LOLA craters
+        sunLight.position.set(
+          14 * Math.cos(rad),
+          3.5 * Math.sin(rad * 0.7),
+          14 * Math.sin(rad)
+        );
+
+        if (sunSlider) sunSlider.value = deg;
+        const dir = getCardinalDirection(deg);
+        if (sunAngleVal) sunAngleVal.textContent = `${Math.round(deg)}° ${dir}`;
+        if (railAzimuth) railAzimuth.textContent = `${Math.round(deg)}° ${dir}`;
+        if (railSun) railSun.textContent = `${Math.round(10 + 12 * Math.cos(rad * 0.5))}°`;
+      }
+
+      sunSlider?.addEventListener('input', (e) => {
+        isSunAutoOrbit = false;
+        btnSunAuto?.classList.remove('is-active');
+        applySunPosition(parseFloat(e.target.value));
+      });
+
+      btnSunAuto?.addEventListener('click', () => {
+        isSunAutoOrbit = !isSunAutoOrbit;
+        playTone(isSunAutoOrbit ? 2525 : 2100, 0.03);
+        btnSunAuto.classList.toggle('is-active', isSunAutoOrbit);
+        btnSunAuto.textContent = isSunAutoOrbit ? 'ORBITING...' : 'ORBIT SUN';
       });
 
       // Experiment 03 Controls
@@ -1601,9 +3535,15 @@
         requestAnimationFrame(animate);
         controls.update();
 
-        // Gentle globe rotation when in Global Observatory and idle
-        if (activeExp === 1 && !controls.state == -1) {
-          globeGroup.rotation.y += 0.0008;
+        // Automatic sun orbit time-lapse if enabled
+        if (isSunAutoOrbit) {
+          currentSunDeg = (currentSunDeg + 0.35) % 360;
+          applySunPosition(currentSunDeg);
+        }
+
+        // Gentle globe rotation when in Global Observatory and idle (controls.state === -1 means idle)
+        if (globeGroup.visible && !isSunAutoOrbit && controls.state === -1) {
+          globeGroup.rotation.y += 0.0006;
         }
 
         renderer.render(scene, camera);
