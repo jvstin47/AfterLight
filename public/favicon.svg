@@ -1,14 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="14" fill="#07090C" />
-  <circle cx="32" cy="32" r="22" fill="none" stroke="#252C32" stroke-width="2" />
-  <!-- Lunar Moon Sphere & Subtle Lighting -->
-  <circle cx="32" cy="32" r="19" fill="#14191E" />
-  <!-- Glowing Crescent -->
-  <path d="M 32 13 A 19 19 0 0 1 32 51 A 14 19 0 0 0 32 13 Z" fill="#ECEAE3" />
-  <!-- Center Instrument Reticle -->
-  <circle cx="32" cy="32" r="3" fill="#E4774F" />
-  <line x1="32" y1="23" x2="32" y2="27" stroke="#E4774F" stroke-width="1.5" />
-  <line x1="32" y1="37" x2="32" y2="41" stroke="#E4774F" stroke-width="1.5" />
-  <line x1="23" y1="32" x2="27" y2="32" stroke="#E4774F" stroke-width="1.5" />
-  <line x1="37" y1="32" x2="41" y2="32" stroke="#E4774F" stroke-width="1.5" />
+  <defs>
+    <style>
+      :root {
+        --bg-disc: #07090C;
+        --moon-body: #1E2328;
+        --crescent-color: #ECEAE3;
+        --reticle-color: #E4774F;
+        --border-color: #777F85;
+      }
+      @media (prefers-color-scheme: light) {
+        :root {
+          --bg-disc: #0C1015;
+          --moon-body: #252C32;
+          --crescent-color: #FFFFFF;
+          --reticle-color: #E4774F;
+          --border-color: #8EADBF;
+        }
+      }
+      .bg-disc { fill: var(--bg-disc); }
+      .rim-ring { stroke: var(--border-color); stroke-width: 1.5; fill: none; opacity: 0.8; }
+      .moon-body { fill: var(--moon-body); }
+      .crescent { fill: var(--crescent-color); }
+      .reticle-core { fill: var(--reticle-color); }
+      .reticle-cross { stroke: var(--reticle-color); stroke-width: 2; stroke-linecap: round; }
+    </style>
+  </defs>
+
+  <!-- Deep Space Base Container Disc -->
+  <circle cx="32" cy="32" r="30" class="bg-disc" />
+  <circle cx="32" cy="32" r="28" class="rim-ring" />
+
+  <!-- Moon Dark Basalt Hemisphere -->
+  <circle cx="32" cy="32" r="23" class="moon-body" />
+
+  <!-- Illuminated Lunar Crescent (Eastward Sunlit Limb) -->
+  <path class="crescent" d="M 32 9 A 23 23 0 0 1 32 55 A 16 23 0 0 0 32 9 Z" />
+
+  <!-- Precision Landing Site Reticle Beacon -->
+  <circle cx="28" cy="32" r="4" class="reticle-core" />
+  <line x1="28" y1="21" x2="28" y2="25" class="reticle-cross" />
+  <line x1="28" y1="39" x2="28" y2="43" class="reticle-cross" />
+  <line x1="17" y1="32" x2="21" y2="32" class="reticle-cross" />
+  <line x1="35" y1="32" x2="39" y2="32" class="reticle-cross" />
 </svg>
