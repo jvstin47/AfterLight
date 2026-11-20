@@ -5,6 +5,13 @@
  */
 
 import { lunarHeritageApi } from '../api/endpoints/lunarHeritage.js';
+import {
+  GLOBAL_MISSIONS,
+  FLAGS_OF_THE_MOON,
+  LUNAR_SCIENCE_EXPERIMENTS,
+  LUNAR_GEOLOGY_MODULES,
+  OUTER_SPACE_TREATY_DISCLAIMER
+} from '../data/globalLunarData.js';
 import { distanceToApollo12, bearingToApollo12 } from '../utils/astronomy.js';
 import { store } from '../state/Store.js';
 import { ActionTypes } from '../state/actions.js';
@@ -169,6 +176,117 @@ class LunarAtlasService {
       logger.error('Failed to load geology modules:', err);
       return [];
     }
+  }
+
+  /**
+   * Computes category and mode totals for the atlas tabs.
+   * @returns {Promise<{ all: number, rovers: number, manned: number, vanguard: number, impacts: number, flags: number, science: number, geology: number }>}
+   */
+  async getCategoryCounts() {
+    const sites = await this.getAllSites();
+    const flagsData = await this.getFlags();
+    const science = await this.getScienceExperiments();
+    const geology = await this.getGeologyModules();
+
+    return {
+      all: sites.length,
+      rovers: sites.filter((s) => s.group === 'rovers' || s.category === 'Planetary Rover').length,
+      manned: sites.filter((s) => s.group === 'manned' || s.category.includes('Apollo') || s.category.includes('Manned')).length,
+      vanguard: sites.filter((s) => s.group === 'vanguard' || s.category.includes('Robotic Lander') || s.category.includes('Vanguard')).length,
+      impacts: sites.filter((s) => s.group === 'impacts' || s.category.includes('Impact')).length,
+      flags: (flagsData.flags || []).length,
+      science: science.length,
+      geology: geology.length
+    };
+  }
+
+
+  /**
+   * Synchronous count aggregation for UI tab badges.
+   */
+  getCategoryCountsSync() {
+    return {
+      all: GLOBAL_MISSIONS.length,
+      rovers: GLOBAL_MISSIONS.filter((s) => s.group === 'rovers' || s.category === 'Planetary Rover').length,
+      manned: GLOBAL_MISSIONS.filter((s) => s.group === 'manned' || s.category.includes('Apollo') || s.category.includes('Manned')).length,
+      vanguard: GLOBAL_MISSIONS.filter((s) => s.group === 'vanguard' || s.category.includes('Robotic Lander') || s.category.includes('Vanguard')).length,
+      impacts: GLOBAL_MISSIONS.filter((s) => s.group === 'impacts' || s.category.includes('Impact')).length,
+      flags: FLAGS_OF_THE_MOON.length,
+      science: LUNAR_SCIENCE_EXPERIMENTS.length,
+      geology: LUNAR_GEOLOGY_MODULES.length
+    };
+  }
+
+  /**
+   * Synchronous site filtering for instant UI re-renders.
+   */
+  filterSitesSync({ category = 'all', agency = 'ALL', era = 'all', query = '' } = {}) {
+    const catLower = category.toLowerCase();
+    const agUpper = agency.toUpperCase();
+    const qLower = query.toLowerCase().trim();
+
+    return GLOBAL_MISSIONS.filter((site) => {
+      // Category filter
+      let matchesCategory = true;
+      if (catLower === 'rovers') {
+        matchesCategory = site.group === 'rovers' || site.category === 'Planetary Rover';
+      } else if (catLower === 'manned' || catLower === 'apollo') {
+        matchesCategory = site.group === 'manned' || site.category.includes('Apollo') || site.category.includes('Manned');
+      } else if (catLower === 'vanguard') {
+        matchesCategory = site.group === 'vanguard' || site.category.includes('Robotic Lander') || site.category.includes('Vanguard');
+      } else if (catLower === 'impacts') {
+        matchesCategory = site.group === 'impacts' || site.category.includes('Impact');
+      }
+      if (!matchesCategory) return false;
+
+      // Agency filter
+      if (agUpper !== 'ALL') {
+        let matchesAgency = false;
+        if (agUpper === 'NASA') matchesAgency = site.agency?.toUpperCase().includes('NASA');
+        else if (agUpper === 'USSR') matchesAgency = site.agency?.toUpperCase().includes('USSR') || site.agency?.toUpperCase().includes('OKB') || site.agency?.toUpperCase().includes('LAVOCHKIN');
+        else if (agUpper === 'CNSA') matchesAgency = site.agency?.toUpperCase().includes('CNSA') || site.country?.toLowerCase().includes('china');
+        else if (agUpper === 'ISRO') matchesAgency = site.agency?.toUpperCase().includes('ISRO') || site.country?.toLowerCase().includes('india');
+        else if (agUpper === 'JAXA') matchesAgency = site.agency?.toUpperCase().includes('JAXA') || site.country?.toLowerCase().includes('japan');
+        else if (agUpper === 'COMMERCIAL') matchesAgency = site.category?.toLowerCase().includes('commercial') || site.agency?.toLowerCase().includes('intuitive');
+        else matchesAgency = site.agency?.toUpperCase().includes(agUpper);
+        if (!matchesAgency) return false;
+      }
+
+      // Era filter
+      if (era && era !== 'all' && site.era !== era) {
+        return false;
+      }
+
+      // Search query
+      if (!qLower) return true;
+      const searchable = [
+        site.name,
+        site.designation,
+        site.agency,
+        site.country,
+        site.region,
+        site.astronauts,
+        ...(site.keyArtifacts || []),
+        site.description
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      return searchable.includes(qLower);
+    });
+  }
+
+  getFlagsSync() {
+    return {
+      flags: FLAGS_OF_THE_MOON,
+      treatyDisclaimer: OUTER_SPACE_TREATY_DISCLAIMER
+    };
+  }
+
+  getScienceExperimentsSync() {
+    return LUNAR_SCIENCE_EXPERIMENTS;
+  }
+
+  getGeologyModulesSync() {
+    return LUNAR_GEOLOGY_MODULES;
   }
 
   /**

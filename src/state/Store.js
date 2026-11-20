@@ -281,3 +281,35 @@ class Store {
 }
 
 export const store = new Store();
+
+// ==============================================================================
+// DECLARATIVE STATE SELECTORS
+// ==============================================================================
+export const selectApp = (state) => state.app;
+export const selectAppStage = (state) => state.app.stage;
+export const selectIsLoading = (state) => state.app.isLoading;
+export const selectIsWebGLEnabled = (state) => state.app.isWebGLEnabled;
+
+export const selectCamera = (state) => state.camera;
+export const selectActivePreset = (state) => state.camera.activePreset;
+export const selectIsCameraTransitioning = (state) => state.camera.isTransitioning;
+export const selectSurveyorProximity = (state) => state.camera.surveyorProximity;
+
+export const selectAudio = (state) => state.audio;
+export const selectIsAudioMuted = (state) => state.audio.isMuted;
+export const selectAudioVolume = (state) => state.audio.volume;
+
+export const selectInspection = (state) => state.inspection;
+export const selectSelectedArtifact = (state) => state.inspection.selectedArtifact;
+export const selectIsInspectionOpen = (state) => state.inspection.isOpen;
+
+export const selectModals = (state) => state.modals;
+export const selectIsTraverseOpen = (state) => state.modals.isTraverseOpen;
+export const selectIsExpeditionsOpen = (state) => state.modals.isExpeditionsOpen;
+export const selectIsQuickSearchOpen = (state) => state.modals.isQuickSearchOpen;
+export const selectIsVidiconActive = (state) => state.modals.isVidiconActive;
+
+export const selectAtlas = (state) => state.atlas;
+export const selectAtlasFilter = (state) => state.atlas.activeFilter;
+export const selectAtlasSearchQuery = (state) => state.atlas.searchQuery;
+export const selectSelectedSiteId = (state) => state.atlas.selectedSiteId;

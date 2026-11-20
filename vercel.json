@@ -63,18 +63,10 @@
     },
     {
       "source": "/design-lab",
-      "destination": "/design-lab/index.html"
+      "destination": "/globe.html"
     },
     {
-      "source": "/fernhollow",
-      "destination": "/fernhollow.html"
-    },
-    {
-      "source": "/tidewell",
-      "destination": "/tidewell.html"
-    },
-    {
-      "source": "/((?!assets/|draco/|globe|design-lab|fernhollow|tidewell|favicon|apple-touch-icon|og-image|robots\\.txt|sitemap\\.xml|site\\.webmanifest).*)",
+      "source": "/((?!assets/|draco/|globe|design-lab|favicon|apple-touch-icon|og-image|robots\\.txt|sitemap\\.xml|site\\.webmanifest).*)",
       "destination": "/index.html"
     }
   ]

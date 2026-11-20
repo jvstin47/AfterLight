@@ -11,13 +11,7 @@ import { lunarAtlasService, ATLAS_MODES } from '../services/LunarAtlasService.js
 import { eventBus } from '../core/EventBus.js';
 import { store } from '../state/Store.js';
 import { ActionTypes } from '../state/actions.js';
-import {
-  GLOBAL_MISSIONS,
-  FLAGS_OF_THE_MOON,
-  LUNAR_SCIENCE_EXPERIMENTS,
-  LUNAR_GEOLOGY_MODULES,
-  OUTER_SPACE_TREATY_DISCLAIMER
-} from '../data/globalLunarData.js';
+// Raw domain data decoupled and accessed exclusively through lunarAtlasService
 import { ArtifactHoloViewer } from './ArtifactHoloViewer.js';
 
 export class ExpeditionsModal {
@@ -37,53 +31,16 @@ export class ExpeditionsModal {
   }
 
   getFilteredSites() {
-    return GLOBAL_MISSIONS.filter((site) => {
-      // Category filter
-      let matchesCategory = true;
-      if (this.activeFilter === 'rovers') {
-        matchesCategory = site.group === 'rovers' || site.category === 'Planetary Rover';
-      } else if (this.activeFilter === 'manned' || this.activeFilter === 'apollo') {
-        matchesCategory = site.group === 'manned' || site.category.includes('Apollo') || site.category.includes('Manned');
-      } else if (this.activeFilter === 'vanguard') {
-        matchesCategory = site.group === 'vanguard' || site.category.includes('Robotic Lander') || site.category.includes('Vanguard');
-      } else if (this.activeFilter === 'impacts') {
-        matchesCategory = site.group === 'impacts' || site.category.includes('Impact');
-      }
-      if (!matchesCategory) return false;
-
-      // Agency filter
-      if (this.activeAgency !== 'ALL') {
-        let matchesAgency = false;
-        const agUpper = this.activeAgency.toUpperCase();
-        if (agUpper === 'NASA') matchesAgency = site.agency?.toUpperCase().includes('NASA');
-        else if (agUpper === 'USSR') matchesAgency = site.agency?.toUpperCase().includes('USSR') || site.agency?.toUpperCase().includes('OKB') || site.agency?.toUpperCase().includes('LAVOCHKIN');
-        else if (agUpper === 'CNSA') matchesAgency = site.agency?.toUpperCase().includes('CNSA') || site.country?.toLowerCase().includes('china');
-        else if (agUpper === 'ISRO') matchesAgency = site.agency?.toUpperCase().includes('ISRO') || site.country?.toLowerCase().includes('india');
-        else if (agUpper === 'JAXA') matchesAgency = site.agency?.toUpperCase().includes('JAXA') || site.country?.toLowerCase().includes('japan');
-        else if (agUpper === 'COMMERCIAL') matchesAgency = site.category?.toLowerCase().includes('commercial') || site.agency?.toLowerCase().includes('intuitive');
-        if (!matchesAgency) return false;
-      }
-
-      // Era filter
-      if (this.activeEra !== 'all' && site.era !== this.activeEra) {
-        return false;
-      }
-
-      return true;
+    return lunarAtlasService.filterSitesSync({
+      category: this.activeFilter,
+      agency: this.activeAgency,
+      era: this.activeEra,
+      query: this.searchQuery
     });
   }
 
   render() {
-    const counts = {
-      all: GLOBAL_MISSIONS.length,
-      rovers: GLOBAL_MISSIONS.filter((s) => s.group === 'rovers').length,
-      manned: GLOBAL_MISSIONS.filter((s) => s.group === 'manned').length,
-      vanguard: GLOBAL_MISSIONS.filter((s) => s.group === 'vanguard').length,
-      impacts: GLOBAL_MISSIONS.filter((s) => s.group === 'impacts').length,
-      flags: FLAGS_OF_THE_MOON.length,
-      science: LUNAR_SCIENCE_EXPERIMENTS.length,
-      geology: LUNAR_GEOLOGY_MODULES.length
-    };
+    const counts = lunarAtlasService.getCategoryCountsSync();
 
     this.container.innerHTML = `
       <div class="expeditions-backdrop"></div>
@@ -344,7 +301,7 @@ export class ExpeditionsModal {
               <h4 class="ost-title">${OUTER_SPACE_TREATY_DISCLAIMER.article}</h4>
             </div>
             <blockquote class="ost-quote">
-              ${OUTER_SPACE_TREATY_DISCLAIMER.text}
+              ${lunarAtlasService.getFlagsSync().treatyDisclaimer.text}
             </blockquote>
             <p class="ost-context">
               ${OUTER_SPACE_TREATY_DISCLAIMER.educationalContext}
@@ -353,7 +310,7 @@ export class ExpeditionsModal {
         </div>
 
         <div class="flags-grid">
-          ${FLAGS_OF_THE_MOON.map((flag) => {
+          ${lunarAtlasService.getFlagsSync().flags.map((flag) => {
             let conditionClass = 'badge-bleached';
             if (flag.condition === 'STANDING_INTACT') conditionClass = 'badge-intact';
             else if (flag.condition === 'TOPPLED_ON_REGOLITH') conditionClass = 'badge-toppled';
@@ -424,7 +381,7 @@ export class ExpeditionsModal {
         </div>
 
         <div class="science-grid">
-          ${LUNAR_SCIENCE_EXPERIMENTS.map((exp) => `
+          ${lunarAtlasService.getScienceExperimentsSync().map((exp) => `
             <article class="science-card ${exp.isOperatingToday ? 'is-active-instrument' : ''}">
               <header class="science-card-header">
                 <div class="science-icon-acronym">
@@ -481,7 +438,7 @@ export class ExpeditionsModal {
         </div>
 
         <div class="geology-grid">
-          ${LUNAR_GEOLOGY_MODULES.map((geo) => `
+          ${lunarAtlasService.getGeologyModulesSync().map((geo) => `
             <article class="geology-card">
               <header class="geology-card-header">
                 <div class="geology-icon-badge">${geo.icon}</div>

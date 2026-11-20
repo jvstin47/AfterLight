@@ -296,7 +296,8 @@ export class GlobalSiteManager {
   }
 
   spawnHardwareForSite(site) {
-    switch (site.entityType) {
+    try {
+      switch (site.entityType) {
       case 'lunokhod-1':
         return createLunokhodRover(this.elevationFn, { posX: 0, posZ: 0, isLunokhod2: false });
       case 'lunokhod-2':
@@ -323,6 +324,10 @@ export class GlobalSiteManager {
         return createSovietLunaLander(this.elevationFn, { posX: 0, posZ: 0, type: 'luna-2' });
       default:
         return null;
+      }
+    } catch (err) {
+      console.error('[GlobalSiteManager] Failed to spawn hardware for site:', site?.id, err);
+      return null;
     }
   }
 

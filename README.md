@@ -97,36 +97,87 @@ For full guidelines, see [docs/SCIENTIFIC_INTEGRITY.md](docs/SCIENTIFIC_INTEGRIT
 
 ---
 
-## Repository Structure
+## Repository & Source Structure
 
 ```
 Afterlight/
-├── .gitattributes                               # Git LFS tracking & line-ending normalization
-├── .gitignore                                   # Comprehensive ignore rules for OS, IDE, and build tools
-├── LICENSE                                      # Dual licensing: MIT for original code/docs
-├── THIRD_PARTY_NOTICES.md                       # Formal NASA and third-party attribution records
-├── CONTRIBUTING.md                              # Contribution standards, branch & commit conventions
-├── CHANGELOG.md                                 # Milestone history & changes
-├── README.md                                    # Master project documentation
-├── catalog/
-│   ├── ASSET_INVENTORY.csv                      # Manifest of 57 assets with SHA-256 hashes
-│   ├── ASSET_CATALOG.md                         # Contextual asset catalog with relative links
-│   └── APOLLO_12_HARDWARE_REGISTRY.md           # Authoritative inventory of surface artifacts
-├── docs/
-│   ├── PROJECT_ROADMAP.md                       # Detailed multi-phase development plan
-│   ├── SCIENTIFIC_INTEGRITY.md                  # Protocol for factual claims & geodesy
-│   ├── LICENSING_AND_ATTRIBUTION.md             # In-depth rights management framework
-│   ├── mission_reports/                         # NTRS flight reports (PDF) & executive summaries
-│   ├── surveyor_documentation/                  # Forensic studies of returned Surveyor hardware
-│   ├── alsep_documentation/                     # Technical systems manuals for ALSEP Array A
-│   └── transcripts_and_flight_plans/            # Verbatim surface communications logs
-└── assets/
-    ├── 3d_models/                               # GLTF & Wavefront OBJ models with technical specs
-    ├── terrain_and_cartography/                 # LROC orthophotos, DEM profiles, GeoJSON traverses
-    ├── photography/                             # Authentic 70mm Hasselblad surface imagery
-    ├── schematics_and_diagrams/                 # Vector blueprints (SVG) of LM, Surveyor, and ALSEP
-    └── visual_references_and_mood/              # PBR calibrations, optical physics & audio design
+├── .env.example                               # Canonical template of runtime environment variables
+├── index.html                                 # Apollo 12 Statio Cognitum interactive surface app
+├── package.json                               # Dependencies & build scripts
+├── vite.config.js                             # Vite bundler configuration & path aliases
+├── vercel.json                                # Edge routing, security headers & clean rewrites
+├── public/                                    # Static web assets & secondary entry points
+│   ├── favicon.svg                            # Production vector favicon
+│   ├── favicon.ico                            # Multi-resolution fallback favicon
+│   ├── favicon-16x16.png / 32x32.png          # High-DPI raster favicons
+│   ├── apple-touch-icon.png                   # iOS home screen icon (180x180)
+│   ├── android-chrome-192x192 / 512x512.png   # PWA manifest icons
+│   ├── site.webmanifest                       # Web application manifest
+│   ├── robots.txt                             # Production search crawler rules
+│   └── globe.html                             # 3D Photorealistic Global Lunar Heritage & Design Lab
+├── src/                                       # Modular Application Source Code
+│   ├── main.js                                # Application bootstrap & error boundary orchestration
+│   ├── api/                                   # Unified API facade, HTTP client & endpoint modules
+│   ├── config/                                # Decoupled environment loader & astronomical constants
+│   ├── core/                                  # Foundation engines (AssetManager, AudioManager, EventBus)
+│   ├── data/                                  # Curated geodetic & historical datasets
+│   ├── entities/                              # 1:1 scale procedural & GLTF 3D spacecraft/rover meshes
+│   ├── scene/                                 # Three.js WebGL terrain, lighting & camera engines
+│   ├── services/                              # Decoupled domain business logic (Atlas, Traverse, Audio)
+│   ├── state/                                 # Centralized Redux-style store, actions & slice selectors
+│   ├── styles/                                # Scoped component stylesheets
+│   ├── ui/                                    # Pure DOM presentation views & interactive modals
+│   └── utils/                                 # Spherical trigonometry, formatting & structured logging
+├── docs/                                      # Engineering standards & historical research
+│   ├── ARCHITECTURE_AND_FOLDER_STRUCTURE.md   # Definitive codebase organization standard
+│   ├── ARCHITECTURE.md                        # High-level architecture & data-flow guide
+│   ├── SCIENTIFIC_INTEGRITY.md                # Geodetic standards & historical validation protocol
+│   └── LICENSING_AND_ATTRIBUTION.md           # Rights management & NASA attribution documentation
+├── catalog/                                   # Curated asset inventories & registries
+│   ├── ASSET_INVENTORY.csv                    # Manifest of cataloged assets with SHA-256 hashes
+│   ├── ASSET_CATALOG.md                       # Contextual asset catalog with relative links
+│   └── APOLLO_12_HARDWARE_REGISTRY.md         # Authoritative inventory of surface artifacts
+└── assets/                                    # Canonical shared 3D models, photography & terrains
 ```
+
+For complete technical specifications, consult [docs/ARCHITECTURE_AND_FOLDER_STRUCTURE.md](docs/ARCHITECTURE_AND_FOLDER_STRUCTURE.md).
+
+---
+
+## Development & Deployment
+
+### Prerequisites
+- Node.js >= 18.0.0
+- npm >= 9.0.0
+
+### Local Development Setup
+```bash
+# 1. Clone repository
+git clone https://github.com/justin/Afterlight.git
+cd Afterlight
+
+# 2. Configure environment
+cp .env.example .env
+
+# 3. Install dependencies
+npm install
+
+# 4. Start local development server
+npm run dev
+```
+
+### Production Build
+```bash
+# Compile optimized bundle to dist/
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+### Dual Experience Routing
+- **`/` (`index.html`):** Apollo 12 Statio Cognitum surface simulation (PBR regolith shader, in situ Surveyor 3 inspection, ALSEP array, EVA-1/EVA-2 traverse cartography).
+- **`/globe` or `/design-lab` (`public/globe.html`):** Photorealistic 3D NASA Moon with orbit-to-surface zoom, global heritage landing sites, and 1:1 true-to-scale spacecraft models.
 
 ---
 

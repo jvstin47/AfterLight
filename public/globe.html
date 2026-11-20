@@ -1864,11 +1864,32 @@
       const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
       camera.position.set(0, 0, 7.5);
 
-      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.0;
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+      } catch (err) {
+        console.warn('[Afterlight] WebGL context creation failed in globe.html:', err);
+        const fallbackOverlay = document.createElement('div');
+        fallbackOverlay.style.cssText = 'position:fixed;inset:0;background:#050709;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#e2e8f0;font-family:monospace;padding:2rem;text-align:center;';
+        fallbackOverlay.innerHTML = `
+          <div style="max-width:540px;border:1px solid rgba(220,38,38,0.4);background:rgba(20,10,12,0.85);padding:2rem;border-radius:6px;">
+            <div style="color:#ef4444;font-size:1.1rem;font-weight:700;margin-bottom:1rem;letter-spacing:0.1em;">WEBGL CONTEXT UNAVAILABLE</div>
+            <p style="font-size:0.875rem;line-height:1.6;color:#94a3b8;margin-bottom:1.5rem;">
+              The 3D graphics hardware context could not be acquired or the browser context limit was exceeded across active tabs.
+            </p>
+            <div style="display:flex;gap:1rem;justify-content:center;">
+              <button onclick="location.reload()" style="background:#2563eb;color:#fff;border:none;padding:0.6rem 1.2rem;font-family:monospace;cursor:pointer;border-radius:4px;font-size:0.8rem;letter-spacing:0.05em;">RETRY SESSION</button>
+              <a href="/" style="background:transparent;color:#38bdf8;border:1px solid #0284c7;padding:0.6rem 1.2rem;font-family:monospace;text-decoration:none;border-radius:4px;font-size:0.8rem;letter-spacing:0.05em;">PRIMARY ARCHIVE</a>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(fallbackOverlay);
+        return;
+      }
 
       const controls = new THREE.OrbitControls(camera, canvas);
       controls.enableDamping = true;

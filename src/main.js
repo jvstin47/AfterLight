@@ -56,8 +56,9 @@ async function renderFallback(fallbackContainer) {
  * Core initialization sequence.
  */
 async function init() {
-  // Initialize Global Runtime Error Boundary
-  errorBoundary.init();
+  try {
+    // Initialize Global Runtime Error Boundary
+    errorBoundary.init();
 
   const canvas = document.getElementById('webgl-canvas');
   const markersLayer = document.getElementById('markers-layer');
@@ -256,7 +257,15 @@ async function init() {
     }
   });
 
-  logger.info('AFTERLIGHT — Architectural refactoring active. Monument operational.');
+    logger.info('AFTERLIGHT — Architectural refactoring active. Monument operational.');
+  } catch (err) {
+    logger.error('[Main] Critical bootstrap failure:', err);
+    if (typeof errorBoundary !== 'undefined') {
+      errorBoundary.handleError(err, 'BootstrapFailure');
+    }
+    const fallbackContainer = document.getElementById('fallback-container');
+    await renderFallback(fallbackContainer);
+  }
 }
 
 window.addEventListener('DOMContentLoaded', init);

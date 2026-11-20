@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import { TRAVERSE_DATA } from '../data/traverseData.js';
+import { traverseService } from '../services/TraverseService.js';
 import { audioService } from '../services/AudioService.js';
 import { eventBus } from '../core/EventBus.js';
 import { store } from '../state/Store.js';
@@ -233,7 +233,7 @@ export class TraverseModal {
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
 
-    const data = TRAVERSE_DATA[evaKey];
+    const data = traverseService.getEvaById(evaKey);
     if (!data) return;
 
     // Update details card summary
@@ -260,9 +260,8 @@ export class TraverseModal {
     pathsLayer.innerHTML = '';
     stationsLayer.innerHTML = '';
 
+    const pathD = traverseService.getSvgPath(data.id);
     if (data.id === 'eva1') {
-      // EVA 1 Path: Intrepid -> MESA -> ALSEP -> Flag -> Return
-      const pathD = `M 0 0 L 2.5 1.5 L -106 -75 L 0 7 L 0 0`;
       pathsLayer.innerHTML = `<path d="${pathD}" class="traverse-path-eva1" />`;
 
       data.waypoints.forEach((wp) => {
@@ -281,8 +280,6 @@ export class TraverseModal {
         stationsLayer.appendChild(circle);
       });
     } else {
-      // EVA 2 Path: Loop around Head -> Bench -> Sharp -> Halo -> Surveyor Crater -> Intrepid
-      const pathD = `M 0 0 L -55 -35 L -95 -30 L -140 45 L -210 95 L -100 130 L 20 100 L 72 150 L 60 85 L 0 0`;
       pathsLayer.innerHTML = `<path d="${pathD}" class="traverse-path-eva2" />`;
 
       data.stations.forEach((st) => {

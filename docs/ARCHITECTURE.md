@@ -49,16 +49,24 @@ Afterlight/
     │   └── StateMachine.js       # Stage lifecycle coordinator synced with Store
     ├── data/                     # Pure historical & cartographic datasets
     │   ├── artifactsData.js      # Apollo 12 in situ hardware specifications
+    │   ├── globalLunarData.js    # Global lunar coordinates, missions & surface features
     │   ├── lunarHeritageData.js  # Catalog of all 18 lunar sites & 9 rovers
     │   └── traverseData.js       # EVA-1 & EVA-2 traverse route stations
     ├── entities/                 # 3D Three.js scene meshes & fiducials
     │   ├── ALSEP.js              # Apollo Lunar Surface Experiments Package
+    │   ├── ApolloLRV.js          # Apollo Lunar Roving Vehicle 1:1 procedural mesh
     │   ├── FlagAndEquipment.js   # US Flag, solar wind foil, TV camera
     │   ├── LunarModule.js        # LM-6 Intrepid descent stage & ladder
+    │   ├── LunokhodRover.js      # Soviet Lunokhod 1 & 2 rovers 1:1 procedural mesh
+    │   ├── PragyanRover.js       # Chandrayaan-3 Pragyan rover 1:1 procedural mesh
+    │   ├── SLIMSoraQ.js          # JAXA SLIM lander & LEV-2 Sora-Q 1:1 procedural mesh
+    │   ├── SovietLunaLander.js   # Soviet Luna 9, 16, 17, 20, 24 1:1 procedural mesh
     │   ├── Surveyor3.js          # Surveyor 3 robotic lander in crater
-    │   └── WaypointMarkers.js    # 3D projected screen fiducials
+    │   ├── WaypointMarkers.js    # 3D projected screen fiducials
+    │   └── YutuRover.js          # Chang'e 3 & 4 Yutu rovers 1:1 procedural mesh
     ├── scene/                    # Three.js 3D environment & shaders
     │   ├── CameraController.js   # Orbit & tween camera controller
+    │   ├── GlobalSiteManager.js  # Macro-to-micro site transitions & entity positioning
     │   ├── LunarLighting.js      # Physically plausible Sun, Earth & starfield
     │   ├── LunarScene.js         # Core scene graph, render loop & resize
     │   ├── LunarTerrain.js       # LROC-accurate topography mesh
@@ -70,6 +78,7 @@ Afterlight/
     │   ├── LunarAtlasService.js  # Great-circle calculations, rover filtering, search
     │   ├── NavigationService.js  # Camera preset switching & transitions
     │   ├── TelemetryService.js   # Site environmental telemetry ingest
+    │   ├── TraverseService.js    # EVA route math, SVG path generation & station lookups
     │   └── index.js
     ├── state/                    # Central reactive state management
     │   ├── actions.js            # Standardized, typed action constants
